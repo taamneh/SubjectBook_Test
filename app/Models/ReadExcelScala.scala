@@ -17,7 +17,7 @@ class ReadExcelScala {
     var num, time, EDA, Ankle : Double =0;
     try {
       //val file: FileInputStream = new FileInputStream("C:\\Users\\staamneh\\Desktop\\sal\\src\\main\\scala\\test.xlsx")
-      val file: FileInputStream = new FileInputStream("C:\\Users\\staamneh\\Desktop\\CPL-Lab\\Children Study\\Stressbook\\S004\\1 Difficult Reading\\RI_S004-001.Q_motion")
+      val file: FileInputStream = new FileInputStream("C:\\Users\\staamneh\\Desktop\\CPL-Lab\\Children Study\\Stressbook\\S004\\1 Difficult Reading\\RI_S004-001.Q_EDA")
       val workbook: XSSFWorkbook = new XSSFWorkbook(file)
       val sheet: XSSFSheet = workbook.getSheetAt(0)
       val rowIterator: util.Iterator[Row] = sheet.iterator

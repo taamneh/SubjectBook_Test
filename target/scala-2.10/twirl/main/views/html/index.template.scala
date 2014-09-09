@@ -31,7 +31,7 @@ Seq[Any](format.raw/*1.19*/("""
    <script type='text/javascript' src='"""),_display_(/*10.41*/routes/*10.47*/.Assets.at("js/changevideo.js")),format.raw/*10.78*/("""'></script>
 
 
-   <script type='text/javascript' src='"""),_display_(/*13.41*/routes/*13.47*/.Assets.at("js/index.js")),format.raw/*13.72*/("""'></script>
+   <!-- <script type='text/javascript' src='"""),_display_(/*13.46*/routes/*13.52*/.Assets.at("js/index.js")),format.raw/*13.77*/("""'></script> -->
    <script type='text/javascript' src='"""),_display_(/*14.41*/routes/*14.47*/.Assets.at("js/test.js")),format.raw/*14.71*/("""'></script>
 
 
@@ -42,7 +42,8 @@ Seq[Any](format.raw/*1.19*/("""
 <br>
 <br>
 <br>
-<div class="css-treeview" style="float:left;width:200px;height:800px;">
+<div id="parent" style="border:1px solid;width:100%; float: left">
+<div class="css-treeview" style="float:left;width:20%;height:800px;">
     <ul>
         <li><input type="checkbox" id="item-0" /><label for="item-0">Children Study</label>
             <ul>
@@ -91,33 +92,32 @@ Seq[Any](format.raw/*1.19*/("""
     </ul>
 </div>
 
-<div  style="float:left;border:1px solid; border-radius:25px;background:#F0FFFF;width:1100px">
+<div  style="float:left;border:1px solid; border-radius:25px;background:#F0FFFF;width:60%;">
    <!-- <p> <button id = "bt"> Generate Line Chart</button> </p> -->
     <!-- <p><button id = "bt2"> Add a new line to the same chart</button> </p> -->
 
-   <ul id ="persons" style="width:600"></ul>
-     <!--<form action=""""),_display_(/*78.25*/routes/*78.31*/.Application.addPerson()),format.raw/*78.55*/("""" method ="post"> -->
+   <!-- <ul id ="persons" style="width:600"></ul> -->
+     <!--<form action=""""),_display_(/*79.25*/routes/*79.31*/.Application.addPerson()),format.raw/*79.55*/("""" method ="post"> -->
         <!--<input name="name" type="text"> -->
         <!--<button> Add person</button> -->
      <!--</form> -->
     <!--<p id = test1> My name is Salah Taamne </p> -->
     <!--<button id = "btn1"> Print persons as alert</button> -->
-
-    <ul id ="persons2"> </ul>
-    <div id="chart_div"></div>
-    <div id="chart"> </div>
+    <div id="chart" style="width:100%"> </div>
     <div>
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <video id= "kid0" width="400px" controls>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+     <video id= "kid0" width="400px" controls>
       <source src= "assets/images/v.mp4" type="video/mp4">
       Your browser does not support HTML5 video.
-    </video>
+     </video>
     <!-- <video id = "kid" width="400px" controls> -->
       <!-- Your browser does not support HTML5 video. -->
     <!-- </video> -->
-    <button id = "cv"> Change the video please</button>
+    <!-- <button id = "cv"> Change the video please</button> -->
   <!-- <button id = "cv2"> Jum </button> -->
     </div>
-      </div>
+   </div>
+    </div>
   """)))}),format.raw/*100.4*/("""
 """))}
   }
@@ -131,11 +131,11 @@ Seq[Any](format.raw/*1.19*/("""
 }
               /*
                   -- GENERATED --
-                  DATE: Mon Sep 08 23:36:47 CDT 2014
+                  DATE: Tue Sep 09 13:30:10 CDT 2014
                   SOURCE: C:/Users/staamneh/Desktop/CPL-Lab/System Desgin/first_play/app/views/index.scala.html
-                  HASH: 0967651bbffc9197971b86aa097f80751c3f8cf0
-                  MATRIX: 505->1|610->18|638->21|676->51|715->53|748->60|1000->286|1014->292|1063->321|1142->373|1157->379|1209->410|1290->464|1305->470|1351->495|1430->547|1445->553|1490->577|1584->644|1599->650|1652->682|4333->3336|4348->3342|4393->3366|5298->4240
-                  LINES: 19->1|22->1|24->3|24->3|24->3|28->7|30->9|30->9|30->9|31->10|31->10|31->10|34->13|34->13|34->13|35->14|35->14|35->14|39->18|39->18|39->18|99->78|99->78|99->78|121->100
+                  HASH: 775cc7cd9d4ca7894c359be9ead5107d3b66356b
+                  MATRIX: 505->1|610->18|638->21|676->51|715->53|748->60|1000->286|1014->292|1063->321|1142->373|1157->379|1209->410|1295->469|1310->475|1356->500|1439->556|1454->562|1499->586|1593->653|1608->659|1661->691|4414->3417|4429->3423|4474->3447|5339->4281
+                  LINES: 19->1|22->1|24->3|24->3|24->3|28->7|30->9|30->9|30->9|31->10|31->10|31->10|34->13|34->13|34->13|35->14|35->14|35->14|39->18|39->18|39->18|100->79|100->79|100->79|121->100
                   -- GENERATED --
               */
           

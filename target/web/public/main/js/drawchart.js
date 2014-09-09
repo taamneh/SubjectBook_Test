@@ -58,7 +58,7 @@ function drawStuff() {
 
 
 
-   var addButton = document.getElementById('bt2');
+   /*var addButton = document.getElementById('bt2');
 
      addButton.onclick = function() {
 
@@ -68,7 +68,7 @@ function drawStuff() {
               data.setValue(i, 2, num);
             }
     chart.draw(data, options);
-    };
+    };*/
 
      google.visualization.events.addListener(chart, 'select', function() {
         var row = chart.getSelection()[0].row;

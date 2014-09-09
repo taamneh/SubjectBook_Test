@@ -10,7 +10,7 @@
    <script type='text/javascript' src='@routes.Assets.at("js/changevideo.js")'></script>
 
 
-   <script type='text/javascript' src='@routes.Assets.at("js/index.js")'></script>
+   <!-- <script type='text/javascript' src='@routes.Assets.at("js/index.js")'></script> -->
    <script type='text/javascript' src='@routes.Assets.at("js/test.js")'></script>
 
 
@@ -21,7 +21,8 @@
 <br>
 <br>
 <br>
-<div class="css-treeview" style="float:left;width:200px;height:800px;">
+<div id="parent" style="border:1px solid;width:100%; float: left">
+<div class="css-treeview" style="float:left;width:20%;height:800px;">
     <ul>
         <li><input type="checkbox" id="item-0" /><label for="item-0">Children Study</label>
             <ul>
@@ -70,31 +71,30 @@
     </ul>
 </div>
 
-<div  style="float:left;border:1px solid; border-radius:25px;background:#F0FFFF;width:1100px">
+<div  style="float:left;border:1px solid; border-radius:25px;background:#F0FFFF;width:60%;">
    <!-- <p> <button id = "bt"> Generate Line Chart</button> </p> -->
     <!-- <p><button id = "bt2"> Add a new line to the same chart</button> </p> -->
 
-   <ul id ="persons" style="width:600"></ul>
+   <!-- <ul id ="persons" style="width:600"></ul> -->
      <!--<form action="@routes.Application.addPerson()" method ="post"> -->
         <!--<input name="name" type="text"> -->
         <!--<button> Add person</button> -->
      <!--</form> -->
     <!--<p id = test1> My name is Salah Taamne </p> -->
     <!--<button id = "btn1"> Print persons as alert</button> -->
-
-    <ul id ="persons2"> </ul>
-    <div id="chart_div"></div>
-    <div id="chart"> </div>
+    <div id="chart" style="width:100%"> </div>
     <div>
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <video id= "kid0" width="400px" controls>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+     <video id= "kid0" width="400px" controls>
       <source src= "assets/images/v.mp4" type="video/mp4">
       Your browser does not support HTML5 video.
-    </video>
+     </video>
     <!-- <video id = "kid" width="400px" controls> -->
       <!-- Your browser does not support HTML5 video. -->
     <!-- </video> -->
-    <button id = "cv"> Change the video please</button>
+    <!-- <button id = "cv"> Change the video please</button> -->
   <!-- <button id = "cv2"> Jum </button> -->
     </div>
-      </div>
+   </div>
+    </div>
   }
