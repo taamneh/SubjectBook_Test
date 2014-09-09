@@ -1,0 +1,4 @@
+[0m[[31merror[0m] [0mC:\Users\Salah\first_play\app\views\salah.scala.html:126: Expected ending '}'[0m
+[0m[[31merror[0m] [0m        @-webkit-keyframes webkit-adjacent-element-selector-bugfix[0m
+[0m[[31merror[0m] [0m        ^[0m
+[0m[[31merror[0m] [0m(compile:[31mtwirlCompileTemplates[0m) Twirl compilation failed[0m
