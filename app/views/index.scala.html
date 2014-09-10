@@ -5,13 +5,14 @@
 
 
    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
    <script type='text/javascript' src='@routes.Assets.at("js/drawchart.js")'></script>
    <script type='text/javascript' src='@routes.Assets.at("js/changevideo.js")'></script>
 
 
    <!-- <script type='text/javascript' src='@routes.Assets.at("js/index.js")'></script> -->
-   <script type='text/javascript' src='@routes.Assets.at("js/test.js")'></script>
+   <script type='text/javascript' src='@routes.Assets.at("js/Intialization.js")'></script>
+   <script type='text/javascript' src='@routes.Assets.at("js/buildtree.js")'></script>
 
 
   <div style="background:#A0A0A0 ">
@@ -21,80 +22,17 @@
 <br>
 <br>
 <br>
-<div id="parent" style="border:1px solid;width:100%; float: left">
-<div class="css-treeview" style="float:left;width:20%;height:800px;">
+<div id="parent" style="border:1px solid;width:100%; float: left" >
+    <br>
+<div class="css-treeview" style="float:left;width:20%;height:1000px;">
+    <button id = "cv2"> Build the Tree </button>
     <ul>
         <li><input type="checkbox" id="item-0" /><label for="item-0">Children Study</label>
-            <ul>
-                <li><input type="checkbox" id="item-0-0" /><label for="item-0-0">S001</label>
-                    <ul>
-                        <li><input type="checkbox" id="item-0-0-0" /><label for="item-0-0-0">Baseline</label>
-                            <ul id="S001BL">
-                                <li><a >Run 1</a></li>
-                            </ul>
-                        </li>
-                        <li><input type="checkbox" id="item-0-0-1" /><label for="item-0-0-0">BaseLine Reading</label>
-                            <ul id="S001BR">
-                                <li><a >Run 1</a></li>
-                            </ul>
-                        </li>
-                        <li><input type="checkbox" id="item-0-0-2" /><label for="item-0-0-0">Difficult Reading</label>
-                            <ul id="S001DR">
-                                <li><a >Run 1</a></li>
-                            </ul>
-                        </li>
-                        <li><input type="checkbox" id="item-0-0-3" /><label for="item-0-0-0">Direct View</label>
-                            <ul id="S001DV">
-                                <li><a >Run 1</a></li>
-                            </ul>
-                        </li>
-                        <li><input type="checkbox" id="item-0-0-4" /><label for="item-0-0-0">Monitor View</label>
-                            <ul id="S001MV">
-                                <li><a >Run 1</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li><input type="checkbox" id="item-0-1" /><label for="item-0-1">S002</label>
-                    <ul>
-                        <li><input type="checkbox" id="item-0-0-22" /><label for="item-0-0-0">Difficult Reading</label>
-                            <ul id="signal-D">
-                                <li><a >Run 1</a></li>
-                            </ul>
-                        </li>
-
-                    </ul>
-                </li>
-
+            <ul class ="subjects">
+                <!--<ul id="signal"><li><a>Run 1</a></li></ul></li></ul> -->
             </ul>
         </li>
     </ul>
 </div>
-
-<div  style="float:left;border:1px solid; border-radius:25px;background:#F0FFFF;width:60%;">
-   <!-- <p> <button id = "bt"> Generate Line Chart</button> </p> -->
-    <!-- <p><button id = "bt2"> Add a new line to the same chart</button> </p> -->
-
-   <!-- <ul id ="persons" style="width:600"></ul> -->
-     <!--<form action="@routes.Application.addPerson()" method ="post"> -->
-        <!--<input name="name" type="text"> -->
-        <!--<button> Add person</button> -->
-     <!--</form> -->
-    <!--<p id = test1> My name is Salah Taamne </p> -->
-    <!--<button id = "btn1"> Print persons as alert</button> -->
-    <div id="chart" style="width:100%"> </div>
-    <div>
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-     <video id= "kid0" width="400px" controls>
-      <source src= "assets/images/v.mp4" type="video/mp4">
-      Your browser does not support HTML5 video.
-     </video>
-    <!-- <video id = "kid" width="400px" controls> -->
-      <!-- Your browser does not support HTML5 video. -->
-    <!-- </video> -->
-    <!-- <button id = "cv"> Change the video please</button> -->
-  <!-- <button id = "cv2"> Jum </button> -->
-    </div>
-   </div>
     </div>
   }

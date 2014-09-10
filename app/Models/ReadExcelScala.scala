@@ -10,14 +10,33 @@ import play.api.libs.json.{JsArray, Json}
 /**
  * Created by staamneh on 9/8/2014.
  */
-class ReadExcelScala {
+class ReadExcelScala(taskP: String , subjectP : String) {
+  var task : String = taskP;
+  var subject : String = subjectP;
+
+  var excelFile = "RI_" + subject + "-001.Q_EDA";
   def fromExcel: JsArray = {
     var js = Json.arr();
     var i =0;
     var num, time, EDA, Ankle : Double =0;
     try {
       //val file: FileInputStream = new FileInputStream("C:\\Users\\staamneh\\Desktop\\sal\\src\\main\\scala\\test.xlsx")
-      val file: FileInputStream = new FileInputStream("C:\\Users\\staamneh\\Desktop\\CPL-Lab\\Children Study\\Stressbook\\S004\\1 Difficult Reading\\RI_S004-001.Q_EDA")
+      var fileName =  " ";
+      if (task == "BL")
+       fileName = "C:\\Users\\staamneh\\Desktop\\CPL-Lab\\System Desgin\\DataSource\\" + subject + "\\BaseLine Dexterity\\"+ excelFile;
+      if (task == "DV")
+        fileName = "C:\\Users\\staamneh\\Desktop\\CPL-Lab\\System Desgin\\DataSource\\" + subject + "\\Direct View\\"+ excelFile;
+      if (task == "MV")
+        fileName = "C:\\Users\\staamneh\\Desktop\\CPL-Lab\\System Desgin\\DataSource\\" + subject + "\\Monitor View\\"+ excelFile;
+      if (task == "BR")
+        fileName = "C:\\Users\\staamneh\\Desktop\\CPL-Lab\\System Desgin\\DataSource\\" + subject + "\\BaseLine Reading\\" + excelFile;
+      if (task == "DR")
+        fileName = "C:\\Users\\staamneh\\Desktop\\CPL-Lab\\System Desgin\\DataSource\\" + subject + "\\Difficult Reading\\" + excelFile;
+
+      println(fileName);
+
+
+      val file: FileInputStream = new FileInputStream(fileName)
       val workbook: XSSFWorkbook = new XSSFWorkbook(file)
       val sheet: XSSFSheet = workbook.getSheetAt(0)
       val rowIterator: util.Iterator[Row] = sheet.iterator

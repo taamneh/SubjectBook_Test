@@ -10,12 +10,12 @@ POST   /person                      controllers.Application.addPerson
 
 GET     /persons                    controllers.Application.getPersons
 
-GET     /test                       controllers.Application.test
+GET     /test                       controllers.Application.test(task, subject)
 
 GET     /file                       controllers.Application.file
 
-GET     /video                       controllers.Application.video
+GET     /video                      controllers.Application.video
 
-GET     /test/:img_no               controllers.Application.findImage(img_no: Int)
+# GET     /test/:img_no             controllers.Application.findImage(img_no: Int)
 
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

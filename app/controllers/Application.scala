@@ -71,7 +71,8 @@ object Application extends Controller {
 
 
   }
-  def test = Action {
+  //def test(fileName: String) = Action {
+  def test(task: String, subject: String) = Action {
     val temp = """{
       "cols": [
       {"id":"","label":"Time","pattern":"","type":"number"},
@@ -334,7 +335,7 @@ object Application extends Controller {
     //Ok(Json.parse(temp))
 
    // var js = Json.arr();
-    var newjs: ReadExcelScala = new ReadExcelScala();
+    var newjs: ReadExcelScala = new ReadExcelScala(task, subject);
     var js = newjs.fromExcel;
 
     Ok(Json.obj(

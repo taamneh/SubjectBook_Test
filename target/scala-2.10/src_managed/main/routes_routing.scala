@@ -1,6 +1,6 @@
 // @SOURCE:C:/Users/staamneh/Desktop/CPL-Lab/System Desgin/first_play/conf/routes
-// @HASH:8880bfe3af6092291ef611215f9b171f24dca80d
-// @DATE:Mon Sep 08 15:33:51 CDT 2014
+// @HASH:0f5a830c28e7cfa09d629aae81a56dfeb501238e
+// @DATE:Wed Sep 10 13:23:45 CDT 2014
 
 
 import play.core._
@@ -55,8 +55,8 @@ HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "getPers
 // @LINE:13
 private[this] lazy val controllers_Application_test3_route = Route("GET", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("test"))))
 private[this] lazy val controllers_Application_test3_invoker = createInvoker(
-controllers.Application.test,
-HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "test", Nil,"GET", """""", Routes.prefix + """test"""))
+controllers.Application.test(fakeValue[String], fakeValue[String]),
+HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "test", Seq(classOf[String], classOf[String]),"GET", """""", Routes.prefix + """test"""))
         
 
 // @LINE:15
@@ -73,20 +73,13 @@ controllers.Application.video,
 HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "video", Nil,"GET", """""", Routes.prefix + """video"""))
         
 
-// @LINE:19
-private[this] lazy val controllers_Application_findImage6_route = Route("GET", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("test/"),DynamicPart("img_no", """[^/]+""",true))))
-private[this] lazy val controllers_Application_findImage6_invoker = createInvoker(
-controllers.Application.findImage(fakeValue[Int]),
-HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "findImage", Seq(classOf[Int]),"GET", """""", Routes.prefix + """test/$img_no<[^/]+>"""))
-        
-
 // @LINE:21
-private[this] lazy val controllers_Assets_at7_route = Route("GET", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("assets/"),DynamicPart("file", """.+""",false))))
-private[this] lazy val controllers_Assets_at7_invoker = createInvoker(
+private[this] lazy val controllers_Assets_at6_route = Route("GET", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("assets/"),DynamicPart("file", """.+""",false))))
+private[this] lazy val controllers_Assets_at6_invoker = createInvoker(
 controllers.Assets.at(fakeValue[String], fakeValue[String]),
 HandlerDef(this.getClass.getClassLoader, "", "controllers.Assets", "at", Seq(classOf[String], classOf[String]),"GET", """""", Routes.prefix + """assets/$file<.+>"""))
         
-def documentation = List(("""GET""", prefix,"""controllers.Application.index"""),("""POST""", prefix + (if(prefix.endsWith("/")) "" else "/") + """person""","""controllers.Application.addPerson"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """persons""","""controllers.Application.getPersons"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """test""","""controllers.Application.test"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """file""","""controllers.Application.file"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """video""","""controllers.Application.video"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """test/$img_no<[^/]+>""","""controllers.Application.findImage(img_no:Int)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """assets/$file<.+>""","""controllers.Assets.at(path:String = "/public", file:String)""")).foldLeft(List.empty[(String,String,String)]) { (s,e) => e.asInstanceOf[Any] match {
+def documentation = List(("""GET""", prefix,"""controllers.Application.index"""),("""POST""", prefix + (if(prefix.endsWith("/")) "" else "/") + """person""","""controllers.Application.addPerson"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """persons""","""controllers.Application.getPersons"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """test""","""controllers.Application.test(task:String, subject:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """file""","""controllers.Application.file"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """video""","""controllers.Application.video"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """assets/$file<.+>""","""controllers.Assets.at(path:String = "/public", file:String)""")).foldLeft(List.empty[(String,String,String)]) { (s,e) => e.asInstanceOf[Any] match {
   case r @ (_,_,_) => s :+ r.asInstanceOf[(String,String,String)]
   case l => s ++ l.asInstanceOf[List[(String,String,String)]]
 }}
@@ -120,8 +113,8 @@ case controllers_Application_getPersons2_route(params) => {
 
 // @LINE:13
 case controllers_Application_test3_route(params) => {
-   call { 
-        controllers_Application_test3_invoker.call(controllers.Application.test)
+   call(params.fromQuery[String]("task", None), params.fromQuery[String]("subject", None)) { (task, subject) =>
+        controllers_Application_test3_invoker.call(controllers.Application.test(task, subject))
    }
 }
         
@@ -142,18 +135,10 @@ case controllers_Application_video5_route(params) => {
 }
         
 
-// @LINE:19
-case controllers_Application_findImage6_route(params) => {
-   call(params.fromPath[Int]("img_no", None)) { (img_no) =>
-        controllers_Application_findImage6_invoker.call(controllers.Application.findImage(img_no))
-   }
-}
-        
-
 // @LINE:21
-case controllers_Assets_at7_route(params) => {
+case controllers_Assets_at6_route(params) => {
    call(Param[String]("path", Right("/public")), params.fromPath[String]("file", None)) { (path, file) =>
-        controllers_Assets_at7_invoker.call(controllers.Assets.at(path, file))
+        controllers_Assets_at6_invoker.call(controllers.Assets.at(path, file))
    }
 }
         

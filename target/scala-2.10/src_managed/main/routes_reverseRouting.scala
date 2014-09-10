@@ -1,6 +1,6 @@
 // @SOURCE:C:/Users/staamneh/Desktop/CPL-Lab/System Desgin/first_play/conf/routes
-// @HASH:8880bfe3af6092291ef611215f9b171f24dca80d
-// @DATE:Mon Sep 08 15:33:51 CDT 2014
+// @HASH:0f5a830c28e7cfa09d629aae81a56dfeb501238e
+// @DATE:Wed Sep 10 13:23:45 CDT 2014
 
 import Routes.{prefix => _prefix, defaultPrefix => _defaultPrefix}
 import play.core._
@@ -15,7 +15,6 @@ import Router.queryString
 
 
 // @LINE:21
-// @LINE:19
 // @LINE:17
 // @LINE:15
 // @LINE:13
@@ -38,7 +37,6 @@ def at(file:String): Call = {
 }
                           
 
-// @LINE:19
 // @LINE:17
 // @LINE:15
 // @LINE:13
@@ -62,17 +60,10 @@ def addPerson(): Call = {
 }
                         
 
-// @LINE:19
-def findImage(img_no:Int): Call = {
-   import ReverseRouteContext.empty
-   Call("GET", _prefix + { _defaultPrefix } + "test/" + implicitly[PathBindable[Int]].unbind("img_no", img_no))
-}
-                        
-
 // @LINE:13
-def test(): Call = {
+def test(task:String, subject:String): Call = {
    import ReverseRouteContext.empty
-   Call("GET", _prefix + { _defaultPrefix } + "test")
+   Call("GET", _prefix + { _defaultPrefix } + "test" + queryString(List(Some(implicitly[QueryStringBindable[String]].unbind("task", task)), Some(implicitly[QueryStringBindable[String]].unbind("subject", subject)))))
 }
                         
 
@@ -104,7 +95,6 @@ def index(): Call = {
 
 
 // @LINE:21
-// @LINE:19
 // @LINE:17
 // @LINE:15
 // @LINE:13
@@ -132,7 +122,6 @@ def at : JavascriptReverseRoute = JavascriptReverseRoute(
 }
               
 
-// @LINE:19
 // @LINE:17
 // @LINE:15
 // @LINE:13
@@ -164,23 +153,12 @@ def addPerson : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:19
-def findImage : JavascriptReverseRoute = JavascriptReverseRoute(
-   "controllers.Application.findImage",
-   """
-      function(img_no) {
-      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "test/" + (""" + implicitly[PathBindable[Int]].javascriptUnbind + """)("img_no", img_no)})
-      }
-   """
-)
-                        
-
 // @LINE:13
 def test : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.test",
    """
-      function() {
-      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "test"})
+      function(task,subject) {
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "test" + _qS([(""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("task", task), (""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("subject", subject)])})
       }
    """
 )
@@ -226,7 +204,6 @@ def index : JavascriptReverseRoute = JavascriptReverseRoute(
 
 
 // @LINE:21
-// @LINE:19
 // @LINE:17
 // @LINE:15
 // @LINE:13
@@ -249,7 +226,6 @@ def at(path:String, file:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.
 }
                           
 
-// @LINE:19
 // @LINE:17
 // @LINE:15
 // @LINE:13
@@ -271,15 +247,9 @@ def addPerson(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
 )
                       
 
-// @LINE:19
-def findImage(img_no:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
-   controllers.Application.findImage(img_no), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "findImage", Seq(classOf[Int]), "GET", """""", _prefix + """test/$img_no<[^/]+>""")
-)
-                      
-
 // @LINE:13
-def test(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
-   controllers.Application.test(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "test", Seq(), "GET", """""", _prefix + """test""")
+def test(task:String, subject:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.test(task, subject), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "test", Seq(classOf[String], classOf[String]), "GET", """""", _prefix + """test""")
 )
                       
 

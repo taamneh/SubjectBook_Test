@@ -1,9 +1,12 @@
-function drawStuff() {
+function drawStuff(fileName) {
 
+alert('hello');
+    var x = "RI_S004-001.Q_motion";
     var jsonData = $.ajax({
                          type: 'GET',
                          url: '/test',
                          dataType:"json",
+                         data: "fileName=" + x,
                          async: false
                          }).responseText;
      // show that data that is recieved from method test as json, it has to be col and row
@@ -44,7 +47,7 @@ function drawStuff() {
     };*/
 
      var options = {
-              title: 'Company Performance',
+              title: 'Q-Sensor Singal',
                animation: {
                       duration: 1000,
                       easing: 'out'
@@ -53,7 +56,7 @@ function drawStuff() {
       };
 
     //instantiate and draw our chart, passing in the options
-    var chart = new google.visualization.LineChart(document.querySelector('#chart'));
+    var chart = new google.visualization.LineChart(document.querySelector('#chart1'));
     chart.draw(data, options);
 
 
@@ -86,15 +89,22 @@ function drawStuff() {
       });
 }
 $(document).ready(function () {
-$("#bt").click(function(){
- //$.get("/test",function(){
-         google.load('visualization', '1.0', { 'packages': ['corechart'], callback: drawStuff });
-        // do stuff on "ready" event
-        });
-
-  $("#S001BL li").not('.emptyMessage').click(function() {
+     /*$("#showvideo").click(function(){
+         $("#videoboard").toggle();
+         if($("#showvideo").html()== 'Show Videos')
+              {$("#showvideo").html('Hide Videos');}
+          else
+             {$("#showvideo").html('Show Videos');}
+       });
+     */
+    //$("#S001BL li").not('.emptyMessage').click(function() {
+    $("#signal li").not('.emptyMessage').click(function() {
+    //$("#signal").find("li").not('.emptyMessage').click(function() {
       google.load('visualization', '1.0', { 'packages': ['corechart'], callback: drawStuff });
-
+      //$("#kid0").load("assets/images/v.mp4");
+        // $("#S001").toggle();
+       //  $('#kid0').html(' <source src= "assets/images/v.mp4" type="video/mp4">');
 });
-   //  });
+
+
 });
