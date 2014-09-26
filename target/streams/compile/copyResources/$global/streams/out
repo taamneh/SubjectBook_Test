@@ -1,3 +1,7 @@
 [0m[[0mdebug[0m] [0mCopy resource mappings: [0m
 [0m[[0mdebug[0m] [0m	(C:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\conf\application.conf,C:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\target\scala-2.10\classes\application.conf)[0m
+[0m[[0mdebug[0m] [0m	(C:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\conf\evolutions,C:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\target\scala-2.10\classes\evolutions)[0m
 [0m[[0mdebug[0m] [0m	(C:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\conf\routes,C:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\target\scala-2.10\classes\routes)[0m
+[0m[[0mdebug[0m] [0m	(C:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\conf\evolutions\default,C:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\target\scala-2.10\classes\evolutions\default)[0m
+[0m[[0mdebug[0m] [0m	(C:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\conf\evolutions\default\1.sql,C:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\target\scala-2.10\classes\evolutions\default\1.sql)[0m
+[0m[[0mdebug[0m] [0m	(C:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\conf\evolutions\default\2.sql,C:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\target\scala-2.10\classes\evolutions\default\2.sql)[0m

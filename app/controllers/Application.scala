@@ -1,31 +1,285 @@
 package controllers
 
-import Models.{DB, Person, ReadExcelScala}
+//import Models.{DB, Person, ReadExcelScala}
+import Models.{ReadExcelScala}
+import Models.UserLogin
 import play.api.Play.current
 import play.api._
+import anorm._
+import play.api.db.DB
 import play.api.data.Form
+import play.api.data.Forms._
+import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.iteratee.Enumerator
 import play.api.libs.json._
 import play.api.mvc._
 
+
+case class UserLogin(username: String, password: String);
+case class NewUser(fullName: String, email: String, password: String, retypePassword: String);
+case class Sharing(email: String, role: Int, message: String,studyId: Int);
+//case class Registration(user_registration_fullName: String, user_registration_email: String, user_registration_password: String, user_registration_retypePassword: String);
 object Application extends Controller {
 
-  def index = Action {
-    Ok(views.html.index("Salah Taamneh."))
-    //Ok(views.html.salah());
+  val userForm = Form(
+    mapping(
+      "username" -> text,
+      "password" -> text
+    )(UserLogin.apply)(UserLogin.unapply)
+  )
+
+  def Login = Action {
+    //Ok(views.html.user(userForm))
+    Ok(views.html.login(userForm))
+  }
+
+  def authentication = Action {
+    implicit request =>
+      userForm.bindFromRequest.fold(
+        formWithErrors => {
+          BadRequest(views.html.login(formWithErrors))
+        },
+        contact => {
+
+          //val contactId = Contact.save(contact)
+          //Redirect(routes.Application.showContact(contactId)).flashing("success" -> "Contact saved!")
+          DB.withConnection { implicit c =>
+            val rowOption  =
+              SQL("select count(*) as c from USER where username ={un} AND password = {ps}")
+                .on('un -> contact.username, 'ps -> contact.password).apply().head
+            val studies  =
+              SQL("select  distinct(study_name), study_id as c from study where study_owner ={un} OR study_id in (select study_id from privilege where username  = {un} );")
+                .on('un -> contact.username)
+            val med = studies().map(row =>
+              row[String]("study_name") -> row[Int]("study_id")
+            ).toList
+            //var str: String = "";
+            //for (name <- med) str = str + name;
+            val ctr = rowOption[Long]("c")
+            if (ctr >0 ) Ok(views.html.displayStudies(contact.username,med)).withSession(
+              "connected" -> contact.username)//Ok(views.html.index(contact.username.toString))
+            else Ok(views.html.login(userForm))
+          }
+
+        }
+      )
+  }
+
+  def displayStudies() = Action
+  {
+    implicit request =>
+      var username: String = "";
+      request.session.get("connected").map { user =>
+       username = user;
+      }.getOrElse {
+        Unauthorized("Oops, you are not connected")
+      }
+    DB.withConnection { implicit c =>
+      val studies  =
+        SQL("select  distinct(study_name), study_id as c from study where study_owner ={un} OR study_id in (select study_id from privilege where username  = {un} );")
+          .on('un -> username)
+      val med = studies().map(row =>
+        row[String]("study_name") -> row[Int]("study_id")
+      ).toList
+      //var str: String = "";
+      //for (name <- med) str = str + name;
+    Ok(views.html.displayStudies(username,med))
+    }
+  }
+
+  def displaySubject(studyNo: Int, SubjectId: String) = Action {
+    implicit request =>
+      var username: String = "";
+      request.session.get("connected").map { user =>
+        username = user;
+      }.getOrElse {
+        Unauthorized("Oops, you are not connected")
+      }
+      var sessionsPerSubject : Map[String, List[( String, String)]]= Map();
+      DB.withConnection { implicit c =>
+        /*val subjects  =
+          SQL("select distinct(subject_id) from subject, session where study_id ={study_no} AND subject.subject_seq = session.subject_seq order by subject_id;")
+            .on('study_no -> studyNo)
+        val subectList = subjects().map(row =>
+          row[String]("subject_id")).toList
+
+        for(sub <- subectList)
+        {*/
+        val sessions  =
+          SQL("select session_name, signal_loc from subject, session where study_id ={study_no} AND subject.subject_seq = session.subject_seq AND subject_id ={subject_id} order by subject_id, session_name ;")
+            .on('study_no -> studyNo, 'subject_id -> SubjectId)
+        val med = sessions().map(row =>
+          (  row[String]("session_name") -> row[String]("signal_loc"))
+        ).toList
+
+        var tt : List[(String, String)] = med;
+        sessionsPerSubject = sessionsPerSubject + (SubjectId -> tt);
+      }
+      //}
+      Ok(views.html.subject(username, sessionsPerSubject,studyNo));
+      //Ok(views.html.subject())
+  }
+
+  def displayFortest = Action {
+    Ok("Tests")
+  }
+
+  val registerForm = Form(
+    mapping(
+      "fullName" -> nonEmptyText,
+      "email" -> nonEmptyText,
+      "password" -> nonEmptyText,
+      "retypePassword" -> nonEmptyText
+    )(NewUser.apply)(NewUser.unapply)
+  )
+
+  def Register = Action {
+    Ok(views.html.registration(registerForm))
+  }
+
+  def submitRegistration = Action {
+    implicit request =>
+      registerForm.bindFromRequest.fold(
+        formWithErrors => {
+          BadRequest(views.html.registration(formWithErrors))
+        },
+        contact => {
+
+          //val contactId = Contact.save(contact)
+          //Redirect(routes.Application.showContact(contactId)).flashing("success" -> "Contact saved!")
+          DB.withConnection { implicit c =>
+            val id: Option[Long] =
+              SQL("insert into user(fullname, username, password, email) values ({fn}, {un}, {pass}, {em})")
+                .on('fn -> contact.fullName , 'un -> contact.email, 'pass -> contact.password, 'em -> contact.email).executeInsert()
+            //var str: String = "";
+            //for (name <- med) str = str + name;
+
+            Ok(views.html.login(userForm))
+          }
+
+        }
+      )
 
   }
-  val personFrom : Form[Person] = Form {
+
+
+  def showStudy(studyNo: Int) = Action
+  {
+    implicit request =>
+      var username: String = "";
+      request.session.get("connected").map { user =>
+        username = user;
+      }.getOrElse {
+        Unauthorized("Oops, you are not connected")
+      }
+    var sessionsPerSubject : Map[String, List[( String, String)]]= Map();
+    DB.withConnection { implicit c =>
+      val subjects  =
+        SQL("select distinct(subject_id) from subject, session where study_id ={study_no} AND subject.subject_seq = session.subject_seq order by subject_id;")
+          .on('study_no -> studyNo)
+      val subectList = subjects().map(row =>
+        row[String]("subject_id")).toList
+
+      for(sub <- subectList)
+      {
+        val sessions  =
+          SQL("select session_name, signal_loc from subject, session where study_id ={study_no} AND subject.subject_seq = session.subject_seq AND subject_id ={subject_id} order by subject_id, session_name ;")
+            .on('study_no -> 1, 'subject_id -> sub)
+        val med = sessions().map(row =>
+          (  row[String]("session_name") -> row[String]("signal_loc"))
+        ).toList
+
+        var tt : List[(String, String)] = med;
+        sessionsPerSubject = sessionsPerSubject + (sub ->tt);
+      }
+    }
+    Ok(views.html.studyModel(username, sessionsPerSubject, studyNo));
+  }
+
+
+  val shareForm = Form(
+    mapping(
+      "email" -> nonEmptyText,
+      "role" -> number,
+      "message" -> nonEmptyText,
+       "studyId"-> number
+    )(Sharing.apply)(Sharing.unapply)
+  )
+
+  def shareMyStudy =Action
+  {
+    implicit request =>
+      var username: String = "";
+      request.session.get("connected").map { user =>
+        username = user;
+      }.getOrElse {
+        Unauthorized("Oops, you are not connected")
+      }
+      shareForm.bindFromRequest.fold(
+        formWithErrors => {
+          BadRequest(views.html.editStudy("SomeThing Wrong Happened!",username));
+        },
+        contact => {
+          println(contact.email + contact.role + contact.message)
+          //val contactId = Contact.save(contact)
+          //Redirect(routes.Application.showContact(contactId)).flashing("success" -> "Contact saved!")
+          DB.withConnection { implicit c =>
+            val id: Option[Long] =
+              SQL("insert into privilege(username,study_id, permission_type) values ({un}, {sid}, {per})")
+                .on('un -> contact.email , 'sid -> contact.studyId , 'per -> contact.role).executeInsert()
+            //var str: String = "";
+            //for (name <- med) str = str + name;
+
+            Ok(views.html.editStudy("Thank you, your study has been shared!",username,contact.studyId));
+          }
+
+        }
+      )
+
+  }
+
+  def logout = Action {
+    Redirect(routes.Application.Login()).withNewSession.flashing(
+      "success" -> "You've been logged out"
+    )
+  }
+
+   /*
+     It will give the user the opporunity to upload more files under any subfolder
+    */
+
+  def sendRequest(StudyName: String) =TODO
+
+
+  def index = Action {
+    Ok(views.html.index("Stress Book"))
+  }
+
+
+  def editStudy(studyId: Int) = Action {
+    implicit request =>
+    var username: String = "";
+    request.session.get("connected").map { user =>
+      username = user;
+    }.getOrElse {
+      Unauthorized("Oops, you are not connected")
+    }
+    Ok(views.html.editStudy("",username, studyId));
+
+  }
+
+
+  /*val personFrom : Form[Person] = Form {
    mapping(
    "name" -> text
    )(Person.apply)(Person.unapply)
-  }
-  def addPerson = Action { implicit request =>
+  }*/
+  /*def addPerson = Action { implicit request =>
     val person = personFrom.bindFromRequest.get
     DB.save(person)
     Redirect(routes.Application.index())
-  }
+  }*/
   def file = Action {
     Ok.sendFile(
       content = Play.application.getFile("/target/web/public/main/images/c64.pdf"),
@@ -52,10 +306,10 @@ object Application extends Controller {
     */
   }
 
-  def getPersons = Action {
+  /*def getPersons = Action {
     val persons = DB.query[Person].fetch
     Ok(Json.toJson(persons))
-  }
+  }*/
   def findImage(img_no : Int) = Action{
 
     val app = Play.application
@@ -89,245 +343,6 @@ object Application extends Controller {
       {"c":[{"v":8,"f":null},{"v":160,"f":null}]},
       {"c":[{"v":9,"f":null},{"v":180,"f":null}]},
       {"c":[{"v":10,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":11,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":12,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":13,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":14,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":15,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":16,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":17,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":18,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":19,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":20,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":21,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":22,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":23,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":24,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":25,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":26,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":27,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":28,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":29,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":30,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":31,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":32,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":33,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":34,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":35,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":36,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":37,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":38,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":39,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":40,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":41,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":42,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":43,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":44,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":45,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":46,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":47,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":48,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":49,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":50,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":51,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":52,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":53,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":54,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":55,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":56,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":57,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":58,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":59,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":60,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":61,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":62,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":63,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":64,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":65,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":66,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":67,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":68,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":69,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":70,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":71,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":72,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":73,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":74,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":75,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":76,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":77,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":78,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":79,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":80,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":81,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":82,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":83,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":84,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":85,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":86,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":87,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":88,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":89,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":90,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":91,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":92,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":93,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":94,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":95,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":96,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":97,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":98,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":99,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":100,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":101,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":102,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":103,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":104,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":105,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":106,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":107,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":108,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":109,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":110,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":111,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":112,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":113,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":114,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":115,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":116,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":117,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":118,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":119,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":120,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":121,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":122,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":123,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":124,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":125,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":126,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":127,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":128,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":129,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":130,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":131,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":132,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":133,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":134,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":135,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":136,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":137,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":138,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":139,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":140,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":141,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":142,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":143,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":144,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":145,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":146,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":147,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":148,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":149,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":150,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":151,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":152,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":153,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":154,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":155,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":156,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":157,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":158,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":159,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":160,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":161,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":162,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":163,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":164,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":165,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":166,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":167,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":168,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":169,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":170,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":171,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":172,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":173,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":174,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":175,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":176,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":177,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":178,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":179,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":180,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":181,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":182,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":183,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":184,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":185,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":186,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":187,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":188,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":189,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":190,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":191,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":192,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":193,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":194,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":195,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":196,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":197,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":198,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":199,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":200,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":201,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":202,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":203,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":204,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":205,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":206,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":207,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":208,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":209,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":210,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":211,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":212,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":213,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":214,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":215,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":216,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":217,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":218,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":219,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":220,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":221,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":222,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":223,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":224,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":225,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":226,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":227,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":228,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":229,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":220,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":231,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":232,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":233,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":234,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":235,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":236,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":237,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":238,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":239,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":240,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":241,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":242,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":243,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":244,"f":null},{"v":180,"f":null}]},
-    {"c":[{"v":245,"f":null},{"v":300,"f":null}]},
-    {"c":[{"v":246,"f":null},{"v":90,"f":null}]},
-    {"c":[{"v":247,"f":null},{"v":106,"f":null}]},
-    {"c":[{"v":248,"f":null},{"v":160,"f":null}]},
-    {"c":[{"v":249,"f":null},{"v":180,"f":null}]},
     {"c":[{"v":250,"f":null},{"v":300,"f":null}]}
     ]
     }
@@ -337,6 +352,12 @@ object Application extends Controller {
    // var js = Json.arr();
     var newjs: ReadExcelScala = new ReadExcelScala(task, subject);
     var js = newjs.fromExcel;
+
+    /*DB.withConnection { implicit c =>
+      val id: Option[Long] =
+        SQL("insert into USER(username, password) values ({name}, {country})")
+          .on('name -> "kareeem", 'country -> "Taamneh").executeInsert()
+    }*/
 
     Ok(Json.obj(
       "cols" -> Json.arr(

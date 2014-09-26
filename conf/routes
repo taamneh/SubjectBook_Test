@@ -3,19 +3,45 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /index                           controllers.Application.index
 
-POST   /person                      controllers.Application.addPerson
 # Map static resources from the /public folder to the /assets URL path
 
-GET     /persons                    controllers.Application.getPersons
-
+#change the name
 GET     /test                       controllers.Application.test(task, subject)
 
+#to be deleted
 GET     /file                       controllers.Application.file
 
+GET     /                           controllers.Application.Login
+
+POST    /login                      controllers.Application.authentication
+
+POST    /logout                     controllers.Application.logout
+
+GET     /signup                     controllers.Application.Register
+
+POST    /signup                     controllers.Application.submitRegistration
+
+POST    /editStudy                  controllers.Application.shareMyStudy
+
+POST     /allStudies                controllers.Application.displayStudies
+
+GET     /displaySubject             controllers.Application.displaySubject(studyNo: Int, SubjectId: String)
+
+GET     /display                    controllers.Application.displayFortest
+
+#to be deleted
 GET     /video                      controllers.Application.video
 
-# GET     /test/:img_no             controllers.Application.findImage(img_no: Int)
+GET     /editStudy/:studyId         controllers.Application.editStudy(studyId: Int)
+
+#to be deleted
+GET     /test/:img_no               controllers.Application.findImage(img_no: Int)
 
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+#to be deleted
+
+
+GET     /showStudy/:studyNo                    controllers.Application.showStudy(studyNo: Int)

@@ -1,4 +1,4 @@
-function drawStuff(task, subject, charDestination) {
+function drawStuff(task, subject, chartDestination) {
 
     //alert('hello');
     var x = "RI_S004-001.Q_motion";
@@ -22,20 +22,16 @@ function drawStuff(task, subject, charDestination) {
       };
 
     //instantiate and draw our chart, passing in the options
-    var chartPlace = "#chart" + charDestination;
+    var chartPlace = "#chart" + chartDestination;
     var chart = new google.visualization.LineChart(document.querySelector(chartPlace));
     chart.draw(data, options);
 
+
+     var videoName = "#video" + chartDestination;
      google.visualization.events.addListener(chart, 'select', function() {
         var row = chart.getSelection()[0].row;
-        //document.getElementById("koko").src = pic;
-        //alert('You selected ' + data.getValue(row, 0) );
-        //var video = $('#kid')[0];
-        var video2 = $('#kid0')[0];
-        //video.currentTime = data.getValue(row, 0);
+        var video2 = $(videoName)[0];
         video2.currentTime = data.getValue(row, 0);
-
-        //video.play();
         video2.play();
 
 
@@ -51,13 +47,27 @@ function linkable(link, type, subjectNum) {
               function intermediate ()
               {
                   drawStuff(type, "S00" +subjectNum , subjectNum);
+                  showVideo(subjectNum);
               }
-             //google.load("visualization", "1", {packages:["corechart"]});
-             //google.setOnLoadCallback(drawStuff);
-            //google.load('visualization', '1.0', {'packages':['corechart']});
-            //google.setOnLoadCallback(drawStuff);
          });
 
+
+}
+function showVideo(num) {
+
+   var videoButton = "#showvideo"+num;
+   var videoBoard = "#videoboard" + num;
+   $(videoButton).click(function(){
+                //$(videoBoard).toggle();
+             if($(videoButton).html()== 'Show Videos')
+                {$(videoButton).html('Hide Videos');
+                 $(videoBoard).slideDown();}
+             else
+                 {$(videoButton).html('Show Videos');
+                    $(videoBoard).slideUp();
+                 }
+                     });
+             $('#video1').html(' <source src= "assets/images/v.mp4" type="video/mp4">');
 }
 $(document).ready(function(){
 
@@ -84,12 +94,12 @@ for ( var i = 1; i <= 20; i++ ) {
 
 
   // for each subject create a placeholder for the charts and video i.e. Div
-    var button_var = '<button id = "showvideo">Show Videos</button>';
-    var video_var = '<div id="videoboard" hidden> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <video id= "kid0" width="400px" controls preload="auto" muted> Your browser does not support HTML5 video.</video> </div>';
-    var placeholder = '<div id ="S00'+ ctr + '" style="float:left;border:1px solid; border-radius:25px;background:#F0FFFF;width:60%;" hidden> <div id="chart'+ ctr + '" style="width:100%"> </div> ' + button_var + video_var+ '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</div>';
+    var button_var = '<button id = "showvideo'+ ctr + '">Show Videos</button>';
+    var video_var = '<div id="videoboard'+ ctr + '" hidden> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <video id= "video'+ ctr +'" width="400px" controls preload="auto" muted> Your browser does not support HTML5 video.</video> </div>';
+    var placeholder = '<div id ="S00'+ ctr + '" style="float:left;border:1px solid; border-radius:25px;background:#F0FFFF;width:60%;" hidden> <div id="chart'+ ctr + '" style="width:100%"> </div> ' + button_var + '<br> '+ video_var+ '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</div>';
 
       //var x = '<p> Taamneh </p>';
-    $('#parent').append(placeholder);
+    $('.SubjectsDock').append(placeholder);
 
       var par1 = "#Run-BL-S0" + ctr + " li";
       var par2 = "#Run-DV-S0" + ctr + " li";
@@ -102,6 +112,7 @@ for ( var i = 1; i <= 20; i++ ) {
       linkable(par3,"MV", ctr);
       linkable(par4,"BR", ctr);
       linkable(par5,"DR", ctr);
+
 
     ctr = ctr + 1;
       //x.appendTo($('#parent'));
