@@ -20,6 +20,12 @@ libraryDependencies ++= Seq(
   ws,
   javaCore,  // The core Java API
   "org.sorm-framework" % "sorm" % "0.3.8",
+  //"com.google.http-client" %  "google-http-client-jackson2"  % "1.18.0-rc",
+  "com.google.http-client" %  "google-http-client-jackson2"  % "1.15.0-rc",
+  //"com.google.apis" % "google-api-services-oauth2" % "v2-rev78-1.18.0-rc",
+  "com.google.apis" % "google-api-services-oauth2" % "v2-rev41-1.15.0-rc",
+  "com.google.apis" % "google-api-services-drive" % "v2-rev145-1.18.0-rc",
+   "com.google.api-client" % "google-api-client" % "1.18.0-rc",
   "com.h2database" % "h2" % "1.3.168",
   "org.webjars" % "webjars-play" % "2.1.0",
   "org.webjars" % "bootstrap" % "2.3.1",
@@ -28,4 +34,3 @@ libraryDependencies ++= Seq(
   "org.apache.poi"  % "poi-ooxml"  % "3.9",
   "org.apache.poi"  % "poi-ooxml"  % "3.5-beta5"
 )
-

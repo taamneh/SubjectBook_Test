@@ -8,7 +8,7 @@ GET     /index                           controllers.Application.index
 # Map static resources from the /public folder to the /assets URL path
 
 #change the name
-GET     /test                       controllers.Application.test(task, subject)
+GET     /test                       controllers.Application.test(task, subject, studyId: Int)
 
 #to be deleted
 GET     /file                       controllers.Application.file
@@ -23,13 +23,25 @@ GET     /signup                     controllers.Application.Register
 
 POST    /signup                     controllers.Application.submitRegistration
 
-POST    /editStudy                  controllers.Application.shareMyStudy
+POST    /InsertStudy                controllers.Application.shareMyStudy
+
+POST    /InsertSubject              controllers.Application.insertSubject
+
+POST    /Create                     controllers.Application.insertStudy
+
+POST    /InsertSession              controllers.Application.InsertSession
+
+GET     /allStudies                controllers.Application.displayStudies
 
 POST     /allStudies                controllers.Application.displayStudies
 
 GET     /displaySubject             controllers.Application.displaySubject(studyNo: Int, SubjectId: String)
 
+GET     /editSubject                controllers.Application.editSubject(studyNo: Int, SubjectId: String)
+
 GET     /display                    controllers.Application.displayFortest
+
+POST    /upload                     controllers.Application.uploadFile
 
 #to be deleted
 GET     /video                      controllers.Application.video

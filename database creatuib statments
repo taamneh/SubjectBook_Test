@@ -1,10 +1,4 @@
-CREATE TABLE user(username VARCHAR(255) PRIMARY KEY, password VARCHAR(255));
-
-INSERT INTO User VALUES('salah', 'taamneh');
-INSERT INTO User VALUES('malcolm', 'stupid');
+select max(subject_seq) from subject;
 
 
-select subject_id,session_no, session_name, signal_loc from subject, session where study_study_id =1 AND subject.subject_seq = session.subject_seq order by subject_id, session_no ;
-
-select distinct(subject_id) from subject, session where study_study_id =1 AND subject.subject_seq = session.subject_seq order by subject_id;
-select session_no, session_name, signal_loc from subject, session where study_study_id =1 AND subject.subject_seq = session.subject_seq AND subject_id ='S001' order by subject_id, session_no ;
+insert into subject values(32,'S007',1,null, null, SYSDATE ,10,10,10);

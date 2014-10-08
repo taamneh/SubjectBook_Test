@@ -1,4 +1,4 @@
-[0m[[31merror[0m] [0mC:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\app\views\subject.scala.html:299: Expected '}' but found '@'[0m
-[0m[[31merror[0m] [0m                            <li><a href="#@session._1" id ="id@#@session._1" class="onesignal" subject=@subject session=@session._1>Session: @session._1</a></li>[0m
-[0m[[31merror[0m] [0m                                                              ^[0m
+[0m[[31merror[0m] [0mC:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\app\views\subject.scala.html:305: Not parsed?[0m
+[0m[[31merror[0m] [0m                        }[0m
+[0m[[31merror[0m] [0m                        ^[0m
 [0m[[31merror[0m] [0m(compile:[31mtwirlCompileTemplates[0m) Twirl compilation failed[0m

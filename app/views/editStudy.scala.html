@@ -1,4 +1,4 @@
-@(answer: String = "", username: String , studyId: Int = 1)
+@(answer: String = "", username: String , studyId: Int = 1, subjects: List[(String,java.util.Date)])
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><title>Vertabelo</title>
     <meta content="width=1170" name="viewport">
@@ -13,7 +13,7 @@
     <script type="text/javascript" src="/assets/js/common.js"></script>
     <script type="text/javascript" src="/assets/js/notifications.js"></script>
     <script type="text/javascript" src="/assets/js/models.js"></script>
-    <script type="text/javascript" src="/assets/js/my_models.js"></script
+    <script type="text/javascript" src="/assets/js/my_models.js"></script>
     <link rel="stylesheet" type="text/css" href="/assets/stylesheets/datePicker.css">
     <link rel="stylesheet" type="text/css" href="/assets/stylesheets/oneweb.css">
     <link rel="stylesheet" type="text/css" href="/assets/stylesheets/dbwm.css"><!-- start Mixpanel --><script content-type="text/javascript">
@@ -63,27 +63,14 @@
             <!-- <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.flow.Utils.setCurrentState("notifications_layer","collapsed");},null,null);</script> -->
         </li>
         <li class="logout">
-            <a href="/login/?action=auth.logout" id="btn1067"><span>Log out</span></a>
+            <a href="/logout" id="btn1067"><span>Log out</span></a>
             <!-- <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1067","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script>
             <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1067","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script> -->
         </li></ul><ul class="links"><li class="dropdown_holder expandable expand-priority-1"><span class="dropdown"><span>Modules</span></span>
         <div class="dropdown_menu_holder">
             <div class="dropdown_menu">
                 <ul class="m">
-                    <li><a href="/diagram">Diagram</a></li>
-                    <li><a href="/allStudies" id="btn1068"><span>My models</span></a>
-                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1068","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script>
-                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1068","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script>
-                    </li>
-                    <li>
-                        <a href="/sharing?action=flow.reset&amp;flow.flow=model_sharing" id="btn1069"><span>Sharing</span></a>
-                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1069","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script>
-                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1069","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script>
-                    </li>
-                    <li><a href="/recommend-us?action=flow.reset&amp;flow.flow=recommend_us" id="btn1070"><span>Recommend us</span></a>
-                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1070","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script>
-                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1070","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script>
-                    </li>
+                    <li><a href="/diagram">Diagram</a></li><li><a href="/allStudies" id="btn1068"><span>My models</span></a><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1068","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1068","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script></li><li><a href="/sharing?action=flow.reset&amp;flow.flow=model_sharing" id="btn1069"><span>Sharing</span></a><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1069","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1069","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script></li><li><a href="/recommend-us?action=flow.reset&amp;flow.flow=recommend_us" id="btn1070"><span>Recommend us</span></a><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1070","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1070","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script></li>
                 </ul>
             </div>
         </div>
@@ -169,8 +156,8 @@
                             </div><h1>Study details</h1>
                         </div>
                         <div class="content">
-                            <div class="section with__right_content">
-                                <div class="right_content"><div class="actions_stack">
+                            <div class="section with__right_content" >
+                                <div class="right_content" style="display:none"><div class="actions_stack">
                                     <a class="action action_model" href="/model/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ">Diagram</a>
                                     <a class="action action_sql" id="generate_sql_button"><span>Generate SQL</span></a>
                                     <!-- <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","generate_sql_button","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script> -->
@@ -380,10 +367,10 @@
                                         <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.table.Table.registerHandlers("table_share");},null,null);</script>
                                     </div><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.flow.Utils.setCurrentState("share","view");},null,null);</script>
                                     <div class="buttons">
-                                    <p style="color:green;"> @answer </p>
+                                    <p style="color:green;" id ="sharingResult"> </p>
                                     <div id="sharing" style="display: none;">
                                         <!-- <form accept-charset="UTF-8" enctype="application/x-www-form-urlencoded" id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4" method="POST" name="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4"> -->
-                                        @helper.form(action = routes.Application.shareMyStudy) {
+                                        <!-- @helper.form(action = routes.Application.shareMyStudy) { -->
                                             <table cellspacing="0" class="data_table" id="model_details_table">
                                                 <tr class="row_1">
                                                     <td class="cell_1">* Email:</td>
@@ -404,28 +391,52 @@
                                                 <tr class="row_3">
                                                     <td class="cell_1">Message:</td>
                                                     <td>
-                                                        <textarea rows="4" cols="50" name="message">
-
-                                                        </textarea>
+                                                        <textarea rows="4" cols="50" name="message" id="message"> I want to share this study with you</textarea>
                                                     </td>
                                                 </tr>
                                                 <tr class="row_4">
-                                                    <td class="cell_1">Message:</td>
+                                                    <td class="cell_1"></td>
                                                     <td>
                                                         <input type="submit" class="button_primary" id="share" name="register" value="Share" />
+
                                                     </td>
                                                 </tr>
-                                                <input type="hidden" name="studyId" value=@studyId>
+                                                <input id= "studyId" type="hidden" name="studyId" value=@studyId>
                                             </table>
                                         <!-- </form> -->
-                                        }
+                                       <!-- } -->
                                     </div>
 
                                         <a class="button_primary" id="btn1052"><span>Share model</span></a>
-                                        <script>
+                                       <script>
                                         $(document).ready(function(){
                                           $("#btn1052").click(function(){
                                             $("#sharing").slideDown("slow");
+
+                                            $('#share').click(function(evt) {
+                                            //$('#errors').hide();
+                                            $.ajax({
+                                                type : 'POST',
+                                                url : '@routes.Application.shareMyStudy',
+                                                 data : {
+                                                        email: $("input[name=email]").val(),
+                                                        role: $("select[name=role]").val() ,
+                                                        message: $("textarea[name=message]").val(),
+                                                        studyId: $("input[name=studyId]").val(),
+                                                    },
+                                                success : function(data) {
+                                                    $("#sharingResult").html(data);
+                                                },
+                                                error : function(data) {
+                                                     $("#sharingResult").html(data);
+                                                    setError('Make call failed');
+                                                }
+                                            });
+                                             $("#sharing").slideUp("slow");
+                                            return false;
+                                                });
+
+                                          e.preventDefault();
                                           });
                                         });
                                         </script>
@@ -448,7 +459,7 @@
                                 <div class="clearFix"></div>
                             </div>
                             <div class="section">
-                                <div class="header"><h2>Model versions</h2></div>
+                                <div class="header"><h2>Study Topology</h2></div>
                                 <div class="content">
                                     <div id="flow_versions_div">
                                         <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.forms.ConfigManager.setFormConfig("show_autosaved_versions",{"fieldValidatorConfigs":{},"fieldNames":["showAutosavedVersions"],"multiFieldValidatorConfigs":[]});epoint.ow.forms.ConfigManager.setJsValidationEnabled("show_autosaved_versions",true);epoint.ow.forms.ConfigManager.setAjaxValidationEnabled("show_autosaved_versions",true);epoint.ow.forms.ConfigManager.setOnChangeValidationEnabled("show_autosaved_versions",true);},null,null);</script>
@@ -476,176 +487,71 @@
                                             <thead class="table_thead">
                                             <tr class="table_header">
                                                 <th>Date</th>
-                                                <th>Author</th>
-                                                <th>Operation</th>
-                                                <th>Name (tag)</th>
+                                                <th>Subject</th>
+                                                 <th>Gender</th>
+                                                <!--<th>Name (tag)</th> -->
                                                 <th></th>
                                                 <th></th>
                                             </tr>
                                             </thead>
                                             <tbody class="table_body">
+                                            @import java.math.BigInteger; var i=1;
+                                            @for(subject <- subjects) {
+                                            @if(i%2 == 0) {
                                             <tr class="table_row_odd table_row_first">
+                                            } else {
+                                            <tr class="table_row_even">
+                                            }
+                                                @{i = i + 1;}
                                                 <td class="c01">
                                                     <a target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4">2014-09-23 13:57</a>
                                                 </td>
-                                                <td class="c02">salah taamne</td>
-                                                <td class="c03">Window close</td>
-                                                <td class="c04">
-                                                    <div id="flow_version_name_edit_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_div"><a class="button" href="?action=flow.transit&amp;flow.flow=version_name_edit_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4&amp;flow.transition=edit&amp;flow.reloadFlow=version_name_edit_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4" id="btn1054"><span>Assign</span></a>
-                                                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1054","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script>
-                                                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1054","epoint.ow.flow.Utils.ajaxFlowHandler",null);},null,null);</script>
-                                                    </div>
-                                                    <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.flow.Utils.setCurrentState("version_name_edit_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4","view");},null,null);</script>
-                                                </td>
-                                                <td class="c05"><a class="button" target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4"><span>Preview</span></a>
-                                                </td>
-                                                <td class="c06">
+                                                <td class="c02">@subject._1</td>
+                                                <td class="c03">M</td>
+                                                <!-- <td class="c04">
                                                     <form accept-charset="UTF-8" enctype="application/x-www-form-urlencoded" id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4" method="POST" name="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4">
                                                         <select class="select_field" onChange="epoint.ow.forms.Utils.fieldValueChanged(this)" id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select" name="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select">
-                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_" value="">More...</option>
-                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_1" value="1">Export to XML</option>
-                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_3" value="3">Create new model from this version</option>
-                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_4" value="4">Delete version</option>
-                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_5" value="5">Restore version</option>
+                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_" value="">Other...</option>
+                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_1" value="1">EDA Signal</option>
+                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_3" value="3">Thermal Signal</option>
+                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_4" value="4">Video</option>
+                                                        </select>
+                                                    </form>
+                                                    <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {registerModelVersionActionSelectClickHandler("form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select","{\"0\":\"\",\"1\":\"model_version_as_xml?gid=avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4\",\"2\":\"\",\"3\":\"?action=flow.transit&flow.flow=models&flow.transition=create_new_model_from_model_version&flow.reloadFlow=models&gid=avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4\",\"4\":\"?action=flow.transit&flow.flow=versions&flow.transition=delete_version&flow.reloadFlow=versions&gid=avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4\",\"5\":\"?action=flow.transit&flow.flow=versions&flow.transition=restore_version&flow.reloadFlow=versions&gid=avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4\"}");},null,null);</script>
+                                                </td> -->
+                                                <td class="c05"><a class="button" href="/editSubject?SubjectId=@subject._1&studyNo=@studyId"><span>Edit</span></a></td>
+                                                <td class="c06"><a class="button"  href="/editSubject?SubjectId=@subject._1&studyNo=@studyId"><span>Delete</span></a></td>
+
+                                                <!-- @helper.form(action = routes.Application.uploadFile, 'enctype -> "multipart/form-data") {
+                                                <td>
+                                                    <input type="file" name="fileUpload">
+                                                </td>
+                                                <td>
+                                                    <input type="submit" value="Upload">
+                                                    }
+                                                </td> -->
+                                            </tr>
+                                            }
+                                            <!-- <tr class="table_row_even">
+                                                <td class="c01">
+                                                    <a target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4">2014-09-23 13:57</a>
+                                                </td>
+                                                <td class="c02">S002</td>
+                                                <td class="c03">F</td>
+                                                <td class="c03">
+                                                    <form accept-charset="UTF-8" enctype="application/x-www-form-urlencoded" id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4" method="POST" name="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4">
+                                                        <select class="select_field" onChange="epoint.ow.forms.Utils.fieldValueChanged(this)" id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select" name="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select">
+                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_" value="">Other...</option>
+                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_1" value="1">EDA Signal</option>
+                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_3" value="3">Thermal Signal</option>
+                                                            <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_4" value="4">Video</option>
                                                         </select>
                                                     </form>
                                                     <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {registerModelVersionActionSelectClickHandler("form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select","{\"0\":\"\",\"1\":\"model_version_as_xml?gid=avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4\",\"2\":\"\",\"3\":\"?action=flow.transit&flow.flow=models&flow.transition=create_new_model_from_model_version&flow.reloadFlow=models&gid=avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4\",\"4\":\"?action=flow.transit&flow.flow=versions&flow.transition=delete_version&flow.reloadFlow=versions&gid=avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4\",\"5\":\"?action=flow.transit&flow.flow=versions&flow.transition=restore_version&flow.reloadFlow=versions&gid=avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4\"}");},null,null);</script>
                                                 </td>
-                                            </tr>
-                                            <tr class="table_row_even">
-                                                <td class="c01"><a target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE">2014-09-23 13:38</a> </td>
-                                                <td class="c02">salah taamne</td>
-                                                <td class="c03">Window close</td>
-                                                <td class="c04">
-                                                    <div id="flow_version_name_edit_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE_div"><a class="button" href="?action=flow.transit&amp;flow.flow=version_name_edit_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE&amp;flow.transition=edit&amp;flow.reloadFlow=version_name_edit_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE" id="btn1055"><span>Assign</span></a>
-                                                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1055","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script>
-                                                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1055","epoint.ow.flow.Utils.ajaxFlowHandler",null);},null,null);</script>
-                                                    </div>
-                                                    <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.flow.Utils.setCurrentState("version_name_edit_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE","view");},null,null);</script>
-                                                </td>
-                                                <td class="c05"><a class="button" target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE"><span>Preview</span></a></td>
-                                                <td class="c06">
-                                                    <form accept-charset="UTF-8" enctype="application/x-www-form-urlencoded" id="form_versions_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE" method="POST" name="form_versions_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE">
-                                                        <select class="select_field" onChange="epoint.ow.forms.Utils.fieldValueChanged(this)" id="form_versions_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE_select" name="form_versions_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE_select">
-                                                            <option id="form_versions_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE_select_" value="">More...</option>
-                                                            <option id="form_versions_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE_select_1" value="1">Export to XML</option>
-                                                            <option id="form_versions_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE_select_3" value="3">Create new model from this version</option>
-                                                            <option id="form_versions_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE_select_4" value="4">Delete version</option>
-                                                            <option id="form_versions_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE_select_5" value="5">Restore version</option>
-                                                        </select>
-                                                    </form>
-                                                    <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {registerModelVersionActionSelectClickHandler("form_versions_oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE_select","{\"0\":\"\",\"1\":\"model_version_as_xml?gid=oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE\",\"2\":\"\",\"3\":\"?action=flow.transit&flow.flow=models&flow.transition=create_new_model_from_model_version&flow.reloadFlow=models&gid=oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE\",\"4\":\"?action=flow.transit&flow.flow=versions&flow.transition=delete_version&flow.reloadFlow=versions&gid=oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE\",\"5\":\"?action=flow.transit&flow.flow=versions&flow.transition=restore_version&flow.reloadFlow=versions&gid=oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE\"}");},null,null);</script>
-                                                </td>
-                                            </tr>
-                                            <tr class="table_row_odd">
-                                                <td class="c01">
-                                                    <a target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z">2014-09-23 13:38</a>
-                                                </td>
-                                                <td class="c02">salah taamne</td>
-                                                <td class="c03">Window close</td>
-                                                <td class="c04">
-                                                    <div id="flow_version_name_edit_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z_div"><a class="button" href="?action=flow.transit&amp;flow.flow=version_name_edit_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z&amp;flow.transition=edit&amp;flow.reloadFlow=version_name_edit_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z" id="btn1056"><span>Assign</span></a>
-                                                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1056","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script>
-                                                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1056","epoint.ow.flow.Utils.ajaxFlowHandler",null);},null,null);</script>
-                                                    </div>
-                                                    <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.flow.Utils.setCurrentState("version_name_edit_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z","view");},null,null);</script>
-                                                </td>
-                                                <td class="c05">
-                                                    <a class="button" target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z"><span>Preview</span></a></td><td class="c06"><form accept-charset="UTF-8" enctype="application/x-www-form-urlencoded" id="form_versions_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z" method="POST" name="form_versions_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z">
-                                                <select class="select_field" onChange="epoint.ow.forms.Utils.fieldValueChanged(this)" id="form_versions_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z_select" name="form_versions_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z_select"><option id="form_versions_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z_select_" value="">More...</option>
-                                                    <option id="form_versions_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z_select_1" value="1">Export to XML</option>
-                                                    <option id="form_versions_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z_select_3" value="3">Create new model from this version</option>
-                                                    <option id="form_versions_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z_select_4" value="4">Delete version</option>
-                                                    <option id="form_versions_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z_select_5" value="5">Restore version</option>
-                                                </select>
-                                            </form>
-                                                <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {registerModelVersionActionSelectClickHandler("form_versions_nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z_select","{\"0\":\"\",\"1\":\"model_version_as_xml?gid=nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z\",\"2\":\"\",\"3\":\"?action=flow.transit&flow.flow=models&flow.transition=create_new_model_from_model_version&flow.reloadFlow=models&gid=nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z\",\"4\":\"?action=flow.transit&flow.flow=versions&flow.transition=delete_version&flow.reloadFlow=versions&gid=nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z\",\"5\":\"?action=flow.transit&flow.flow=versions&flow.transition=restore_version&flow.reloadFlow=versions&gid=nOcgTGSYzOzWgPWRtmrqUGXKYuiArKlVspycWbFzlr4kHGeDaLfuz2AOfrJYEy5z\"}");},null,null);</script>
-                                            </td>
-                                            </tr>
-                                            <tr class="table_row_even"><td class="c01">
-                                                <a target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1">2014-09-23 13:38</a>
-                                            </td>
-                                                <td class="c02">salah taamne</td>
-                                                <td class="c03">Window close</td>
-                                                <td class="c04">
-                                                    <div id="flow_version_name_edit_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1_div"><a class="button" href="?action=flow.transit&amp;flow.flow=version_name_edit_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1&amp;flow.transition=edit&amp;flow.reloadFlow=version_name_edit_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1" id="btn1057"><span>Assign</span></a><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1057","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1057","epoint.ow.flow.Utils.ajaxFlowHandler",null);},null,null);</script></div>
-                                                    <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.flow.Utils.setCurrentState("version_name_edit_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1","view");},null,null);</script>
-                                                </td>
-                                                <td class="c05">
-                                                    <a class="button" target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1"><span>Preview</span></a>
-                                                </td>
-                                                <td class="c06">
-                                                    <form accept-charset="UTF-8" enctype="application/x-www-form-urlencoded" id="form_versions_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1" method="POST" name="form_versions_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1">
-                                                        <select class="select_field" onChange="epoint.ow.forms.Utils.fieldValueChanged(this)" id="form_versions_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1_select" name="form_versions_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1_select">
-                                                            <option id="form_versions_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1_select_" value="">More...</option>
-                                                            <option id="form_versions_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1_select_1" value="1">Export to XML</option>
-                                                            <option id="form_versions_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1_select_3" value="3">Create new model from this version</option>
-                                                            <option id="form_versions_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1_select_4" value="4">Delete version</option>
-                                                            <option id="form_versions_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1_select_5" value="5">Restore version</option>
-                                                        </select>
-                                                    </form>
-                                                    <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {registerModelVersionActionSelectClickHandler("form_versions_xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1_select","{\"0\":\"\",\"1\":\"model_version_as_xml?gid=xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1\",\"2\":\"\",\"3\":\"?action=flow.transit&flow.flow=models&flow.transition=create_new_model_from_model_version&flow.reloadFlow=models&gid=xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1\",\"4\":\"?action=flow.transit&flow.flow=versions&flow.transition=delete_version&flow.reloadFlow=versions&gid=xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1\",\"5\":\"?action=flow.transit&flow.flow=versions&flow.transition=restore_version&flow.reloadFlow=versions&gid=xNlFWESuxsBPf0m6D5isKtNGiUYGzFkblZ68ZHu8HrgBk6uP7CxFQ5Ycl04ppJM1\"}");},null,null);</script>
-                                                </td>
-                                            </tr>
-                                            <tr class="table_row_odd">
-                                                <td class="c01">
-                                                    <a target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS">2014-09-23 13:36</a>
-                                                </td>
-                                                <td class="c02">salah taamne</td><td class="c03">Window close</td>
-                                                <td class="c04">
-                                                    <div id="flow_version_name_edit_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS_div">
-                                                        <a class="button" href="?action=flow.transit&amp;flow.flow=version_name_edit_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS&amp;flow.transition=edit&amp;flow.reloadFlow=version_name_edit_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS" id="btn1058"><span>Assign</span></a>
-                                                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1058","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script>
-                                                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1058","epoint.ow.flow.Utils.ajaxFlowHandler",null);},null,null);</script>
-                                                    </div>
-                                                    <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.flow.Utils.setCurrentState("version_name_edit_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS","view");},null,null);</script>
-                                                </td>
-                                                <td class="c05">
-                                                    <a class="button" target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS"><span>Preview</span></a>
-                                                </td>
-                                                <td class="c06">
-                                                    <form accept-charset="UTF-8" enctype="application/x-www-form-urlencoded" id="form_versions_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS" method="POST" name="form_versions_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS">
-                                                        <select class="select_field" onChange="epoint.ow.forms.Utils.fieldValueChanged(this)" id="form_versions_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS_select" name="form_versions_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS_select">
-                                                            <option id="form_versions_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS_select_" value="">More...</option>
-                                                            <option id="form_versions_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS_select_1" value="1">Export to XML</option>
-                                                            <option id="form_versions_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS_select_3" value="3">Create new model from this version</option>
-                                                            <option id="form_versions_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS_select_4" value="4">Delete version</option>
-                                                            <option id="form_versions_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS_select_5" value="5">Restore version</option>
-                                                        </select>
-                                                    </form>
-                                                    <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {registerModelVersionActionSelectClickHandler("form_versions_ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS_select","{\"0\":\"\",\"1\":\"model_version_as_xml?gid=ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS\",\"2\":\"\",\"3\":\"?action=flow.transit&flow.flow=models&flow.transition=create_new_model_from_model_version&flow.reloadFlow=models&gid=ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS\",\"4\":\"?action=flow.transit&flow.flow=versions&flow.transition=delete_version&flow.reloadFlow=versions&gid=ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS\",\"5\":\"?action=flow.transit&flow.flow=versions&flow.transition=restore_version&flow.reloadFlow=versions&gid=ecAoqdV0DezeUDOwtBpmCy0t44mTq7X6k46ZYYtxrcqY5zVao4f4UsYpjy7kKkDS\"}");},null,null);</script>
-                                                </td>
-                                            </tr>
-                                            <tr class="table_row_even">
-                                                <td class="c01">
-                                                    <a target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj">2014-09-22 12:15</a>
-                                                </td>
-                                                <td class="c02">salah taamne</td>
-                                                <td class="c03">Manual save</td>
-                                                <td class="c04">
-                                                    <div id="flow_version_name_edit_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj_div">
-                                                        <a class="button" href="?action=flow.transit&amp;flow.flow=version_name_edit_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj&amp;flow.transition=edit&amp;flow.reloadFlow=version_name_edit_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj" id="btn1059"><span>Assign</span></a>
-                                                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1059","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script>
-                                                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1059","epoint.ow.flow.Utils.ajaxFlowHandler",null);},null,null);</script>
-                                                   </div>
-                                                    <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.flow.Utils.setCurrentState("version_name_edit_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj","view");},null,null);</script>
-                                                </td>
-                                                <td class="c05">
-                                                    <a class="button" target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj"><span>Preview</span></a>
-                                                </td>
-                                                <td class="c06"><form accept-charset="UTF-8" enctype="application/x-www-form-urlencoded" id="form_versions_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj" method="POST" name="form_versions_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj">
-                                                    <select class="select_field" onChange="epoint.ow.forms.Utils.fieldValueChanged(this)" id="form_versions_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj_select" name="form_versions_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj_select">
-                                                        <option id="form_versions_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj_select_" value="">More...</option>
-                                                        <option id="form_versions_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj_select_1" value="1">Export to XML</option>
-                                                        <option id="form_versions_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj_select_3" value="3">Create new model from this version</option>
-                                                        <option id="form_versions_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj_select_4" value="4">Delete version</option>
-                                                        <option id="form_versions_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj_select_5" value="5">Restore version</option>
-                                                    </select>
-                                                </form>
-                                                    <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {registerModelVersionActionSelectClickHandler("form_versions_ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj_select","{\"0\":\"\",\"1\":\"model_version_as_xml?gid=ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj\",\"2\":\"\",\"3\":\"?action=flow.transit&flow.flow=models&flow.transition=create_new_model_from_model_version&flow.reloadFlow=models&gid=ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj\",\"4\":\"?action=flow.transit&flow.flow=versions&flow.transition=delete_version&flow.reloadFlow=versions&gid=ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj\",\"5\":\"?action=flow.transit&flow.flow=versions&flow.transition=restore_version&flow.reloadFlow=versions&gid=ZjcrKD79Qvw0FGdTKeYt6TCQftne76djrMWST4NDo6i3QdRskjSfyHfl8JK5g6Cj\"}");},null,null);</script>
-                                                </td>
-                                            </tr>
-                                            <tr class="table_row_odd">
+                                                <td class="c04"><a class="button" target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/oGdetLq8pjHcoavNncz8crYI3bQ34b6mYxsDnT4FO881JwOySctO8FVCDGDQrIkE"><span>Edit</span></a></td>
+                                            </tr> -->
+                                           <!-- <tr class="table_row_odd">
                                                 <td class="c01">
                                                     <a target="_blank" href="/model-version-view/6hAY25fT5vSlN8rulB1TOQKdrnvhRVnvUcZsCJOXOEgCgku4UIl5sxSrAP6OMAqQ/lBRZX2qGLg5kK5eO6wX7Sd8s4SXpDJQPuVKwROxNE16HSYOaEaZMpdRYjyc7U0gW">2014-09-17 23:08</a>
                                                 </td>
@@ -704,18 +610,105 @@
                                                     </form>
                                                     <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {registerModelVersionActionSelectClickHandler("form_versions_BnBEdon09rv80qulrPKzrBhRF58IMBDoxAFrcAQEZHoxIaOOvcPToPdMox3x4V2l_select","{\"0\":\"\",\"1\":\"model_version_as_xml?gid=BnBEdon09rv80qulrPKzrBhRF58IMBDoxAFrcAQEZHoxIaOOvcPToPdMox3x4V2l\",\"2\":\"\",\"3\":\"?action=flow.transit&flow.flow=models&flow.transition=create_new_model_from_model_version&flow.reloadFlow=models&gid=BnBEdon09rv80qulrPKzrBhRF58IMBDoxAFrcAQEZHoxIaOOvcPToPdMox3x4V2l\",\"4\":\"?action=flow.transit&flow.flow=versions&flow.transition=delete_version&flow.reloadFlow=versions&gid=BnBEdon09rv80qulrPKzrBhRF58IMBDoxAFrcAQEZHoxIaOOvcPToPdMox3x4V2l\",\"5\":\"?action=flow.transit&flow.flow=versions&flow.transition=restore_version&flow.reloadFlow=versions&gid=BnBEdon09rv80qulrPKzrBhRF58IMBDoxAFrcAQEZHoxIaOOvcPToPdMox3x4V2l\"}");},null,null);</script>
                                                 </td>
-                                            </tr>
+                                            </tr> -->
                                             </tbody>
                                         </table>
+                                        <a class="button_primary" id="addSubject"><span>Add Subject</span></a>
+                                        <script>
+                                        $(document).ready(function(){
+                                          $("#addSubject").click(function(){
+                                            $("#newSubject").slideDown("slow");
+
+                                            });
+                                            });
+                                            </script>
+
                                         </div>
-                                        <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.table.Table.registerHandlers("table_versions");},null,null);</script>
+                                        @helper.form(action = routes.Application.insertSubject, 'enctype -> "multipart/form-data") {
+                                        <div id="newSubject" style="display: none;">
+
+                                            <table cellspacing="0" class="data_table" id="add_subject_table">
+                                                <tr class="row_1">
+                                                    <td class="cell_1">* Subject ID:</td>
+                                                    <td>
+                                                        <input class="text_field" size="10"  type="text" id="subject_id" maxlength="10" name="subject_id" prompttext="">
+                                                    </td>
+                                                    <td class="cell_1">Subject DOB:</td>
+                                                    <td>
+                                                        <input class="text_field" size="10"  type="date" id="subject_DOB" maxlength="10" name="subject_DOB" prompttext="">
+                                                    </td>
+                                                    <td class="cell_1">Subject gender:</td>
+                                                    <td>
+                                                        <input class="text_field" size="5" o type="text" id="subject_gender" maxlength="10" name="subject_gender" prompttext="">
+                                                    </td>
+                                                </tr>
+                                                <tr class="row_2">
+                                                    <td class="cell_1">STAI:</td>
+                                                    <td>
+                                                        <input class="text_field" size="10"  type="number" id="STAI" maxlength="10" name="STAI" prompttext="">
+                                                    </td>
+                                                    <td class="cell_1">PAS:</td>
+                                                    <td>
+                                                        <input class="text_field" size="10"  type="number" id="PAS" maxlength="10" name="PAS" prompttext="">
+                                                    </td>
+                                                    <td class="cell_1">NAS:</td>
+                                                    <td>
+                                                        <input class="text_field" size="5" o type="number" id="NAS" maxlength="10" name="NAS" prompttext="">
+                                                    </td>
+                                                    <td>
+                                                        <input id= "study_id" type="hidden" name="study_id" value=@studyId>
+                                                        <input type="submit" class="button_primary" id="addSub" name="InsertSubject" value="Save" />
+                                                    </td>
+                                                </tr>
+                                                <tr class="row_3">
+                                                    <td class="cell_1"></td>
+
+                                                    <td> </td>
+                                                    <td> </td>
+                                                    <td> </td>
+                                                    <td> </td>
+                                                </tr>
+
+                                            </table>
+                                            }
+
+                                          <!--   <script>
+                                            $(document).ready(function(){
+                                            $("#addSub").click(function(){
+
+                                            $.ajax({
+                                            type : 'POST',
+                                            url : '@routes.Application.insertSubject',
+                                            data : {
+                                            subject_id: $("input[name=subject_id]").val(),
+                                            study_id: $("input[name=studyId]").val(),
+                                            subject_DOB: $("input[name=subject_DOB]").val(),
+                                            STAI: $("input[name=STAI]").val(),
+                                            PAS: $("input[name=PAS]").val(),
+                                            NAS: $("input[name=NAS]").val()
+                                            },
+                                            success : function(data) {
+                                            alert('Sucess');
+                                            $("#sharingResult").html(data);
+                                            },
+                                            error : function(data) {
+                                            alert('Not Sucess');
+                                            $("#sharingResult").html(data);
+                                            setError('Make call failed');
+                                            }
+                                            });
+                                            return false;
+                                            });
+
+                                            //e.preventDefault();
+                                            });
+                                            </script> -->
+
+
+
+                                        </div>
+
                                         <div class="buttons">
-                                            <a class="button" href="?action=flow.transit&amp;flow.flow=versions&amp;flow.transition=more_versions&amp;flow.reloadFlow=versions" id="btn1062"><span>Older versions</span></a>
-                                            <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1062","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script>
-                                            <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1062","epoint.ow.flow.Utils.ajaxFlowHandler",null);},null,null);</script>
-                                            <a class="button" href="?action=flow.transit&amp;flow.flow=versions&amp;flow.transition=show_all_versions&amp;flow.reloadFlow=versions" id="btn1063"><span>Show all versions</span></a>
-                                            <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1063","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script>
-                                            <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn1063","epoint.ow.flow.Utils.ajaxFlowHandler",null);},null,null);</script>
                                         </div>
                                     </div>
                                     <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.flow.Utils.setCurrentState("versions","view");},null,null);</script>

@@ -25,6 +25,10 @@ object sal {
 
   println(fruit(1)._2);
 
+
+  val ss: List[(Int, String, Int)] = List((1,"sss",3))
+  println(ss(0)._2);
+
   var test: List[(Int, List[Int])] = List(1->List(1,2,17));
 
   val test2: List[Int] = (test(0)._2)

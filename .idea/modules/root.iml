@@ -64,7 +64,6 @@
     <orderEntry type="library" name="SBT: oauth.signpost:signpost-core:1.2.1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="SBT: org.apache.commons:commons-exec:1.1" level="project" />
     <orderEntry type="library" name="SBT: org.apache.commons:commons-lang3:3.1" level="project" />
-    <orderEntry type="library" name="SBT: org.apache.httpcomponents:httpclient:4.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="SBT: org.apache.httpcomponents:httpclient:4.3.1" level="project" />
     <orderEntry type="library" name="SBT: org.apache.httpcomponents:httpcore:4.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="SBT: org.apache.httpcomponents:httpcore:4.3" level="project" />
@@ -163,6 +162,13 @@
     <orderEntry type="library" name="SBT: org.apache.poi:poi-ooxml-schemas:3.9" level="project" />
     <orderEntry type="library" name="SBT: org.apache.xmlbeans:xmlbeans:2.4.0" level="project" />
     <orderEntry type="library" name="SBT: stax:stax-api:1.0.1" level="project" />
+    <orderEntry type="library" name="SBT: org.apache.httpcomponents:httpclient:4.0.1" level="project" />
+    <orderEntry type="library" name="SBT: com.google.api-client:google-api-client:1.18.0-rc" level="project" />
+    <orderEntry type="library" name="SBT: com.google.http-client:google-http-client:1.18.0-rc" level="project" />
+    <orderEntry type="library" name="SBT: com.google.oauth-client:google-oauth-client:1.18.0-rc" level="project" />
+    <orderEntry type="library" name="SBT: com.google.apis:google-api-services-drive:v2-rev145-1.18.0-rc" level="project" />
+    <orderEntry type="library" name="SBT: com.google.http-client:google-http-client-jackson2:1.15.0-rc" level="project" />
+    <orderEntry type="library" name="SBT: com.google.apis:google-api-services-oauth2:v2-rev41-1.15.0-rc" level="project" />
   </component>
 </module>
 

@@ -1,20 +1,13 @@
 $(document).ready(function(){
 
-
-
-/*jQuery('.tabs .tab-links a').on('click', function(e)  {
-        var currentAttrValue = jQuery(this).attr('href');
-
-        // Show/Hide Tabs
-        jQuery('.tabs ' + currentAttrValue).show().siblings().hide();
-
-        // Change/remove current tab to active
-        jQuery(this).parent('li').addClass('active').siblings().removeClass('active');
-
-        e.preventDefault();
-    });*/
-   //$(".chart").each(function(index, value) {
  $('.tabs .tab-links a').click(function() {
+
+   function intermediate ()
+                     {
+                        drawStuff(session, subject , name, studyId);
+                        showVideo(name);
+
+                     }
 
       //alert('1111');
       var currentAttrValue = $(this).attr('href');
@@ -32,31 +25,33 @@ $(document).ready(function(){
 
                var subject= $(this).attr('subject');
                var session = $(this).attr('session');
+               var studyId = $(this).attr('studyId');
                var name = session;
+               var occupied = $(this).attr('occupied');
 
+               if(occupied =="no")
+               {
+               $(this).attr("occupied", "yes");
                google.load('visualization', '1.0', { 'packages': ['corechart'], callback: intermediate});
                e.preventDefault();
 
               var videoDiv ="#"+name;
-                 function intermediate ()
-                  {
-                     drawStuff(session, subject , name);
-                     showVideo(name);
 
-                  }
-                 $(videoDiv).toggle();
+                 $(videoDiv).slideDown("slow");
+               }
             });
 
-});
-function drawStuff(task, subject, chartDestination) {
 
-    //alert('hello');
+});
+function drawStuff(task, subject, chartDestination, studyId) {
+
+
     var x = "RI_S004-001.Q_motion";
     var jsonData = $.ajax({
                          type: 'GET',
                          url: '/test',
                          dataType:"json",
-                         data: "task=" + task + "&subject=" + subject,
+                         data: "task=" + task + "&subject=" + subject + "&studyId=" + studyId,
                          async: false
                          }).responseText;
      // show that data that is recieved from method test as json, it has to be col and row
@@ -66,15 +61,17 @@ function drawStuff(task, subject, chartDestination) {
               title: 'Q-Sensor Singal',
                animation: {
                       duration: 1000,
-                      easing: 'out'
+                      easing: 'in'
                     },
-              backgroundColor: { fill:'transparent' }
+              backgroundColor: {
+               color: 'F0FFFF',
+              fill:'transparent' },
+              chartArea:{left:40,top:20,width:'50%',height:'75%'}
 
       };
 
     //instantiate and draw our chart, passing in the options
     var chartPlace = "#chart" + chartDestination;
-    //alert(chartPlace);
     var chart = new google.visualization.LineChart(document.querySelector(chartPlace));
     chart.draw(data, options);
 
@@ -103,5 +100,16 @@ function showVideo(num) {
                     $(videoBoard).slideUp();
                  }
                      });
-             $('#video1').html(' <source src= "assets/images/v.mp4" type="video/mp4">');
+               var v = "#video" + num;
+               var v2 = "#video" + num;
+               var vpath = "assets/images/" + num +".mp4";
+             $(v).attr("src", vpath);
+             $(v).attr("type", "video/mp4");
+             $(v).attr("preload","auto");
+
+             $(v2).attr("src", vpath);
+             $(v2).attr("type", "video/mp4");
+             $(v2).attr("preload","auto");
+
+             //$(v).html(' <source src= $vpath type="video/mp4">');
 }
