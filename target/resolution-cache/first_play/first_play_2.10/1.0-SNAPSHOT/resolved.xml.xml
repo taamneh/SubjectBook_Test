@@ -4,7 +4,7 @@
 		module="first_play_2.10"
 		revision="1.0-SNAPSHOT"
 		status="integration"
-		publication="20141008144314"
+		publication="20141022143551"
 	>
 		<description>
 		first_play
@@ -55,5 +55,7 @@
 		<dependency org="org.apache.xmlbeans" name="xmlbeans" rev="2.4.0" conf="compile->default(compile)"/>
 		<dependency org="org.apache.poi" name="poi-ooxml" rev="3.9" conf="compile->default(compile)"/>
 		<dependency org="org.apache.poi" name="poi-ooxml" rev="3.5-beta5" conf="compile->default(compile)"/>
+		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.7" conf="compile->default(compile)"/>
+		<dependency org="org.slf4j" name="jcl-over-slf4j" rev="1.7.7" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>

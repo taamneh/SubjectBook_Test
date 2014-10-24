@@ -8,14 +8,24 @@ GET     /index                           controllers.Application.index
 # Map static resources from the /public folder to the /assets URL path
 
 #change the name
-GET     /test                       controllers.Application.test(task, subject, studyId: Int)
+GET     /GetSignal                  controllers.Application.GetSignal(task, subject, studyId: Int, signal_type: Int)
 
 #to be deleted
 GET     /file                       controllers.Application.file
 
 GET     /                           controllers.Application.Login
 
+GET     /display                    controllers.Application.ReciveOuthData(state: String, code :String)
+
+GET    /login                      controllers.Application.authentication
+
 POST    /login                      controllers.Application.authentication
+
+GET     /createStudy                controllers.Application.CreateStudy()
+
+POST     /createStudy                controllers.Application.test()
+
+GET     /ShowDriveDialog            controllers.Application.ShowDriveDialog()
 
 POST    /logout                     controllers.Application.logout
 
@@ -38,8 +48,6 @@ POST     /allStudies                controllers.Application.displayStudies
 GET     /displaySubject             controllers.Application.displaySubject(studyNo: Int, SubjectId: String)
 
 GET     /editSubject                controllers.Application.editSubject(studyNo: Int, SubjectId: String)
-
-GET     /display                    controllers.Application.displayFortest
 
 POST    /upload                     controllers.Application.uploadFile
 

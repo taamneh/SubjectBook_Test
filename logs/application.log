@@ -1,9 +1,385 @@
-2014-10-08 15:58:14,095 - [INFO] - from play in pool-5-thread-9 
+2014-10-24 13:11:47,408 - [INFO] - from play in pool-4-thread-3 
 Listening for HTTP on /0:0:0:0:0:0:0:0:9000
 
-2014-10-08 15:58:26,347 - [INFO] - from play in play-internal-execution-context-1 
+2014-10-24 13:11:58,531 - [INFO] - from play in play-internal-execution-context-1 
 database [default] connected at jdbc:h2:mem:play
 
-2014-10-08 15:58:26,472 - [INFO] - from play in play-internal-execution-context-1 
+2014-10-24 13:11:58,574 - [ERROR] - from play in play-internal-execution-context-1 
+Referential integrity constraint violation: "STUDY_CREDENTIAL: PUBLIC.STUDY FOREIGN KEY(STUDY_OWNER) REFERENCES PUBLIC.CREDENTIAL(USERID) ('taamneh_07@hotmail.com')"; SQL statement:
+INSERT INTO study VALUES(1, 'Children', NOW(), 1, 'taamneh_07@hotmail.com' ) [23506-175] [ERROR:23506, SQLSTATE:23506]
+
+2014-10-24 13:11:58,581 - [ERROR] - from application in New I/O worker #1 
+
+
+! @6k1mbmc17 - Internal server error, for (GET) [/] ->
+
+play.api.db.evolutions.InconsistentDatabase: Database 'default' is in an inconsistent state![An evolution has not been applied properly. Please check the problem and resolve it manually before marking it as resolved.]
+	at play.api.db.evolutions.Evolutions$.checkEvolutionsState(Evolutions.scala:196) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.Evolutions$.applyScript(Evolutions.scala:296) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1$$anonfun$apply$1.apply$mcV$sp(Evolutions.scala:495) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.EvolutionsPlugin.withLock(Evolutions.scala:531) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1.apply(Evolutions.scala:485) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1.apply(Evolutions.scala:483) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at scala.collection.immutable.List.foreach(List.scala:318) ~[scala-library.jar:na]
+	at play.api.db.evolutions.EvolutionsPlugin.onStart(Evolutions.scala:483) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.collection.immutable.List.foreach(List.scala:318) ~[scala-library.jar:na]
+	at play.api.Play$$anonfun$start$1.apply$mcV$sp(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$$anonfun$start$1.apply(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$$anonfun$start$1.apply(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.utils.Threads$.withContextClassLoader(Threads.scala:21) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$.start(Play.scala:90) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:157) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.Option.map(Option.scala:145) ~[scala-library.jar:na]
+	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.util.Success.flatMap(Try.scala:200) ~[scala-library.jar:na]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:120) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) ~[scala-library.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) ~[scala-library.jar:na]
+
+2014-10-24 13:12:03,613 - [ERROR] - from application in New I/O worker #7 
+
+
+! @6k1mbmc17 - Internal server error, for (GET) [/] ->
+
+play.api.db.evolutions.InconsistentDatabase: Database 'default' is in an inconsistent state![An evolution has not been applied properly. Please check the problem and resolve it manually before marking it as resolved.]
+	at play.api.db.evolutions.Evolutions$.checkEvolutionsState(Evolutions.scala:196) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.Evolutions$.applyScript(Evolutions.scala:296) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1$$anonfun$apply$1.apply$mcV$sp(Evolutions.scala:495) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.EvolutionsPlugin.withLock(Evolutions.scala:531) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1.apply(Evolutions.scala:485) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1.apply(Evolutions.scala:483) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at scala.collection.immutable.List.foreach(List.scala:318) ~[scala-library.jar:na]
+	at play.api.db.evolutions.EvolutionsPlugin.onStart(Evolutions.scala:483) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.collection.immutable.List.foreach(List.scala:318) ~[scala-library.jar:na]
+	at play.api.Play$$anonfun$start$1.apply$mcV$sp(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$$anonfun$start$1.apply(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$$anonfun$start$1.apply(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.utils.Threads$.withContextClassLoader(Threads.scala:21) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$.start(Play.scala:90) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:157) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.Option.map(Option.scala:145) ~[scala-library.jar:na]
+	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.util.Success.flatMap(Try.scala:200) ~[scala-library.jar:na]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:120) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) ~[scala-library.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) ~[scala-library.jar:na]
+
+2014-10-24 13:12:11,372 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:h2:mem:play
+
+2014-10-24 13:12:11,378 - [ERROR] - from play in play-internal-execution-context-1 
+Referential integrity constraint violation: "SESSION_SUBJECT: PUBLIC.SESSION FOREIGN KEY(SUBJECT_SEQ) REFERENCES PUBLIC.SUBJECT(SUBJECT_SEQ) (24)"; SQL statement:
+INSERT INTO session VALUES(24,1,1,'DR', 'C:\\Users\\staamneh\\Desktop\\CPL-Lab\\System Desgin\\DataSource\\S005\\Difficult Reading\\RI_S005-001.Q_EDA', 1) [23506-175] [ERROR:23506, SQLSTATE:23506]
+
+2014-10-24 13:12:11,379 - [ERROR] - from application in New I/O worker #7 
+
+
+! @6k1mbn4ph - Internal server error, for (GET) [/] ->
+
+play.api.db.evolutions.InconsistentDatabase: Database 'default' is in an inconsistent state![An evolution has not been applied properly. Please check the problem and resolve it manually before marking it as resolved.]
+	at play.api.db.evolutions.Evolutions$.checkEvolutionsState(Evolutions.scala:196) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.Evolutions$.applyScript(Evolutions.scala:296) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1$$anonfun$apply$1.apply$mcV$sp(Evolutions.scala:495) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.EvolutionsPlugin.withLock(Evolutions.scala:531) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1.apply(Evolutions.scala:485) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1.apply(Evolutions.scala:483) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at scala.collection.immutable.List.foreach(List.scala:318) ~[scala-library.jar:na]
+	at play.api.db.evolutions.EvolutionsPlugin.onStart(Evolutions.scala:483) ~[play-jdbc_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.collection.immutable.List.foreach(List.scala:318) ~[scala-library.jar:na]
+	at play.api.Play$$anonfun$start$1.apply$mcV$sp(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$$anonfun$start$1.apply(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$$anonfun$start$1.apply(Play.scala:91) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.utils.Threads$.withContextClassLoader(Threads.scala:21) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.Play$.start(Play.scala:90) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:157) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.Option.map(Option.scala:145) ~[scala-library.jar:na]
+	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.util.Success.flatMap(Try.scala:200) ~[scala-library.jar:na]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:120) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) ~[scala-library.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) ~[scala-library.jar:na]
+
+2014-10-24 13:12:16,614 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:h2:mem:play
+
+2014-10-24 13:12:16,675 - [INFO] - from play in play-internal-execution-context-1 
 Application started (Dev)
+
+2014-10-24 13:15:23,632 - [DEBUG] - from application in play-akka.actor.default-dispatcher-9 
+Study: NSF Methodisthas been created
+
+2014-10-24 13:16:27,020 - [INFO] - from play in play-akka.actor.default-dispatcher-19 
+Starting application default Akka system.
+
+2014-10-24 13:21:59,503 - [DEBUG] - from application in play-akka.actor.default-dispatcher-30 
+Study: examhas been created
+
+2014-10-24 14:25:52,950 - [ERROR] - from application in play-akka.actor.default-dispatcher-51 
+
+
+! @6k1mlejk0 - Internal server error, for (GET) [/GetSignal?task=DR&subject=S001&studyId=2&signal_type=1] ->
+
+play.api.Application$$anon$1: Execution exception[[NullPointerException: in is null]]
+	at play.api.Application$class.handleError(Application.scala:296) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.DefaultApplication.handleError(Application.scala:402) [play_2.10-2.3.3.jar:2.3.3]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$14$$anonfun$apply$1.applyOrElse(PlayDefaultUpstreamHandler.scala:205) [play_2.10-2.3.3.jar:2.3.3]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$14$$anonfun$apply$1.applyOrElse(PlayDefaultUpstreamHandler.scala:202) [play_2.10-2.3.3.jar:2.3.3]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:33) [scala-library.jar:na]
+	at scala.util.Failure$$anonfun$recover$1.apply(Try.scala:185) [scala-library.jar:na]
+	at scala.util.Try$.apply(Try.scala:161) [scala-library.jar:na]
+	at scala.util.Failure.recover(Try.scala:185) [scala-library.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library.jar:na]
+	at play.api.libs.iteratee.Execution$trampoline$.execute(Execution.scala:46) [play-iteratees_2.10-2.3.3.jar:2.3.3]
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40) [scala-library.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248) [scala-library.jar:na]
+	at scala.concurrent.Promise$class.complete(Promise.scala:55) [scala-library.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153) [scala-library.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:23) [scala-library.jar:na]
+	at akka.dispatch.TaskInvocation.run(AbstractDispatcher.scala:41) [akka-actor_2.10-2.3.4.jar:na]
+	at akka.dispatch.ForkJoinExecutorConfigurator$AkkaForkJoinTask.exec(AbstractDispatcher.scala:393) [akka-actor_2.10-2.3.4.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library.jar:na]
+Caused by: java.lang.NullPointerException: in is null
+	at java.util.zip.ZipInputStream.<init>(Unknown Source) ~[na:1.7.0_67]
+	at java.util.zip.ZipInputStream.<init>(Unknown Source) ~[na:1.7.0_67]
+	at org.apache.poi.openxml4j.opc.ZipPackage.<init>(ZipPackage.java:83) ~[poi-ooxml-3.9.jar:3.9]
+	at org.apache.poi.openxml4j.opc.OPCPackage.open(OPCPackage.java:267) ~[poi-ooxml-3.9.jar:3.9]
+	at org.apache.poi.util.PackageHelper.open(PackageHelper.java:39) ~[poi-ooxml-3.9.jar:3.9]
+	at org.apache.poi.xssf.usermodel.XSSFWorkbook.<init>(XSSFWorkbook.java:204) ~[poi-ooxml-3.9.jar:3.9]
+	at Models.ReadExcelScala.fromExcelInputParallel(ReadExcelScala.scala:36) ~[classes/:na]
+	at Models.GoogleDrive.DownloadSignal(GoogleDrive.java:411) ~[classes/:na]
+	at controllers.Application$$anonfun$GetSignal$1.apply(Application.scala:623) ~[classes/:2.3.3]
+	at controllers.Application$$anonfun$GetSignal$1.apply(Application.scala:593) ~[classes/:2.3.3]
+	at play.api.mvc.ActionBuilder$$anonfun$apply$16.apply(Action.scala:433) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.ActionBuilder$$anonfun$apply$16.apply(Action.scala:432) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$.invokeBlock(Action.scala:556) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$.invokeBlock(Action.scala:555) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.ActionBuilder$$anon$1.apply(Action.scala:518) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4$$anonfun$apply$5.apply(Action.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4$$anonfun$apply$5.apply(Action.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.utils.Threads$.withContextClassLoader(Threads.scala:21) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4.apply(Action.scala:129) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4.apply(Action.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.Option.map(Option.scala:145) ~[scala-library.jar:na]
+	at play.api.mvc.Action$$anonfun$apply$1.apply(Action.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1.apply(Action.scala:121) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.libs.iteratee.DoneIteratee$$anonfun$mapM$2.apply(Iteratee.scala:705) ~[play-iteratees_2.10-2.3.3.jar:2.3.3]
+	at play.api.libs.iteratee.DoneIteratee$$anonfun$mapM$2.apply(Iteratee.scala:705) ~[play-iteratees_2.10-2.3.3.jar:2.3.3]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) [scala-library.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) [scala-library.jar:na]
+	... 6 common frames omitted
+
+2014-10-24 14:26:25,820 - [ERROR] - from application in play-akka.actor.default-dispatcher-52 
+
+
+! @6k1mlgga8 - Internal server error, for (GET) [/GetSignal?task=DR&subject=S001&studyId=2&signal_type=1] ->
+
+play.api.Application$$anon$1: Execution exception[[NullPointerException: in is null]]
+	at play.api.Application$class.handleError(Application.scala:296) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.DefaultApplication.handleError(Application.scala:402) [play_2.10-2.3.3.jar:2.3.3]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$14$$anonfun$apply$1.applyOrElse(PlayDefaultUpstreamHandler.scala:205) [play_2.10-2.3.3.jar:2.3.3]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$14$$anonfun$apply$1.applyOrElse(PlayDefaultUpstreamHandler.scala:202) [play_2.10-2.3.3.jar:2.3.3]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:33) [scala-library.jar:na]
+	at scala.util.Failure$$anonfun$recover$1.apply(Try.scala:185) [scala-library.jar:na]
+	at scala.util.Try$.apply(Try.scala:161) [scala-library.jar:na]
+	at scala.util.Failure.recover(Try.scala:185) [scala-library.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library.jar:na]
+	at play.api.libs.iteratee.Execution$trampoline$.execute(Execution.scala:46) [play-iteratees_2.10-2.3.3.jar:2.3.3]
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40) [scala-library.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248) [scala-library.jar:na]
+	at scala.concurrent.Promise$class.complete(Promise.scala:55) [scala-library.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153) [scala-library.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:23) [scala-library.jar:na]
+	at akka.dispatch.TaskInvocation.run(AbstractDispatcher.scala:41) [akka-actor_2.10-2.3.4.jar:na]
+	at akka.dispatch.ForkJoinExecutorConfigurator$AkkaForkJoinTask.exec(AbstractDispatcher.scala:393) [akka-actor_2.10-2.3.4.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library.jar:na]
+Caused by: java.lang.NullPointerException: in is null
+	at java.util.zip.ZipInputStream.<init>(Unknown Source) ~[na:1.7.0_67]
+	at java.util.zip.ZipInputStream.<init>(Unknown Source) ~[na:1.7.0_67]
+	at org.apache.poi.openxml4j.opc.ZipPackage.<init>(ZipPackage.java:83) ~[poi-ooxml-3.9.jar:3.9]
+	at org.apache.poi.openxml4j.opc.OPCPackage.open(OPCPackage.java:267) ~[poi-ooxml-3.9.jar:3.9]
+	at org.apache.poi.util.PackageHelper.open(PackageHelper.java:39) ~[poi-ooxml-3.9.jar:3.9]
+	at org.apache.poi.xssf.usermodel.XSSFWorkbook.<init>(XSSFWorkbook.java:204) ~[poi-ooxml-3.9.jar:3.9]
+	at Models.ReadExcelScala.fromExcelInputParallel(ReadExcelScala.scala:36) ~[classes/:na]
+	at Models.GoogleDrive.DownloadSignal(GoogleDrive.java:411) ~[classes/:na]
+	at controllers.Application$$anonfun$GetSignal$1.apply(Application.scala:623) ~[classes/:2.3.3]
+	at controllers.Application$$anonfun$GetSignal$1.apply(Application.scala:593) ~[classes/:2.3.3]
+	at play.api.mvc.ActionBuilder$$anonfun$apply$16.apply(Action.scala:433) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.ActionBuilder$$anonfun$apply$16.apply(Action.scala:432) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$.invokeBlock(Action.scala:556) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$.invokeBlock(Action.scala:555) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.ActionBuilder$$anon$1.apply(Action.scala:518) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4$$anonfun$apply$5.apply(Action.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4$$anonfun$apply$5.apply(Action.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.utils.Threads$.withContextClassLoader(Threads.scala:21) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4.apply(Action.scala:129) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4.apply(Action.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.Option.map(Option.scala:145) ~[scala-library.jar:na]
+	at play.api.mvc.Action$$anonfun$apply$1.apply(Action.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1.apply(Action.scala:121) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.libs.iteratee.DoneIteratee$$anonfun$mapM$2.apply(Iteratee.scala:705) ~[play-iteratees_2.10-2.3.3.jar:2.3.3]
+	at play.api.libs.iteratee.DoneIteratee$$anonfun$mapM$2.apply(Iteratee.scala:705) ~[play-iteratees_2.10-2.3.3.jar:2.3.3]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) [scala-library.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) [scala-library.jar:na]
+	... 6 common frames omitted
+
+2014-10-24 14:29:35,150 - [DEBUG] - from application in play-akka.actor.default-dispatcher-61 
+Study: Examhas been created
+
+2014-10-24 14:31:08,100 - [ERROR] - from application in play-akka.actor.default-dispatcher-68 
+
+
+! @6k1mm6hp6 - Internal server error, for (GET) [/GetSignal?task=DR&subject=S001&studyId=2&signal_type=1] ->
+
+play.api.Application$$anon$1: Execution exception[[NullPointerException: in is null]]
+	at play.api.Application$class.handleError(Application.scala:296) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.DefaultApplication.handleError(Application.scala:402) [play_2.10-2.3.3.jar:2.3.3]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$14$$anonfun$apply$1.applyOrElse(PlayDefaultUpstreamHandler.scala:205) [play_2.10-2.3.3.jar:2.3.3]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$14$$anonfun$apply$1.applyOrElse(PlayDefaultUpstreamHandler.scala:202) [play_2.10-2.3.3.jar:2.3.3]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:33) [scala-library.jar:na]
+	at scala.util.Failure$$anonfun$recover$1.apply(Try.scala:185) [scala-library.jar:na]
+	at scala.util.Try$.apply(Try.scala:161) [scala-library.jar:na]
+	at scala.util.Failure.recover(Try.scala:185) [scala-library.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library.jar:na]
+	at play.api.libs.iteratee.Execution$trampoline$.execute(Execution.scala:46) [play-iteratees_2.10-2.3.3.jar:2.3.3]
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40) [scala-library.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248) [scala-library.jar:na]
+	at scala.concurrent.Promise$class.complete(Promise.scala:55) [scala-library.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153) [scala-library.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:23) [scala-library.jar:na]
+	at akka.dispatch.TaskInvocation.run(AbstractDispatcher.scala:41) [akka-actor_2.10-2.3.4.jar:na]
+	at akka.dispatch.ForkJoinExecutorConfigurator$AkkaForkJoinTask.exec(AbstractDispatcher.scala:393) [akka-actor_2.10-2.3.4.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library.jar:na]
+Caused by: java.lang.NullPointerException: in is null
+	at java.util.zip.ZipInputStream.<init>(Unknown Source) ~[na:1.7.0_67]
+	at java.util.zip.ZipInputStream.<init>(Unknown Source) ~[na:1.7.0_67]
+	at org.apache.poi.openxml4j.opc.ZipPackage.<init>(ZipPackage.java:83) ~[poi-ooxml-3.9.jar:3.9]
+	at org.apache.poi.openxml4j.opc.OPCPackage.open(OPCPackage.java:267) ~[poi-ooxml-3.9.jar:3.9]
+	at org.apache.poi.util.PackageHelper.open(PackageHelper.java:39) ~[poi-ooxml-3.9.jar:3.9]
+	at org.apache.poi.xssf.usermodel.XSSFWorkbook.<init>(XSSFWorkbook.java:204) ~[poi-ooxml-3.9.jar:3.9]
+	at Models.ReadExcelScala.fromExcelInputParallel(ReadExcelScala.scala:36) ~[classes/:na]
+	at Models.GoogleDrive.DownloadSignal(GoogleDrive.java:411) ~[classes/:na]
+	at controllers.Application$$anonfun$GetSignal$1.apply(Application.scala:623) ~[classes/:2.3.3]
+	at controllers.Application$$anonfun$GetSignal$1.apply(Application.scala:593) ~[classes/:2.3.3]
+	at play.api.mvc.ActionBuilder$$anonfun$apply$16.apply(Action.scala:433) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.ActionBuilder$$anonfun$apply$16.apply(Action.scala:432) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$.invokeBlock(Action.scala:556) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$.invokeBlock(Action.scala:555) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.ActionBuilder$$anon$1.apply(Action.scala:518) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4$$anonfun$apply$5.apply(Action.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4$$anonfun$apply$5.apply(Action.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.utils.Threads$.withContextClassLoader(Threads.scala:21) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4.apply(Action.scala:129) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4.apply(Action.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.Option.map(Option.scala:145) ~[scala-library.jar:na]
+	at play.api.mvc.Action$$anonfun$apply$1.apply(Action.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1.apply(Action.scala:121) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.libs.iteratee.DoneIteratee$$anonfun$mapM$2.apply(Iteratee.scala:705) ~[play-iteratees_2.10-2.3.3.jar:2.3.3]
+	at play.api.libs.iteratee.DoneIteratee$$anonfun$mapM$2.apply(Iteratee.scala:705) ~[play-iteratees_2.10-2.3.3.jar:2.3.3]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) [scala-library.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) [scala-library.jar:na]
+	... 6 common frames omitted
+
+2014-10-24 15:50:44,430 - [ERROR] - from application in play-akka.actor.default-dispatcher-84 
+
+
+! @6k1n6ibe6 - Internal server error, for (GET) [/GetSignal?task=DR&subject=S001&studyId=2&signal_type=1] ->
+
+play.api.Application$$anon$1: Execution exception[[NullPointerException: in is null]]
+	at play.api.Application$class.handleError(Application.scala:296) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.DefaultApplication.handleError(Application.scala:402) [play_2.10-2.3.3.jar:2.3.3]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$14$$anonfun$apply$1.applyOrElse(PlayDefaultUpstreamHandler.scala:205) [play_2.10-2.3.3.jar:2.3.3]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$14$$anonfun$apply$1.applyOrElse(PlayDefaultUpstreamHandler.scala:202) [play_2.10-2.3.3.jar:2.3.3]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:33) [scala-library.jar:na]
+	at scala.util.Failure$$anonfun$recover$1.apply(Try.scala:185) [scala-library.jar:na]
+	at scala.util.Try$.apply(Try.scala:161) [scala-library.jar:na]
+	at scala.util.Failure.recover(Try.scala:185) [scala-library.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library.jar:na]
+	at play.api.libs.iteratee.Execution$trampoline$.execute(Execution.scala:46) [play-iteratees_2.10-2.3.3.jar:2.3.3]
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40) [scala-library.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248) [scala-library.jar:na]
+	at scala.concurrent.Promise$class.complete(Promise.scala:55) [scala-library.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153) [scala-library.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:23) [scala-library.jar:na]
+	at akka.dispatch.TaskInvocation.run(AbstractDispatcher.scala:41) [akka-actor_2.10-2.3.4.jar:na]
+	at akka.dispatch.ForkJoinExecutorConfigurator$AkkaForkJoinTask.exec(AbstractDispatcher.scala:393) [akka-actor_2.10-2.3.4.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library.jar:na]
+Caused by: java.lang.NullPointerException: in is null
+	at java.util.zip.ZipInputStream.<init>(Unknown Source) ~[na:1.7.0_67]
+	at java.util.zip.ZipInputStream.<init>(Unknown Source) ~[na:1.7.0_67]
+	at org.apache.poi.openxml4j.opc.ZipPackage.<init>(ZipPackage.java:83) ~[poi-ooxml-3.9.jar:3.9]
+	at org.apache.poi.openxml4j.opc.OPCPackage.open(OPCPackage.java:267) ~[poi-ooxml-3.9.jar:3.9]
+	at org.apache.poi.util.PackageHelper.open(PackageHelper.java:39) ~[poi-ooxml-3.9.jar:3.9]
+	at org.apache.poi.xssf.usermodel.XSSFWorkbook.<init>(XSSFWorkbook.java:204) ~[poi-ooxml-3.9.jar:3.9]
+	at Models.ReadExcelScala.fromExcelInputParallel(ReadExcelScala.scala:36) ~[classes/:na]
+	at Models.GoogleDrive.DownloadSignal(GoogleDrive.java:411) ~[classes/:na]
+	at controllers.Application$$anonfun$GetSignal$1.apply(Application.scala:623) ~[classes/:2.3.3]
+	at controllers.Application$$anonfun$GetSignal$1.apply(Application.scala:593) ~[classes/:2.3.3]
+	at play.api.mvc.ActionBuilder$$anonfun$apply$16.apply(Action.scala:433) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.ActionBuilder$$anonfun$apply$16.apply(Action.scala:432) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$.invokeBlock(Action.scala:556) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$.invokeBlock(Action.scala:555) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.ActionBuilder$$anon$1.apply(Action.scala:518) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4$$anonfun$apply$5.apply(Action.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4$$anonfun$apply$5.apply(Action.scala:130) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.utils.Threads$.withContextClassLoader(Threads.scala:21) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4.apply(Action.scala:129) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1$$anonfun$apply$4.apply(Action.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at scala.Option.map(Option.scala:145) ~[scala-library.jar:na]
+	at play.api.mvc.Action$$anonfun$apply$1.apply(Action.scala:128) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.mvc.Action$$anonfun$apply$1.apply(Action.scala:121) ~[play_2.10-2.3.3.jar:2.3.3]
+	at play.api.libs.iteratee.DoneIteratee$$anonfun$mapM$2.apply(Iteratee.scala:705) ~[play-iteratees_2.10-2.3.3.jar:2.3.3]
+	at play.api.libs.iteratee.DoneIteratee$$anonfun$mapM$2.apply(Iteratee.scala:705) ~[play-iteratees_2.10-2.3.3.jar:2.3.3]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) [scala-library.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) [scala-library.jar:na]
+	... 6 common frames omitted
 

@@ -32,5 +32,9 @@ libraryDependencies ++= Seq(
   "org.apache.poi"  % "poi" % "3.9",
   "org.apache.xmlbeans" % "xmlbeans"  % "2.4.0",
   "org.apache.poi"  % "poi-ooxml"  % "3.9",
-  "org.apache.poi"  % "poi-ooxml"  % "3.5-beta5"
+  "org.apache.poi"  % "poi-ooxml"  % "3.5-beta5",
+  "org.slf4j" % "slf4j-api"       % "1.7.7",
+  "org.slf4j" % "jcl-over-slf4j"  % "1.7.7"
 )
+
+//libraryDependencies ~= { _.map(_.exclude("ch.qos.logback", "logback-classic")) }

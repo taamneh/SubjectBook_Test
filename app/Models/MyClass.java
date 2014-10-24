@@ -10,16 +10,17 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 //import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.ParentReference;
+import com.google.api.services.drive.model.*;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Userinfo;
+import org.apache.poi.poifs.property.Child;
 //import com.google.api.services.oauth2.model.Userinfoplus;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +41,7 @@ class MyClass {
 
     private static final String CLIENTSECRETS_LOCATION = "C:\\Users\\staamneh\\Desktop\\CPL-Lab\\System Desgin\\first_play\\app\\client_secrets.json";
 
-    private static final String REDIRECT_URI = "http://www.cpl.uh.edu/";
+    private static final String REDIRECT_URI = "http://stressbook.ddns.net/display";
     private static final List<String> SCOPES = Arrays.asList(
             //"https://www.googleapis.com/auth/drive.file",
             "https://www.googleapis.com/auth/drive",
@@ -115,7 +116,7 @@ class MyClass {
     /**
      * Exception thrown when no user ID could be retrieved.
      */
-    private static class NoUserIdException extends Exception {
+    public static class NoUserIdException extends Exception {
     }
 
     /**
@@ -133,7 +134,7 @@ class MyClass {
     /**
      * Store OAuth 2.0 credentials in the application's database.
      *
-     * @param userId User's ID.
+     * @param userId      User's ID.
      * @param credentials The OAuth 2.0 credentials to store.
      */
     static void storeCredentials(String userId, Credential credentials) {
@@ -167,11 +168,11 @@ class MyClass {
      * Exchange an authorization code for OAuth 2.0 credentials.
      *
      * @param authorizationCode Authorization code to exchange for OAuth 2.0
-     *        credentials.
+     *                          credentials.
      * @return OAuth 2.0 credentials.
      * @throws CodeExchangeException An error occurred.
      */
-    static Credential  exchangeCode(String authorizationCode)
+    static Credential exchangeCode(String authorizationCode)
             throws CodeExchangeException {
         try {
             GoogleAuthorizationCodeFlow flow = getFlow();
@@ -373,6 +374,98 @@ class MyClass {
             // The file doesn't have any content stored on Drive.
             return null;
         }
+    }
+
+
+    static InputStream downloadFileByUrl(Drive service, String url) {
+        //if (file.getDownloadUrl() != null && file.getDownloadUrl().length() > 0) {
+            try {
+                HttpResponse resp =
+                        service.getRequestFactory().buildGetRequest(new GenericUrl(url))
+                                .execute();
+                return resp.getContent();
+            } catch (IOException e) {
+                // An error occurred.
+                e.printStackTrace();
+                return null;
+            }
+
+    }
+    /**
+     * Retrieve a list of File resources.
+     *
+     * @param service Drive API service instance.
+     * @return List of File resources.
+     */
+    static List<File> retrieveAllFiles(Drive service, String query) throws IOException {
+        List<File> result = new ArrayList<File>();
+        Drive.Files.List request = service.files().list();
+        request.setQ(query);
+        do {
+            try {
+                FileList files = request.execute();
+
+                result.addAll(files.getItems());
+                request.setPageToken(files.getNextPageToken());
+            } catch (IOException e) {
+                System.out.println("An error occurred: " + e);
+                request.setPageToken(null);
+            }
+        } while (request.getPageToken() != null &&
+                request.getPageToken().length() > 0);
+
+        return result;
+    }
+
+
+    /**
+     * Print files belonging to a folder.
+     *
+     * @param service Drive API service instance.
+     * @param folderId ID of the folder to print files from.
+     */
+   static void printFilesInFolder(Drive service, String folderId)
+            throws IOException {
+        Drive.Children.List request = service.children().list(folderId);
+        do {
+            try {
+                ChildList children = request.execute();
+
+                for (ChildReference child : children.getItems()) {
+                    System.out.println("File Id: " + child.getId());
+                    //test(service,child.getId());
+                }
+                request.setPageToken(children.getNextPageToken());
+            } catch (IOException e) {
+                System.out.println("An error occurred: " + e);
+                request.setPageToken(null);
+            }
+        } while (request.getPageToken() != null &&
+                request.getPageToken().length() > 0);
+    }
+
+    static List<String> returnFilesInFolder(Drive service, String folderId, String query)
+            throws IOException {
+        List<String> result = new ArrayList<String>();
+        Drive.Children.List request = service.children().list(folderId);
+        request.setQ(query);
+        do {
+            try {
+                ChildList children = request.execute();
+
+                for (ChildReference child : children.getItems()) {
+                    //System.out.println("File Id: " + child.getId());
+                    //test(service,child.getId());
+                    result.add(child.getId());
+                }
+                request.setPageToken(children.getNextPageToken());
+            } catch (IOException e) {
+                System.out.println("An error occurred: " + e);
+                request.setPageToken(null);
+            }
+        } while (request.getPageToken() != null &&
+                request.getPageToken().length() > 0);
+        return result;
     }
 
     // ...

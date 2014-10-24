@@ -1,4 +1,4 @@
-@(SubjectId: String, sub_sess: Map[String, List[( String, String)]], studyNo:Int, userName: String)
+@(SubjectId: String, sub_sess: Map[String, List[String]], studyNo:Int, userName: String, signals: List[Int])
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -241,23 +241,15 @@
 
                     <div class="tabs">
 
-                        <!-- <ul class="tab-links">
-                        @for((subject,sessions) <- sub_sess){
-                        @for(session <- sessions){
-                            <li><a href="#@session._1" id ="id@session._1" class="onesignal" subject="@subject" session="@session._1">Session: @session._1</a></li>
-                        }
-                        }
 
-                        </ul>
-                        -->
                         @import java.math.BigInteger; var i=1;
                         @for((subject,sessions) <- sub_sess){
                         <ul class="tab-links">
                             @for(session <- sessions){
                             @if(i == 1) {
-                            <li class="active"><a  href="#@session._1" id="link@session._1" class="onesignal" subject="@subject" session="@session._1" studyId=@studyNo  occupied ="no">@session._1</a></li>
+                            <li class="active"><a  href="#@session" id="link@session" class="onesignal" subject="@subject" session="@session" studyId=@studyNo  occupied ="no">@session</a></li>
                             } else {
-                            <li><a  href="#@session._1" id="link@session._1" class="onesignal" subject="@subject" session="@session._1" studyId=@studyNo  occupied ="no">@session._1</a></li>
+                            <li><a  href="#@session" id="link@session" class="onesignal" subject="@subject" session="@session" studyId=@studyNo  occupied ="no">@session</a></li>
                             }
                                 @{i = i + 1;}
 
@@ -273,17 +265,48 @@
                         <div class="tab-content">
                             @for((subject,sessions) <- sub_sess){
                                 @for(session <- sessions){
-                                <div id="@session._1" class="tab">
+                                <div id="@session" class="tab">
                                    <!-- <div style="float:left;border:1px solid; border-radius:25px;background:#F0FFFF;width:60%;"> -->
                                     <div>
-                                        <div id="chart@session._1" class="chart" style="width:100%" subject="@subject" session="@session._1">
-                                        </div>
-                                        <button id = "showvideo@session._1">Show Videos</button>
+                                        <!-- <div id="chart@session" class="chart" style="width:100%" subject="@subject" session="@session"> -->
+
+                                            @for(signal <- signals){
+
+                                            <div id="chart@session@signal" class="chart" style="width:100%" subject="@subject" session="@session" signal="@signal">
+
+                                            </div>
+                                            <a id = "dynamic@session@signal">Dynamic</a>
+
+                                            }
+
+                                                <!--<div id="edachart@session" class="chart" style="width:100%" subject="@subject" session="@session">
+
+                                                </div>
+                                                 <a id = "dynamiceda@session">Dynamic</a>
+                                                <div id="motionchart@session" class="chart" style="width:100%" subject="@subject" session="@session">
+
+                                                </div>
+                                                  <a id = "dynamicmotion@session">Dynamic</a>
+                                                <div id="perspirationchart@session" class="chart" style="width:100%" subject="@subject" session="@session">
+
+                                                </div>
+                                                <a id = "dynamicperspiration@session">Dynamic</a>
+                                                <div id="thermalbreathingchart@session" class="chart" style="width:100%" subject="@subject" session="@session">
+
+                                                </div>
+                                                <a id = "dynamicthermalbreathing@session">Dynamic</a>
+                                                <div id="beltbreathingchart@session" class="chart" style="width:100%" subject="@subject" session="@session">
+
+                                                </div>
+                                                <a id = "dynamicbeltbreathing@session">Dynamic</a>
+                                                -->
+                                        <!-- </div> -->
+                                                <!--  <button id = "showvideo@session">Show Videos</button> -->
                                         <br>
-                                        <div id="videoboard@session._1" hidden> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                            <video id= "video@session._1" width="350px" controls preload="auto" muted> Your browser does not support HTML5 video.
+                                        <div id="videoboard@session" hidden> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                            <video id= "video@session" width="350px" controls preload="auto" muted> Your browser does not support HTML5 video.
                                             </video>
-                                            <video id= "video1@session._1" width="350px" controls preload="auto" muted> Your browser does not support HTML5 video.
+                                            <video id= "video1@session" width="350px" controls preload="auto" muted> Your browser does not support HTML5 video.
                                             </video>
                                         </div>
                                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
