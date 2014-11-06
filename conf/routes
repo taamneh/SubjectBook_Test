@@ -3,31 +3,46 @@
 # ~~~~
 
 # Home page
-GET     /index                           controllers.Application.index
 
-# Map static resources from the /public folder to the /assets URL path
+GET     /                           controllers.Application.Main
 
-#change the name
+GET     /display                    controllers.Application.ReceiveOauthData(state: String, code :String)
+
+GET     /getInfo                    controllers.Application.getInfo(task, subject, studyId: Int, signal_type: Int)
+
+GET     /getPsycho                  controllers.Application.getPsycho(task, subject, studyId: Int, signal_type: Int)
+
 GET     /GetSignal                  controllers.Application.GetSignal(task, subject, studyId: Int, signal_type: Int)
 
-#to be deleted
+GET     /allStudies                controllers.Application.displayStudies
+
+GET     /showStudy/:studyNo         controllers.Application.showStudy(studyNo: Int)
+
+GET     /displaySubject             controllers.Application.displaySubject(studyNo: Int, SubjectId: String)
+
+GET     /createStudy                controllers.Application.ShowCreateStudyForm()
+
+POST     /createStudy                controllers.Application.InsertNewStudy()
+
+POST    /logout                     controllers.Application.logout
+
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET       /videoB                     controllers.Application.getVideo()
+
+GET       /video                     controllers.Application.getVideo2()
+
+# Orphans...
 GET     /file                       controllers.Application.file
-
-GET     /                           controllers.Application.Login
-
-GET     /display                    controllers.Application.ReciveOuthData(state: String, code :String)
 
 GET    /login                      controllers.Application.authentication
 
 POST    /login                      controllers.Application.authentication
 
-GET     /createStudy                controllers.Application.CreateStudy()
-
-POST     /createStudy                controllers.Application.test()
-
 GET     /ShowDriveDialog            controllers.Application.ShowDriveDialog()
-
-POST    /logout                     controllers.Application.logout
 
 GET     /signup                     controllers.Application.Register
 
@@ -37,15 +52,7 @@ POST    /InsertStudy                controllers.Application.shareMyStudy
 
 POST    /InsertSubject              controllers.Application.insertSubject
 
-POST    /Create                     controllers.Application.insertStudy
-
 POST    /InsertSession              controllers.Application.InsertSession
-
-GET     /allStudies                controllers.Application.displayStudies
-
-POST     /allStudies                controllers.Application.displayStudies
-
-GET     /displaySubject             controllers.Application.displaySubject(studyNo: Int, SubjectId: String)
 
 GET     /editSubject                controllers.Application.editSubject(studyNo: Int, SubjectId: String)
 
@@ -56,12 +63,3 @@ GET     /video                      controllers.Application.video
 
 GET     /editStudy/:studyId         controllers.Application.editStudy(studyId: Int)
 
-#to be deleted
-GET     /test/:img_no               controllers.Application.findImage(img_no: Int)
-
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
-
-#to be deleted
-
-
-GET     /showStudy/:studyNo                    controllers.Application.showStudy(studyNo: Int)

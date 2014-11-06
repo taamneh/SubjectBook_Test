@@ -1,4 +1,4 @@
-[0m[[31merror[0m] [0mC:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\app\assets\js\signalwithtab.js:137: Missing semicolon.[0m
-[0m[[31merror[0m] [0m   alert(chartDestination)[0m
-[0m[[31merror[0m] [0m                          ^[0m
+[0m[[31merror[0m] [0mC:\Users\staamneh\Desktop\CPL-Lab\System Desgin\first_play\app\assets\js\signalwithtab.js:207: Missing semicolon.[0m
+[0m[[31merror[0m] [0m     var charName= ""[0m
+[0m[[31merror[0m] [0m                     ^[0m
 [0m[[31merror[0m] [0mone error found[0m

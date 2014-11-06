@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head lang="en">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<video controls="controls" id = "v">
+    <!-- <source src="https://drive.google.com/uc?id=0B2TDTGk9sqZLNDRMbnNPMktwUHc&export=download" type='video/mp4'/> -->
+    <source src="/videoB" type='video/webm'/>
+    Your browser does not support the video tag.
+</video>
+
+<video controls="controls">
+    <source src="https://drive.google.com/uc?id=0B2TDTGk9sqZLbC1BMVgzcVE0WjA&export=download" type='video/mp4'/>
+</video>
+
+<div>
+
+</div>
+<button id = "salah">Show Videos</button>
+<script type="text/javascript">
+    $(document).ready(function(){
+ $('#salah').click(function() {
+
+
+   $('#v').attr("src", "https://www.youtube.com/watch?v=_qgn9TJEQNY" );
+
+            $.ajax({
+         url : '/videoB',
+         dataType : 'video/mp4',
+         type : 'get',
+         success : function(data) {
+           alert( data ); // alerts the response
+           $('#v').attr("src", data);
+         }
+});
+ });
+ });
+
+</script>
+
+<!-- <video controls="controls">
+    <source src="https://googledrive.com/host/0B2TDTGk9sqZLNDRMbnNPMktwUHc" type='video/mp4'/>
+</video> -->
+
+<a href="https://drive.google.com/uc?id=0B2TDTGk9sqZLNDRMbnNPMktwUHc&export=download">Click please</a>
+
+</body>
+</html>
+
+
+

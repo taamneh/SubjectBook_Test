@@ -32,7 +32,7 @@
             <li class="user dropdown_holder"><span class="dropdown"><span>@userName</span></span><div class="dropdown_menu_holder"><div class="dropdown_menu"><ul class="m"><li><a href="" id="btn31"><span>My account</span></a><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn31","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn31","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script></li></ul></div></div></li><li class="notifications"><div id="flow_notifications_layer_div"><div class="menu_item dropdown_holder"><a class="dropdown notifications" href="" id="btn32"><span></span></a><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn32","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn32","epoint.ow.flow.Utils.ajaxFlowHandler",null);},null,null);</script></div> <!-- <script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {pl.epoint.dbwm.war_user.notifications.startNotificationsLayerRefresh("?action=flow.transit&flow.flow=notifications_layer&flow.transition=refresh&flow.reloadFlow=notifications_layer&flow.disableMessagesAddons=true");},null,null);</script> --> </div><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.flow.Utils.setCurrentState("notifications_layer","collapsed");},null,null);</script></li><li class="logout"><a href="/logout" id="btn33"><span>Log out</span></a><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn33","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn33","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script></li>
         </ul>
         <ul class="links">
-            <li class="dropdown_holder expandable expand-priority-1"><span class="dropdown"><span>Modules</span></span><div class="dropdown_menu_holder"><div class="dropdown_menu"><ul class="m"><li><a href="/diagram">Diagram</a></li><li><a href="/allStudies" id="btn34"><span>My models</span></a><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn34","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn34","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script></li><li><a href="/sharing?action=flow.reset&amp;flow.flow=model_sharing" id="btn35"><span>Sharing</span></a><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn35","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn35","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script></li><li><a href="/recommend-us?action=flow.reset&amp;flow.flow=recommend_us" id="btn36"><span>Recommend us</span></a><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn36","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn36","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script></li></ul></div></div></li><li class="dropdown_holder" id="help-menu"><span class="dropdown"><span>Help</span></span>
+            <li class="dropdown_holder expandable expand-priority-1"><span class="dropdown"><span>Modules</span></span><div class="dropdown_menu_holder"><div class="dropdown_menu"><ul class="m"><li><a href="/diagram">Diagram</a></li><li><a href="/allStudies" id="btn34"><span>My models</span></a></li><li><a href="/sharing?action=flow.reset&amp;flow.flow=model_sharing" id="btn35"><span>Sharing</span></a><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn35","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn35","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script></li><li><a href="/recommend-us?action=flow.reset&amp;flow.flow=recommend_us" id="btn36"><span>Recommend us</span></a><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn36","epoint.ow.Utils.buttonDefaultsHandler",null);},90,null);</script><script type="text/javascript">oneweb.DocumentReadyManager.addOnewebAction(function() {epoint.ow.Utils.bindEvent("click","btn36","oneweb.CsrfTokenManager.postHandler",null,null);},null,null);</script></li></ul></div></div></li><li class="dropdown_holder" id="help-menu"><span class="dropdown"><span>Help</span></span>
             <div class="dropdown_menu_holder">
                 <div class="dropdown_menu">
                     <ul class="m">
@@ -102,7 +102,7 @@
                             <div class ="showontop" >
                             <form calss="salah" id="msform" method="post">
                                 <!-- progressbar -->
-                                @helper.form(action = routes.Application.test, 'enctype -> "multipart/form-data") {
+                                @helper.form(action = routes.Application.InsertNewStudy, 'enctype -> "multipart/form-data") {
                                 <ul class="taa" id="progressbar1">
                                     <li class="active">Data Source</li>
                                     <li>Biography Information</li>
@@ -153,7 +153,7 @@
                                         <tr>
                                             <td class="cell_1">* Sessions per subject:</td>
                                             <td>
-                                                <input type="number" class="text_field" name="numSess" min="1" max="100" value = 1>
+                                                <input type="number" class="text_field" name="numSess" min="0" max="100" value = 1>
                                             </td>
                                             </tr>
                                         <!-- <tr>
@@ -274,16 +274,16 @@
                                     <h3 class="fs-subtitle"></h3>
                                     <table cellspacing="0" class="data_table" id="add_sessions_table">
                                         <tr>
-                                            <td class="cell_1"> STAI Psychometrics: </td>
+                                            <td class="cell_1"> State-Trait Anxiety Inventory: </td>
                                             <td class="cell_2"><input type="checkbox" id="SAI" name="SAI" value=1 style="width: 20px">SAI&nbsp;&nbsp;&nbsp;&nbsp; </td>
-                                            <td class="cell_2"><input type="checkbox" id="PA" name="PA" value=10 style="width: 20px">PA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
-                                            <td class="cell_2"><input type="checkbox" id="NA" name="NA" value=100 style="width: 20px">NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                                            <td class="cell_2"><input type="checkbox" id="STAI_other" name="STAI_other" value=1000 style="width: 20px">Other</td>
+                                            <!--<td class="cell_2"><input type="checkbox" id="PA" name="PA" value=10 style="width: 20px">PA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td> -->
+                                            <!-- <td class="cell_2"><input type="checkbox" id="NA" name="NA" value=100 style="width: 20px">NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td> -->
+                                            <td class="cell_2"><input type="checkbox" id="TAI" name="STAI_other" value=1000 style="width: 20px">TAI</td>
                                         </tr>
                                         <tr>
-                                            <td class="cell_1"> Trait Psychometrics : </td>
-                                            <td class="cell_2"><input type="checkbox" id="TA" name="TA" value=10000 style="width: 20px">TA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
-                                            <td class="cell_2"><input type="checkbox" id="AB" name="AB" value=100000 style="width: 20px">AB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+                                            <td class="cell_1"> Positive and Negative Affect Scales: </td>
+                                            <td class="cell_2"><input type="checkbox" id="PA" name="PA" value=10000 style="width: 20px">PA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+                                            <td class="cell_2"><input type="checkbox" id="NA" name="NA" value=100000 style="width: 20px">NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
                                             <td class="cell_2"><input type="checkbox" id ="Trait_Other" name="Trait_Other" value=1000000 style="width: 20px">Other</td>
                                             <td class="cell_2"></td>
                                         </tr>
@@ -291,7 +291,7 @@
 
                                     <script>
                                                 $(document).ready(function(){
-                                                $('#SAI').change(function() {
+                                                    $('#SAI').change(function() {
                                                     if($(this).is(":checked")) {
                                                        var a =  parseInt($("#Psychometric").val()) + 1
                                                        $("#Psychometric").val(a.toString() );
@@ -303,7 +303,7 @@
                                                        }
                                                      });
 
-                                                     $('#PA').change(function() {
+                                                     $('#TAI').change(function() {
                                                      if($(this).is(":checked")) {
                                                        var a =  parseInt($("#Psychometric").val()) + 10
                                                        $("#Psychometric").val(a.toString() );
@@ -315,7 +315,7 @@
                                                        }
                                                      });
 
-                                                      $('#NA').change(function() {
+                                                      $('#PA').change(function() {
                                                      if($(this).is(":checked")) {
 
                                                        var a =  parseInt($("#Psychometric").val()) + 100
@@ -328,7 +328,7 @@
                                                        }
                                                      });
 
-                                                      $('#STAI_other').change(function() {
+                                                      $('#NA').change(function() {
                                                      if($(this).is(":checked")) {
 
                                                        var a =  parseInt($("#Psychometric").val()) + 1000
@@ -341,7 +341,7 @@
                                                        }
                                                      });
 
-                                                      $('#TA').change(function() {
+                                                      $('#Trait_Other').change(function() {
                                                      if($(this).is(":checked")) {
 
                                                        var a =  parseInt($("#Psychometric").val()) + 10000
@@ -350,32 +350,6 @@
                                                        else
                                                        {
                                                            var a =  parseInt($("#Psychometric").val()) - 10000
-                                                       $("#Psychometric").val(a.toString() );
-                                                       }
-                                                     });
-
-                                                      $('#AB').change(function() {
-                                                     if($(this).is(":checked")) {
-
-                                                       var a =  parseInt($("#Psychometric").val()) + 100000
-                                                       $("#Psychometric").val(a.toString() );
-                                                       }
-                                                       else
-                                                       {
-                                                           var a =  parseInt($("#Psychometric").val()) - 100000
-                                                       $("#Psychometric").val(a.toString() );
-                                                       }
-                                                     });
-
-                                                      $('#Trait_Other').change(function() {
-                                                     if($(this).is(":checked")) {
-
-                                                       var a =  parseInt($("#Psychometric").val()) + 1000000
-                                                       $("#Psychometric").val(a.toString() );
-                                                       }
-                                                       else
-                                                       {
-                                                           var a =  parseInt($("#Psychometric").val()) - 1000000
                                                        $("#Psychometric").val(a.toString() );
                                                        }
                                                      });

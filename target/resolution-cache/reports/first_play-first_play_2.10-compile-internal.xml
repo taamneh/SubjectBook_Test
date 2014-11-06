@@ -7,7 +7,7 @@
 		revision="1.0-SNAPSHOT"
 		conf="compile-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20141022143551"/>
+		date="20141104154711"/>
 	<dependencies>
 		<module organisation="org.apache.poi" name="poi-ooxml">
 			<revision name="3.9" status="release" pubdate="20121206092104" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://poi.apache.org/" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, runtime, master" position="80">
