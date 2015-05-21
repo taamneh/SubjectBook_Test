@@ -51,6 +51,7 @@ object DataBaseOperations extends Controller{
       refresh = id[String]("refresh_token");
 
 
+
     }
     var cred = new AccessRefreshString(access, refresh);
     /*val cred: Credential = new Credential(access);
@@ -59,19 +60,38 @@ object DataBaseOperations extends Controller{
     return cred;
   }
 
-  def GenerateStudyNoGD(StudyName: String, username: String, study_type : Int): Int = {
+  def GenerateStudyNoGD(StudyName: String, username: String, study_type : Int, public: Int): Int = {
 
     DB.withConnection { implicit c =>
-      Logger.debug("Study: " + StudyName + "has been created" );
       val rowOption = SQL("select coalesce(max(study_id),0) as c from study;").apply().head
       var ctr = rowOption[Long]("c");
       ctr = ctr + 1;
-      Logger.info("Study:" + StudyName + "has been created");
+
+      //var uuid = java.util.UUID.randomUUID.toString
+      //ctr = uuid.toLong;
+      Logger.info("Generate study Id for Study: " + StudyName );
       val id: Option[Long] =
-        SQL("insert into study values({study_id},{study_name},SYSDATE, {study_type}, {user});")
+        SQL("insert into study values({study_id},{study_name},NOW(), {study_type}, {user}, NULL);")
           .on('study_id -> ctr , 'study_name -> StudyName, 'study_type -> study_type, 'user -> username).executeInsert()
-      ctr.toInt;
+
+      if(public ==1) {
+        val id2: Option[Long] =
+          SQL("insert into privilege values({s_id}, 1, {user});")
+            .on('s_id -> ctr, 'user -> username).executeInsert()
+      }
+        ctr.toInt;
+
     }
+  }
+
+  def InsertStudyPortraitString(StudyNo: Int, queryString: String)= {
+
+    DB.withConnection { implicit c =>
+      val id: Int =
+        SQL("update study set portrait_string = {str} WHERE study_id={std};")
+          .on( 'str -> queryString, 'std -> StudyNo).executeUpdate()
+    }
+    Logger.debug("Study: " + StudyNo + "has been Updated with Portrait string" );
   }
 
   def InsertSubjectGD(subject: String,studyId :Int,bio_code:Int, psycho:Int,physio: Int): Unit = {
@@ -83,7 +103,7 @@ object DataBaseOperations extends Controller{
       ctr = ctr+1;
       //println("Salah CTR   :" + ctr)
       val id: Option[Long] =
-        SQL("insert into subject values({seq},{subject_id},{study_id},null, null, SYSDATE ,10,10,10,{a}, {b}, {c});")
+        SQL("insert into subject values({seq},{subject_id},{study_id},null, null, NOW() ,10,10,10,{a}, {b}, {c});")
           .on('seq -> ctr , 'subject_id -> subject, 'study_id -> studyId, 'a->bio_code ,'b ->psycho ,'c ->physio ).executeInsert()
     }
   }
@@ -96,14 +116,16 @@ object DataBaseOperations extends Controller{
         SQL("select subject_seq from subject where subject_id={sub_id} AND study_id={study_id};").on('sub_id -> subject, 'study_id-> studyId).apply().head
       val seq = rowOption1[Long]("subject_seq");
 
-      val rowOption2  =
+      /*val rowOption2  =
         SQL("select coalesce(max(session_no),0) as c from session where subject_seq={seq};").on('seq -> seq).apply().head
       var ctr = rowOption2[Long]("c");
-      ctr = ctr+1;
+      ct = ctr+1; */
+      val rowOption = SQL("select coalesce(max(signal_seq),0) as c from session where subject_seq={seq};").on('seq -> seq).apply().head;
+      var ctr = rowOption[Long]("c");
+      ctr = ctr + 1;
       val id: Option[Long] =
-      //INSERT INTO session VALUES(1,1,1,'BL', 'C:\\Users\\staamneh\\Desktop\\CPL-Lab\\System Desgin\\DataSource\\S001\\BaseLine Dexterity\\RI_S001-001.Q_EDA', 1);
-        SQL("insert into session values({seq},{sess_no},1 ,{sess_name}, {url},{signal_type});")
-          .on('seq -> seq, 'sess_name -> session_name, 'sess_no -> session_no,'url -> url, 'signal_type -> signal_type).executeInsert()
+        SQL("insert into session values({signal_seq}, {seq},{sess_no},1 ,{sess_name}, {url},'', {signal_type});")
+          .on( 'signal_seq -> {ctr}, 'seq -> seq, 'sess_name -> session_name, 'sess_no -> session_no,'url -> url, 'signal_type -> signal_type).executeInsert()
     }
   }
 
