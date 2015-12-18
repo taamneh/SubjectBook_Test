@@ -31,9 +31,10 @@ function drawStuff(task, subject, chartDestination) {
     var x = "RI_S004-001.Q_motion";
     var jsonData = $.ajax({
                          type: 'GET',
-                         url: '/test',
+                         url: '/displaySubject',
                          dataType:"json",
-                         data: "task=" + task + "&subject=" + subject,
+                         //data: "task=" + task + "&subject=" + subject ,
+                         data: "studyNo=1" + "&SubjectId=" + subject ,
                          async: false
                          }).responseText;
      // show that data that is recieved from method test as json, it has to be col and row

@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="JRI">
+    <CLASSES>
+      <root url="jar://C:/Program Files/R/R-3.2.2/library/rJava/jri/JRI.jar!/" />
+      <root url="jar://C:/Program Files/R/R-3.2.2/library/rJava/jri/JRIEngine.jar!/" />
+      <root url="jar://C:/Program Files/R/R-3.2.2/library/rJava/jri/REngine.jar!/" />
+      <root url="file://$PROJECT_DIR$" />
+    </CLASSES>
+    <JAVADOC />
+    <NATIVE>
+      <root url="jar://C:/Program Files/R/R-3.2.2/library/rJava/jri/JRI.jar!/" />
+    </NATIVE>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/app" />
+      <root url="file://$PROJECT_DIR$/target/scala-2.10/src_managed/main" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$" recursive="false" />
+  </library>
+</component>

@@ -1,0 +1,431 @@
+@(userName: String, sub_sess: List[( String)], studyNo:Int, study_name:String,  poratratParm: String)
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SubjectBook</title>
+
+    <link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/stylesheets/datepicker3.css" rel="stylesheet">
+    <link href="/assets/stylesheets/styles.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="/assets/javascripts/html5shiv.js"></script>
+    <script src="/assets/javascripts/respond.min.js"></script>
+    <![endif]-->
+
+
+    <script src="/assets/javascripts/jquery-1.11.1.min.js"></script>
+    <script src="/assets/javascripts/bootstrap.min.js"></script>
+    <script src="/assets/javascripts/chart.min.js"></script>
+    <script src="/assets/javascripts/chart-data.js"></script>
+    <script src="/assets/javascripts/easypiechart.js"></script>
+    <script src="/assets/javascripts/easypiechart-data.js"></script>
+    <script src="/assets/javascripts/bootstrap-datepicker.js"></script>
+
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><span>Subject</span>Book</a> <a class="navbar-brand" href="/allStudies"><span></span>My Studies</a>
+            <a class="navbar-brand" href="#"><span></span>Share</a>
+            <a class="navbar-brand" href="/frontPage"><span></span>Help</a>
+            <ul class="user-menu">
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> @userName <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                        <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+    <form role="search">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+        </div>
+    </form>
+    <ul class="nav menu">
+        <!-- <li><a href="index.html"><span class="glyphicon glyphicon-dashboard"></span> Dashboard</a></li>
+        <li><a href="widgets.html"><span class="glyphicon glyphicon-th"></span> Widgets</a></li>
+        <li class="active"><a href="charts.html"><span class="glyphicon glyphicon-stats"></span> Charts</a></li> -->
+        <li><a href="/allStudies"><span class="glyphicon glyphicon-th"></span> My Studies </a></li>
+        <li><a href="/createStudy"><span class="glyphicon glyphicon-pencil"></span> New Study</a></li>
+        <li><a href="/showAllDataTypes"><span class="glyphicon glyphicon-cog"></span> Manage your Data</a></li>
+        <li><a href="/showAllPsychometric"><span class="glyphicon glyphicon-cog"></span> Manage your Psychometric data</a></li>
+        <!-- <li><a href="panels.html"><span class="glyphicon glyphicon-info-sign"></span> Alerts &amp; Panels</a></li> -->
+        <li role="presentation" class="divider"></li>
+        <!-- <li><a href="login.html"><span class="glyphicon glyphicon-user"></span> Login Page</a></li> -->
+    </ul>
+    <!-- <div class="attribution">Template by <a href="http://www.medialoot.com/item/lumino-admin-bootstrap-template/">Medialoot</a></div> -->
+</div><!--/.sidebar-->
+
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main" id="placePortrait">
+    <div class="row">
+        <ol class="breadcrumb">
+                <li><a href="/allStudies"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li class="active"><a href="/showStudy/@studyNo">@study_name </a> </li>
+        </ol>
+    </div><!--/.row-->
+
+
+
+
+    <!-- <a id ="portart">Portart </a> -->
+
+    <!-- Use a container to wrap the slider, the purpose is to enable slider to always fit width of the wrapper while window resize -->
+    <div class="row">
+        <!-- Jssor Slider Begin -->
+        <!-- To move inline styles to css file/block, please specify a class name for each element. -->
+        <!-- ================================================== -->
+        <div id="slider1_container" style="display: none; position: relative; margin: 0 auto; width: 1140px; height: 442px; overflow: hidden;">
+
+            <!-- Loading Screen -->
+            <div u="loading" style="position: absolute; top: 0px; left: 0px;">
+                <div style="filter: alpha(opacity=70); opacity:0.7; position: absolute; display: block;
+
+                background-color: #000; top: 0px; left: 0px;width: 100%; height:100%;">
+                </div>
+                <div style="position: absolute; display: block; background: url(/assets/images/loading.gif) no-repeat center center;
+
+                top: 0px; left: 0px;width: 100%;height:100%;">
+                </div>
+            </div>
+
+            <!-- Slides Container -->
+            <div u="slides" style="cursor: move; position: absolute; left: 0px; top: 0px; width: 1140px; height: 442px;
+            overflow: hidden;">
+                <div>
+                    <img u="image" src2="/assets/images/general.jpg" />
+                </div>
+                <div>
+                    <img u="image" src2="/assets/images/sessions.jpg" />
+                </div>
+                <div>
+                    <img u="image" src2="/assets/images/sessions2.jpg" />
+                </div>
+                <div>
+                    <img u="image" src2="/assets/images/NASA.jpg" />
+                </div>
+                <div>
+                    <img u="image" src2="/assets/images/performance.jpg" />
+                </div>
+            </div>
+
+            <!--#region Bullet Navigator Skin Begin -->
+            <!-- Help: http://www.jssor.com/development/slider-with-bullet-navigator-jquery.html -->
+            <style>
+                /* jssor slider bullet navigator skin 05 css */
+                /*
+                .jssorb05 div           (normal)
+                .jssorb05 div:hover     (normal mouseover)
+                .jssorb05 .av           (active)
+                .jssorb05 .av:hover     (active mouseover)
+                .jssorb05 .dn           (mousedown)
+                */
+                .jssorb05 {
+                position: absolute;
+                }
+                .jssorb05 div, .jssorb05 div:hover, .jssorb05 .av {
+                position: absolute;
+                /* size of bullet elment */
+                width: 16px;
+                height: 16px;
+                background: url(/assets/images/b05.png) no-repeat;
+                overflow: hidden;
+                cursor: pointer;
+                }
+                .jssorb05 div { background-position: -7px -7px; }
+                .jssorb05 div:hover, .jssorb05 .av:hover { background-position: -37px -7px; }
+                .jssorb05 .av { background-position: -67px -7px; }
+                .jssorb05 .dn, .jssorb05 .dn:hover { background-position: -97px -7px; }
+            </style>
+            <!-- bullet navigator container -->
+            <div u="navigator" class="jssorb05" style="bottom: 16px; right: 6px;">
+                <!-- bullet navigator item prototype -->
+                <div u="prototype"></div>
+            </div>
+            <!--#endregion Bullet Navigator Skin End -->
+
+            <!--#region Arrow Navigator Skin Begin -->
+            <!-- Help: http://www.jssor.com/development/slider-with-arrow-navigator-jquery.html -->
+            <style>
+                /* jssor slider arrow navigator skin 11 css */
+                /*
+                .jssora11l                  (normal)
+                .jssora11r                  (normal)
+                .jssora11l:hover            (normal mouseover)
+                .jssora11r:hover            (normal mouseover)
+                .jssora11l.jssora11ldn      (mousedown)
+                .jssora11r.jssora11rdn      (mousedown)
+                */
+                .jssora11l, .jssora11r {
+                display: block;
+                position: absolute;
+                /* size of arrow element */
+                width: 37px;
+                height: 37px;
+                cursor: pointer;
+                background: url(/assets/images/a11.png) no-repeat;
+                overflow: hidden;
+                }
+                .jssora11l { background-position: -11px -41px; }
+                .jssora11r { background-position: -71px -41px; }
+                .jssora11l:hover { background-position: -131px -41px; }
+                .jssora11r:hover { background-position: -191px -41px; }
+                .jssora11l.jssora11ldn { background-position: -251px -41px; }
+                .jssora11r.jssora11rdn { background-position: -311px -41px; }
+            </style>
+            <!-- Arrow Left -->
+            <span u="arrowleft" class="jssora11l" style="top: 123px; left: 8px;">
+            </span>
+            <!-- Arrow Right -->
+            <span u="arrowright" class="jssora11r" style="top: 123px; right: 8px;">
+            </span>
+            <!--#endregion Arrow Navigator Skin End -->
+            <a style="display: none" href="http://www.jssor.com">Bootstrap Slider</a>
+        </div>
+        <!-- Jssor Slider End -->
+    </div>
+
+
+    <script type="text/javascript"  src="/assets/javascripts/jssor.slider.mini.js"></script>
+    <script>
+        jQuery(document).ready(function ($) {
+            var options = {
+                $AutoPlay: true,                                    //[Optional] Whether to auto play, to enable slideshow, this option must be set to true, default value is false
+                $AutoPlaySteps: 1,                                  //[Optional] Steps to go for each navigation request (this options applys only when slideshow disabled), the default value is 1
+                $AutoPlayInterval: 8000,                            //[Optional] Interval (in milliseconds) to go for next slide since the previous stopped if the slider is auto playing, default value is 3000
+                $PauseOnHover: 1,                                   //[Optional] Whether to pause when mouse over if a slider is auto playing, 0 no pause, 1 pause for desktop, 2 pause for touch device, 3 pause for desktop and touch device, 4 freeze for desktop, 8 freeze for touch device, 12 freeze for desktop and touch device, default value is 1
+
+                $ArrowKeyNavigation: true,   			            //[Optional] Allows keyboard (arrow key) navigation or not, default value is false
+                $SlideEasing: $JssorEasing$.$EaseOutQuint,          //[Optional] Specifies easing for right to left animation, default value is $JssorEasing$.$EaseOutQuad
+                $SlideDuration: 800,                                //[Optional] Specifies default duration (swipe) for slide in milliseconds, default value is 500
+                $MinDragOffsetToSlide: 20,                          //[Optional] Minimum drag offset to trigger slide , default value is 20
+                //$SlideWidth: 600,                                 //[Optional] Width of every slide in pixels, default value is width of 'slides' container
+                //$SlideHeight: 300,                                //[Optional] Height of every slide in pixels, default value is height of 'slides' container
+                $SlideSpacing: 0, 					                //[Optional] Space between each slide in pixels, default value is 0
+                $DisplayPieces: 1,                                  //[Optional] Number of pieces to display (the slideshow would be disabled if the value is set to greater than 1), the default value is 1
+                $ParkingPosition: 0,                                //[Optional] The offset position to park slide (this options applys only when slideshow disabled), default value is 0.
+                $UISearchMode: 1,                                   //[Optional] The way (0 parellel, 1 recursive, default value is 1) to search UI components (slides container, loading screen, navigator container, arrow navigator container, thumbnail navigator container etc).
+                $PlayOrientation: 1,                                //[Optional] Orientation to play slide (for auto play, navigation), 1 horizental, 2 vertical, 5 horizental reverse, 6 vertical reverse, default value is 1
+                $DragOrientation: 1,                                //[Optional] Orientation to drag slide, 0 no drag, 1 horizental, 2 vertical, 3 either, default value is 1 (Note that the $DragOrientation should be the same as $PlayOrientation when $DisplayPieces is greater than 1, or parking position is not 0)
+
+                $ArrowNavigatorOptions: {                           //[Optional] Options to specify and enable arrow navigator or not
+                    $Class: $JssorArrowNavigator$,                  //[Requried] Class to create arrow navigator instance
+                    $ChanceToShow: 2,                               //[Required] 0 Never, 1 Mouse Over, 2 Always
+                    $AutoCenter: 2,                                 //[Optional] Auto center arrows in parent container, 0 No, 1 Horizontal, 2 Vertical, 3 Both, default value is 0
+                    $Steps: 1,                                      //[Optional] Steps to go for each navigation request, default value is 1
+                    $Scale: false                                   //Scales bullets navigator or not while slider scale
+                },
+
+                $BulletNavigatorOptions: {                                //[Optional] Options to specify and enable navigator or not
+                    $Class: $JssorBulletNavigator$,                       //[Required] Class to create navigator instance
+                    $ChanceToShow: 2,                               //[Required] 0 Never, 1 Mouse Over, 2 Always
+                    $AutoCenter: 1,                                 //[Optional] Auto center navigator in parent container, 0 None, 1 Horizontal, 2 Vertical, 3 Both, default value is 0
+                    $Steps: 1,                                      //[Optional] Steps to go for each navigation request, default value is 1
+                    $Lanes: 1,                                      //[Optional] Specify lanes to arrange items, default value is 1
+                    $SpacingX: 12,                                   //[Optional] Horizontal space between each item in pixel, default value is 0
+                    $SpacingY: 4,                                   //[Optional] Vertical space between each item in pixel, default value is 0
+                    $Orientation: 1,                                //[Optional] The orientation of the navigator, 1 horizontal, 2 vertical, default value is 1
+                    $Scale: false                                   //Scales bullets navigator or not while slider scale
+                }
+            };
+
+            //Make the element 'slider1_container' visible before initialize jssor slider.
+            $("#slider1_container").css("display", "block");
+            var jssor_slider1 = new $JssorSlider$("slider1_container", options);
+
+            //responsive code begin
+            //you can remove responsive code if you don't want the slider scales while window resizes
+            function ScaleSlider() {
+                var parentWidth = jssor_slider1.$Elmt.parentNode.clientWidth;
+                if (parentWidth) {
+                    jssor_slider1.$ScaleWidth(parentWidth - 30);
+                }
+                else
+                    window.setTimeout(ScaleSlider, 30);
+            }
+            ScaleSlider();
+
+
+            $(window).bind("load", ScaleSlider);
+            $(window).bind("resize", ScaleSlider);
+            $(window).bind("orientationchange", ScaleSlider);
+            //responsive code end
+        });
+    </script>
+
+
+    <script>
+
+    function showPage(pageNo)
+    {
+     var el = document.getElementById('iframe');
+
+     var pages = '@poratratParm'.split("~");
+      var str = pages[pageNo-1];
+      var temp = str.match("subjects=\\d+");
+      var numberOfSubjects = temp[0].match("\\d+");
+
+      var height = Math.ceil(numberOfSubjects/3) * 157
+      var res = str.replace(/&amp;/g, '&');
+       el.height = height + "px";
+
+       var studyName = '@study_name'
+
+       if(studyName.toLowerCase().indexOf("toyota")> -1)
+           el.src = "http://kyeongan.cpl.uh.edu/projects/css/api/generator-portrait-toyota.php?" + res ;
+        else
+           el.src = "http://kyeongan.cpl.uh.edu/projects/css/api/generator-portrait.php?" + res ;
+
+
+    }
+    $( document ).ready(function() {
+            if('@poratratParm' != "")
+            {
+
+                var place = "placePortrait"
+                var pages = "@poratratParm".split("~");
+                var container = document.createElement('div');
+                container.setAttribute("class", "text-center");
+
+
+                var lst = document.createElement('ul');
+                lst.className = "pagination pagination-lg";
+                lst.setAttribute("id", "pag2");
+                if(pages.length > 1) {
+                 for (var i = 0; i < pages.length; i++) {
+                       var number = i +1
+                       var listItem = document.createElement('li');
+                       listItem.innerHTML = "<a href=\"#\" onclick=showPage("+ number +")>" + number + "</a>";
+                       lst.appendChild(listItem);
+                 }
+               }
+
+                var iframe = document.createElement('iframe');
+                var name = "iframe"
+                iframe.setAttribute("id", name);
+                iframe.width = "100%";
+                iframe.height = "2600px";
+                iframe.style.borderWidth =0
+                var str = pages[0];
+                var res = str.replace(/&amp;/g, '&');
+
+
+              var studyName = '@study_name'
+
+                if(studyName.toLowerCase().indexOf("toyota")> -1){
+                    iframe.src = "http://kyeongan.cpl.uh.edu/projects/css/api/generator-portrait-toyota.php?" + res ;
+
+                    }
+               else{
+                    iframe.src = "http://kyeongan.cpl.uh.edu/projects/css/api/generator-portrait.php?" + res ;
+                    $("#slider1_container").hide();
+                    }
+                document.getElementById(place).appendChild(iframe);
+                container.appendChild(lst);
+                document.getElementById(place).appendChild(container);
+
+
+            }
+            else
+            {  // to hide the slider when no portrait
+
+                 $("#slider1_container").hide();
+            }
+     });
+
+   /* paramList =  $.ajax({
+               type: 'GET',
+               url: "/portrait",
+               dataType:"text",
+               data: "studyId=" + @studyNo,
+                async: false
+     }).responseText;*/
+
+
+    </script>
+
+
+
+
+    @if(poratratParm == "") {
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Subjects</h1>
+        </div>
+    </div><!--/.row-->
+
+    <div class="row">
+    @for(subject <- sub_sess){
+        <div class="col-xs-12 col-md-6 col-lg-3">
+            <div class="panel panel-blue panel-widget ">
+                <div class="row no-padding">
+                    <div class="col-sm-3 col-lg-5 widget-left">
+                        <em class="glyphicon glyphicon-user glyphicon-l"></em>
+                    </div>
+                    <div class="col-sm-9 col-lg-7 widget-right">
+                        <div class="large">
+                            <a href="/displaySubject?studyNo=@studyNo&SubjectId=@subject">
+                                @subject
+                            </a>
+                        </div>
+                        <div class="text-muted">
+                            <!-- <a class="" href="#">
+                                <span class="glyphicon glyphicon-signal"></span> BL
+                            </a> -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+</div><!--/.row-->
+    }
+
+</div>	<!--/.main-->
+
+
+
+
+<script>
+		$('#calendar').datepicker({
+		});
+
+		!function ($) {
+		    $(document).on("click","ul.nav li.parent > a > span.icon", function(){          
+		        $(this).find('em:first').toggleClass("glyphicon-minus");      
+		    }); 
+		    $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+	</script>
+</body>
+
+</html>

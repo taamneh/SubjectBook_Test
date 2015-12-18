@@ -21,11 +21,43 @@ object index extends BaseScalaTemplate[play.twirl.api.HtmlFormat.Appendable,Form
 
 Seq[Any](format.raw/*1.19*/("""
 
-"""),_display_(/*3.2*/main("My First Play Project ")/*3.32*/ {_display_(Seq[Any](format.raw/*3.34*/("""
+"""),_display_(/*3.2*/main(message)/*3.15*/ {_display_(Seq[Any](format.raw/*3.17*/("""
 
-    """),_display_(/*5.6*/message),format.raw/*5.13*/("""
 
-""")))}),format.raw/*7.2*/("""
+
+   """),format.raw/*7.4*/("""<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+   <script type='text/javascript' src='"""),_display_(/*9.41*/routes/*9.47*/.Assets.at("js/drawchart.js")),format.raw/*9.76*/("""'></script>
+   <script type='text/javascript' src='"""),_display_(/*10.41*/routes/*10.47*/.Assets.at("js/changevideo.js")),format.raw/*10.78*/("""'></script>
+
+
+   <script type='text/javascript' src='"""),_display_(/*13.41*/routes/*13.47*/.Assets.at("js/Intialization.js")),format.raw/*13.80*/("""'></script>
+   <script type='text/javascript' src='"""),_display_(/*14.41*/routes/*14.47*/.Assets.at("js/buildtree.js")),format.raw/*14.76*/("""'></script>
+
+
+  <div style="background:#A0A0A0 ">
+      <img src='"""),_display_(/*18.18*/routes/*18.24*/.Assets.at("images/cpllogo.png")),format.raw/*18.56*/("""' alt="Mountain View" style="width:214px;height:123px">
+  </div>
+
+<br>
+<br>
+<br>
+<div id="parent" style="border:1px solid;width:100%; float: left" >
+    <br>
+<div class="css-treeview" style="float:left;width:20%;height:1000px;">
+    <button id = "cv2"> Build the Tree </button>
+    <ul>
+        <li><input type="checkbox" id="item-0" /><label for="item-0">Children Study</label>
+            <ul class ="subjects">
+                <!--<ul id="signal"><li><a>Run 1</a></li></ul></li></ul> -->
+            </ul>
+        </li>
+    </ul>
+</div>
+     <div class="SubjectsDock">
+     </div>
+</div>
+  """)))}),format.raw/*39.4*/("""
 """))}
   }
 
@@ -38,11 +70,11 @@ Seq[Any](format.raw/*1.19*/("""
 }
               /*
                   -- GENERATED --
-                  DATE: Sat Aug 30 01:27:22 CDT 2014
-                  SOURCE: C:/Users/Salah/first_play/app/views/index.scala.html
-                  HASH: c3507cc472fbab26fcd8ec3b3cca7623c928f4f3
-                  MATRIX: 505->1|610->18|638->21|676->51|715->53|747->60|774->67|806->70
-                  LINES: 19->1|22->1|24->3|24->3|24->3|26->5|26->5|28->7
+                  DATE: Wed Dec 09 22:04:13 CST 2015
+                  SOURCE: C:/first_play/app/views/index.scala.html
+                  HASH: 9d9d5d97ed5d9a41c3518ccadc4e81318eb3abe7
+                  MATRIX: 505->1|610->18|638->21|659->34|698->36|731->43|982->268|996->274|1045->303|1124->355|1139->361|1191->392|1272->446|1287->452|1341->485|1420->537|1435->543|1485->572|1579->639|1594->645|1647->677|2271->1271
+                  LINES: 19->1|22->1|24->3|24->3|24->3|28->7|30->9|30->9|30->9|31->10|31->10|31->10|34->13|34->13|34->13|35->14|35->14|35->14|39->18|39->18|39->18|60->39
                   -- GENERATED --
               */
           

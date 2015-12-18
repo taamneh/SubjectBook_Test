@@ -1,8 +1,27 @@
-@(SubjectId: String, sub_sess: Map[String, List[String]], studyNo:Int, userName: String, signals: List[Int])
+@(SubjectId: String, sub_sess: Map[String, List[String]], studyNo:Int, userName: String, signals: List[Int], videos:  Map[String, List[ String]], study_type: Int, sub_sess_menu: Map[String, List[String]], studyName: String)
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html itemscope="" itemtype="http://schema.org/WebPage" lang="en">
 <head>
+
+    <style type="text/css">
+
+
+        #fooObject {
+        /* simple box */
+        position:absolute;
+        left:0px;
+        top:8em;
+        width:0em;
+        line-height:10em;
+        background:#99ccff;
+        border:1px 0px 0px 0px solid #003366;
+        white-space:nowrap;
+        padding:0.5em;
+        border-radius: 25px;
+        }
+
+    </style>
 
     <meta charset="UTF-8">
     <!-- <script type="text/javascript" src="/assets/js/jquery-1.9.0.min.js"></script> -->
@@ -24,17 +43,14 @@
     <link rel="stylesheet" href="/assets/stylesheets/portrat.css" type="text/css" />
 
 
-    <!--<link rel="stylesheet" type="text/css" href="/assets/stylesheets/datePicker.css"> -->
     <link rel="stylesheet" type="text/css" href="/assets/stylesheets/oneweb.css">
-    <!--<link rel="stylesheet" type="text/css" href="/assets/stylesheets/dbwm.css">-->
     <link rel="stylesheet" type="text/css" href="/assets/stylesheets/jquery-ui-1.9.2.css">
     <link rel="stylesheet" type="text/css" href="/assets/stylesheets/modeler.css">
 
 </head>
-<body>
-
-<div id="wrapper">
-<table class="border_layout" style="border:1px solid;width:100%;">
+<body style="border:1px solid;width:100%; height=100%;">
+<div id="wrapper" >
+<table class="border_layout" style="border:1px solid;width:100%; height=100%">
 <tr>
     <td class="border_layout_north" colspan="3">
         <div class="border_layout_north">
@@ -42,7 +58,7 @@
 
 
                 <div id="header">
-                    <a class="logo" href="http://www.cpl.uh.edu/"><img alt="Vertabelo Logo" width="70" height="40"  src="/assets/images/cpllogo.png"></a>
+                    <a class="logo" href="http://www.cpl.uh.edu/"><img alt="CPL Logo" width="70" height="40"  src="/assets/images/cpllogo.png"></a>
                     <ul class="user_menu"> <li class="user dropdown_holder"><span class="dropdown"><span>@userName</span></span> <div class="dropdown_menu_holder"><div class="dropdown_menu"><ul class="m"><li><a href="/my-account?action=flow.reset&amp;flow.flow=my_account" id="btn31"><span>My account</span></a> </li> </ul></div></div></li><li class="notifications"><div id="flow_notifications_layer_div"><div class="menu_item dropdown_holder"><a class="dropdown notifications" href="?action=flow.transit&amp;flow.flow=notifications_layer&amp;flow.transition=expanded&amp;flow.reloadFlow=notifications_layer" id="btn32"><span></span></a></div></div></li><li class="logout"><a href="/logout" id="btn33"><span>Log out</span></a></li></ul>
                     <ul class="links">
                         <li class="dropdown_holder expandable expand-priority-1"><span class="dropdown"><span>Modules</span></span><div class="dropdown_menu_holder"><div class="dropdown_menu"><ul class="m"><li><a href="/diagram">Diagram</a></li><li><a href="/allStudies"  id="btn34"><span>My models</span></a></li><li><a href="/sharing?action=flow.reset&amp;flow.flow=model_sharing" id="btn35"><span>Sharing</span></a></li><li><a href="/recommend-us?action=flow.reset&amp;flow.flow=recommend_us" id="btn36"><span>Recommend us</span></a></li></ul></div></div></li><li class="dropdown_holder" id="help-menu"><span class="dropdown"><span>Help</span></span>
@@ -135,12 +151,13 @@
             </table> -->
         </div>
     </td>
+
 </tr>
 <tr>
-    <td class="border_layout_west" id="left-panel">
+    <td class="border_layout_west" id="left-panel" >
         <div class="border_layout_west">
-            <div class="accordion">
-                <div class="block">
+            <div class="accordion" >
+                <div class="block" >
                     <div class="header">
                         <h2>Study Structure</h2>
                     </div>
@@ -150,13 +167,59 @@
                             <button class="handy-menu-find-in-area-button" type="button">Find in {{area}}</button>
                         </script>
                         <div class="tree">
-                            <div class="tree_title">Model</div>
+                            <div class="tree_title">@studyName Study [<a href="/showStudy/@studyNo"> Portrait View</a>]</div>
                             <ul>
                                 <li>
                                     <div id="table-list-root-node"><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label">Subjects</span><span class="context-menu-trigger" data-label="table" data-what="tables"></span></div>
                                     <ul id="table-list">
+                                        <p hidden id = "studyNo" value = "123" subject ="S001">@studyNo</p>
+                                        @for((subject,sessions) <- sub_sess_menu){
+                                        <!-- <li><input type="checkbox" id="item-0-2" />@subject<label for="item-0"></label> -->
+                                        <li> <div ><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label"><a href="/displaySubject?studyNo=@studyNo&SubjectId=@subject">@subject </a></span><span class="context-menu-trigger" data-label="table" data-what="tables"></span></div>
+                                            <ul>
+                                                @for(session <- sessions){
+                                                <!-- <li><input type="checkbox" id="item-0-0-23" /><label for="item-0">@session</label> <ul id="@subject@session"> <li class="inner" subject=@subject session=@session><a >Run 1</a></li> </ul></li> -->
+
+                                                <li><div ><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label"><a href="/displaySubject?studyNo=@studyNo&SubjectId=@subject#@session">@session </a></span><span class="context-menu-trigger" data-label="table" data-what="tables"></span></div>
+                                                    <!-- <ul id="@subject@session">
+                                                         <li>
+                                                             <div><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span>
+                                                                 <div class="inner" subject=@subject session=@session > <span class="label">Run 1</span> </div>
+
+                                                                 <span class="context-menu-trigger" data-label="table" data-what="tables"></span>
+                                                             </div>
+                                                         </li>
+                                                     </ul> -->
+                                                </li>
+
+                                                <!-- <li> <div ><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label">@subject</span><span class="context-menu-trigger" data-label="table" data-what="tables"></span></div> -->
+                                                }
+
+                                            </ul>
+                                        </li>
+                                        }
+                                        <!-- </ul> -->
+                                        <!-- </li> -->
                                     </ul>
                                 </li>
+                                <!--<li>
+                                    <div id="reference-list-root-node"><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label">References</span><span class="context-menu-trigger" data-label="reference" data-what="references"></span></div><ul id="reference-list"></ul>
+                                </li>
+                                <li>
+                                    <div id="sequence-list-root-node"><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label">Sequences</span><span class="context-menu-trigger" data-label="sequence" data-what="sequences"></span></div><ul id="sequence-list"></ul>
+                                </li>
+                                <li><div id="note-list-root-node"><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label">Text notes</span><span class="context-menu-trigger" data-label="note" data-what="notes"></span></div><ul id="note-list"></ul>
+                                </li>
+                                <li><div id="view-list-root-node"><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label">Views</span><span class="context-menu-trigger" data-label="view" data-what="views"></span></div><ul id="view-list"></ul>
+                                </li>
+                                <li><div id="area-list-root-node"><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label">Subject areas</span><span class="context-menu-trigger" data-label="area" data-what="areas"></span></div>
+                                    <ul id="area-list">
+                                        <li>
+                                            <div id="area-list-root-node"><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label">Subject areas</span><span class="context-menu-trigger" data-label="area" data-what="areas"></span></div>
+                                        </li>
+                                    </ul>
+
+                                </li> -->
                             </ul>
                         </div>
                     </div>
@@ -164,6 +227,7 @@
             </div>
         </div>
     </td>
+
 
     <td class="border_layout_center">
         <div class="border_layout_center" >
@@ -188,7 +252,9 @@
                         <div class="tab-content" style="overflow:scroll; height:800px;">
                             @for((subject,sessions) <- sub_sess){
                                 @for(session <- sessions){
+
                                 <div id="@session" class="tab">
+                                    <fieldset>
                                     <h2>Subject: @SubjectId </h2>
                                     <br>
                                   <div id="bio@session">
@@ -221,36 +287,63 @@
                                             </tr>
                                         </table>
                                     </div>
-
                                     <br><br>
 
                                     <div>
 
-                                            @for(signal <- signals){
+                                        @for(signal <- signals){
                                         @if(signal < 8) {
-                                        <div  id="dashboard_div@session@signal">
-                                            <div id="filter_div@session@signal"></div>
-                                            <div id="chart@session@signal" class="chart" style="width:100%" subject="@subject" session="@session" signal="@signal">
+                                        <div id="Combo" style="border-style: solid;  border-radius: 15px; border-color: #636363;">
 
-                                            </div>
+                                                <div  id="dashboard_div@session@signal">
+                                                    <div id="chart@session@signal" class="chart" style="width: 915px; height: 200px;" subject="@subject" session="@session" signal="@signal">
+                                                    </div>
+                                                    <div id="filter_div@session@signal" style="width: 915px; height: 50px;"></div>
+                                                </div>
+                                                <br>
+                                                <!-- &nbsp; &nbsp; &nbsp; &nbsp;  <a id = "dynamic@session@signal">Dynamic</a><button id = "showvideo@session@signal">Show Videos</button><button id = "editchart@session@signal">Edit Chart</button>  <br> -->
+                                                &nbsp; &nbsp; &nbsp; &nbsp;  <a id = "dynamic@session@signal">Dynamic</a><a id = "showvideo@session@signal">Show Videos</a><a id = "editchart@session@signal">Edit Chart</a>  <br>
+                                            <br>
+                                                <div id="videoboard@session@signal" name="videoboard@session@signal" style="position:relative; left: 40px; width: 915px; height: 300px; overflow-x:scroll; white-space: nowrap;" hidden>
+                                                    <!-- <video id= "video@session" width="350px" controls preload="auto" muted> Your browser does not support HTML5 video.
+                                                    </video>
+                                                    <video id= "video1@session" width="350px" controls preload="auto" muted> Your browser does not support HTML5 video.
+                                                    </video> -->
+                                                    @{import java.math.BigInteger; var i=1};
+                                                    @for((sess,videoList) <- videos){
+                                                    @if(sess == session) {
+                                                    @for(video <- videoList){
+                                                    @if(study_type == 1) {
+                                                    <object id="@video">
+                                                        <param name='movie' value='https://video.google.com/get_player?docid=0B2TDTGk9sqZLQjlxcVRxYUNqOFE&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1'></param>
+                                                        <param name='allowFullScreen' value='true'></param>
+                                                        <param name='allowScriptAccess' value='always'></param>
+                                                        <embed id='video@video@signal' src='https://video.google.com/get_player?docid=@video&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1&amp;color=white&amp;autoplay=0&amp;enablejsapi=1&amp;playerapiid=video@video@signal' type='application/x-shockwave-flash' allowfullscreen='true' allowScriptAccess='always' width='350' height='250'></embed>
+                                                    </object>
+                                                    } else {
+                                                    <object width='400' height='250' id="@video">
+                                                        <embed src='@video' type='video/x-ms-wm' allowfullscreen='true' play ='false' autostart="false"  allowScriptAccess='always' width='350' height='250'></embed></object>
+                                                    }
+                                                    @{i = i + 1;}
+                                                    }
+                                                    }
+                                                    }
+                                                    <br>
+                                                    <a id = "stopvideo@session@signal">Stop Videos</a>
+                                                </div>
+                                           <!-- <div id="fooObject">
+                                                <p> p</p>
+                                            </div> -->
                                         </div>
-                                        <br>
-                                            <a id = "dynamic@session@signal">Dynamic</a>
-                                        <br><br><br>
+                                        <br><br><br> <br><br><br>
                                                }
                                             }
 
-                                        <button id = "showvideo@session">Show Videos</button>
-                                        <br>
-                                        <div id="videoboard@session" hidden> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                            <video id= "video@session" width="350px" controls preload="auto" muted> Your browser does not support HTML5 video.
-                                            </video>
-                                            <video id= "video1@session" width="350px" controls preload="auto" muted> Your browser does not support HTML5 video.
-                                            </video>
-                                        </div>
+
                                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                     </div>
                                     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                                        </fieldset>
                                 </div>
                                }
                             }
@@ -258,12 +351,7 @@
                         </div>
                     </div>
 
-                <!-- </div> -->
-                <div id="preview">
 
-                </div>
-            </div>
-            <div id="diagram_as_image" style="display:none">
             </div>
         </div>
     </td>

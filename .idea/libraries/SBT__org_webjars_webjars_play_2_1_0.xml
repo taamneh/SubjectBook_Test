@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="SBT: org.webjars:webjars-play:2.1.0">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/.ivy2/cache/org.webjars/webjars-play/jars/webjars-play-2.1.0.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

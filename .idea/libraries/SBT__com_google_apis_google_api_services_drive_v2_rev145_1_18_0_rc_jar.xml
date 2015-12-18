@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SBT: com.google.apis:google-api-services-drive:v2-rev145-1.18.0-rc:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.google.apis/google-api-services-drive/jars/google-api-services-drive-v2-rev145-1.18.0-rc.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

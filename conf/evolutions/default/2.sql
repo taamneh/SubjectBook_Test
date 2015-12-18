@@ -2,19 +2,45 @@
 
 # --- !Ups
 
-INSERT INTO signal VALUES(1, 'Q-Sensor');
-INSERT INTO signal VALUES(2, 'Motion');
-INSERT INTO signal VALUES(3, 'perspiration');
-INSERT INTO signal VALUES(4, 'breathing');
-INSERT INTO signal VALUES(5, 'Z_ECG');
-INSERT INTO signal VALUES(6, 'Z_breathing');
-INSERT INTO signal VALUES(7, 'Q_temperature');
-INSERT INTO signal VALUES(8, 'Video');
-INSERT INTO signal VALUES(9, 'Info');
-INSERT INTO signal VALUES(10, 'Activity');
-INSERT INTO signal VALUES(11, 'Pm');
-INSERT INTO signal VALUES(12, 'Other');
 
-INSERT INTO session VALUES(24,1,1,'DR', 'C:\\Users\\staamneh\\Desktop\\CPL-Lab\\System Desgin\\DataSource\\S005\\Difficult Reading\\RI_S005-001.Q_EDA', 1);
+INSERT INTO lookup VALUES (1, 'signal data');
+INSERT INTO lookup VALUES (2, 'videos');
+INSERT INTO lookup VALUES (3, 'Information data');
+INSERT INTO lookup VALUES (4, 'tabular data');
+INSERT INTO lookup VALUES (5, 'Psychometric data');
+INSERT INTO lookup VALUES (6, 'activity data');
+INSERT INTO lookup VALUES (7, 'Performance');
+
+
+INSERT INTO signals VALUES(1, 'perspiration', 'perspiration', 1, 'Perinasal EDA', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(2, 'Simulation', 'sim', 1, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(3, 'Q_Sensor', 'q_eda', 1, 'Palm EDA', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(4, 'hrv', 'hrv', 1, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(5, 'expression', 'expression', 1, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(6, 'Motion', 'q_motion', 1, 'Energy', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(7, 'breathing', 'breathing', 1, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(8, 'Heart Rate', 'Z_ECG', 1, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(9, 'Belt breathing', 'z_breathing', 1, '', 8, 9, 2,'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(10, 'Temperature', 'q_temperature', 1, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(11, 'Nasal Persperiation', 'nperspiration', 1, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(12, 'bar', 'bar', 4, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(13, 'eye', 'eye', 1, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(100, 'Video', 'avi', 2, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(101, 'Info', 'info', 3, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(102, 'Activity', 'activity', 6, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(103, 'Physchometric', 'pm', 5, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(104, 'Performance', 'prf', 7, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO signals VALUES(105, 'Other', 'xlsx', 1, '', 8,9, 2, 'cplsubjectbook@gmail.com');
+INSERT INTO permission VALUES(1, 'Full_Access');
+
+INSERT INTO psychometric(p_name, min_value, max_value,owner) VALUES( 'TYPE AB', 35, 380, 'cplsubjectbook@gmail.com');
+INSERT INTO psychometric(p_name, min_value, max_value,owner) VALUES( 'PA', 20, 80, 'cplsubjectbook@gmail.com');
+INSERT INTO psychometric(p_name, min_value, max_value,owner) VALUES( 'SAI', 20, 80, 'cplsubjectbook@gmail.com');
+INSERT INTO psychometric(p_name, min_value, max_value,owner) VALUES( 'TAI', 20, 80, 'cplsubjectbook@gmail.com');
+
+
+
+
+
 
 # --- !Downs

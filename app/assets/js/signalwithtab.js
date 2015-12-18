@@ -1,7 +1,8 @@
 $(document).ready(function(){
-
+alert('ready');
  $('.tabs .tab-links a').click(function() {
 
+alert('Inside');
    function intermediate ()
                      {
                         //drawStuff(session, subject , name, studyId);
@@ -12,52 +13,52 @@ $(document).ready(function(){
                                                if($(chartname).length > 0)
                                                {
                                                drawStuff_temp1(session, subject , chartname, studyId, 1, dynamicbtn, info);
-                                               info = 0;
+                                               info = 0; showVideo(session,1);
                                                }
                                                chartname = "#chart"+name+2;
                                                dynamicbtn = "#dynamic"+name+2;
                                                if($(chartname).length > 0)
                                                {
                                                   drawStuff_temp1(session, subject , chartname, studyId, 2,dynamicbtn, info);
-                                                  info = 0;
+                                                  info = 0; showVideo(session,2);
                                                }
                                                 chartname = "#chart"+name+3;
                                                 dynamicbtn = "#dynamic"+name+3;
                                                  if($(chartname).length > 0)
                                                  {
                                                    drawStuff_temp1(session, subject , chartname, studyId, 3, dynamicbtn, info);
-                                                   info = 0;
+                                                   info = 0; showVideo(session,3);
                                                   }
                                                chartname = "#chart"+name+4;
                                                dynamicbtn = "#dynamic"+name+4;
                                                if($(chartname).length > 0)
                                                {
                                                   drawStuff_temp1(session, subject , chartname, studyId, 4, dynamicbtn, info);
-                                                  info = 0;
+                                                  info = 0; showVideo(session,4);
                                                }
                                                chartname = "#chart"+name+5;
                                                dynamicbtn = "#dynamic"+name+5;
                                                if($(chartname).length > 0)
                                                {
                                                   drawStuff_temp1(session, subject , chartname, studyId, 5, dynamicbtn, info);
-                                                  info = 0;
+                                                  info = 0; showVideo(session,5);
                                                }
                                                chartname = "#chart"+name+6;
                                                dynamicbtn = "#dynamic"+name+6;
                                                if($(chartname).length > 0)
                                                {
                                                   drawStuff_temp1(session, subject , chartname, studyId, 6, dynamicbtn, info);
-                                                  info = 0;
+                                                  info = 0; showVideo(session,6);
                                                }
                                                chartname = "#chart"+name+7;
                                                dynamicbtn = "#dynamic"+name+7;
                                                 if($(chartname).length > 0)
                                                 {
                                                    drawStuff_temp1(session, subject , chartname, studyId, 7, dynamicbtn, info);
-                                                   info = 0;
+                                                   info = 0; showVideo(session,7);
                                                 }
 
-                             showVideo(session);
+
 
 
 
@@ -87,7 +88,7 @@ $(document).ready(function(){
                {
                $(this).attr("occupied", "yes");
                //google.load('visualization', '1.0', {'packages':['controls']});
-               google.load('visualization', '1.0', { 'packages': ['corechart', 'controls'], callback: intermediate});
+               google.load('visualization', '1.0', { 'packages': ['corechart', 'controls', 'charteditor'], callback: intermediate});
                e.preventDefault();
 
               var videoDiv ="#"+name;
@@ -103,7 +104,7 @@ $(document).ready(function(){
 
 function drawStuff_temp1(task, subject, chartDestination, studyId, signal_type, dynamicbtn, info) {
 
-
+   signalnum = signal_type;
     var x = "RI_S004-001.Q_motion";
     var jsonData = $.ajax({
                          type: 'GET',
@@ -209,10 +210,22 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signal_type, 
                 document.getElementById(dash));
 
      var donutRangeSlider = new google.visualization.ControlWrapper({
-               'controlType': 'NumberRangeFilter',
+               'controlType': 'ChartRangeFilter',
                'containerId': filter,
                'options': {
-                 'filterColumnLabel': 'Time'
+                  'filterColumnIndex' : 0,
+                 'filterColumnLabel': 'Time',
+                 'ui': {
+                          'chartType': 'LineChart',
+                          'chartOptions': {
+                            'chartArea': {'left': '40','width': '80%'},
+                            'hAxis': {'baselineColor': 'none'}
+                          },
+               },
+               'chartView': {
+                           'columns': [0, 1]
+                         },
+                 'minRangeSize': 86400000
                }
              });
 
@@ -221,6 +234,7 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signal_type, 
 		dataTable: data,
 		options : {
                       title: signal_title,
+                      legend: { position: 'bottom' },
                        animation: {
                               duration: 1000,
                               easing: 'in'
@@ -228,8 +242,9 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signal_type, 
                       backgroundColor: {
                        color: 'F0FFFF',
                       fill:'transparent' },
-                      chartArea:{left:40,top:20,width:'50%',height:'75%'}
-
+                      chartArea:{left:40,width:'80%',height:'80%'},
+                      'hAxis': {'slantedText': false}
+                       //explorer: { actions: ['dragToZoom', 'rightClickToReset'] }
               },
 		containerId: charName
            });
@@ -237,6 +252,42 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signal_type, 
 
     dashboard.bind(donutRangeSlider, wrapper);
                    dashboard.draw(data);
+
+
+
+        var editme = "#editchart"  + task + signal_type;
+        $(editme).click(function()
+        {
+         var chartEditor = new google.visualization.ChartEditor();
+         google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
+         chartEditor.openDialog(wrapper, {});
+         function redrawChart(){
+               //chartEditor.getChartWrapper().draw(document.getElementById('chart1DirectView1'));
+              var newwrapper = chartEditor.getChartWrapper();
+               dashboard.bind(donutRangeSlider, newwrapper);
+                                  dashboard.draw(data);
+
+                                  google.visualization.events.addListener(newwrapper, 'select', function() {
+
+                                              var selectedItemIn  = newwrapper.getChart().getSelection()[0].row;
+                                              var pointIn = data.getValue(selectedItemIn, 0);
+                                            var v = donutRangeSlider.getState();
+                                            var start = v.range.start;
+                                          seek(pointIn + start);
+
+
+
+                                        });
+             }
+         });
+
+
+          var stopv = "#stopvideo"  + task + signal_type;
+          $(stopv).click(function() {
+          stopvideo();
+          });
+
+
     /*var chart = new google.visualization.LineChart(document.querySelector(chartPlace));
     chart.draw(data, options);*/
 
@@ -290,26 +341,53 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signal_type, 
 
 
 
-  /*   var videoName = "#video" + chartDestination;
+     var videoName = "#video" + chartDestination;
 
 
-     google.visualization.events.addListener(chart, 'select', function() {
-        var row = chart.getSelection()[0].row;
-        var video2 = $(videoName)[0];
-        video2.currentTime = data.getValue(row, 0);
-        video2.play();
+     google.visualization.events.addListener(wrapper, 'select', function() {
+
+          var selectedItem  = wrapper.getChart().getSelection()[0].row;
+          var point = data.getValue(selectedItem, 0);
+          var v = donutRangeSlider.getState();
+          var start = v.range.start;
+        seek(point + start);
+
+
       });
-*/
+
 
 
 }
 
 
-function showVideo(num) {
+function showVideo(num, signal) {
 
-   var videoButton = "#showvideo"+num;
-   var videoBoard = "#videoboard" + num;
+   var videoButton = "#showvideo"+num + signal;
+   var videoBoard = "#videoboard" + num + signal;
+
+
+
+
+
+
    $(videoButton).click(function(){
+
+   //$('div[id^="videoboard"]').slideUp();
+
+
+     $('div[id^="videoboard"]').each(function() {
+             var v_id=  "#" + this.id;
+             $(v_id).slideUp();
+      });
+
+       $('a[id^="showvideo"]').each(function() {
+
+                   var v_id=  "#" + this.id;
+                   if(v_id != videoButton)
+                        $(v_id).html('Show Videos');
+            });
+
+   videonum =0;
                 //$(videoBoard).toggle();
              if($(videoButton).html()== 'Show Videos')
                 {$(videoButton).html('Hide Videos');
@@ -332,3 +410,103 @@ function showVideo(num) {
 
              $(v).html(' <source src= $vpath type="video/mp4">');
 }
+var player1 = null;
+var player2 = null;
+var player3 = null;
+var player4 = null;
+var videonum =0 ;
+var signalnum = null;
+function onYouTubePlayerReady(playerId)
+{
+if(videonum===0 )
+{
+   player1 = document.getElementById(playerId);
+   player1.addEventListener("onStateChange", "onytplayerStateChange");
+   //alert(ctr);
+
+}
+if(videonum==1)
+{
+   player2 = document.getElementById(playerId);
+   player2.addEventListener("onStateChange", "onytplayerStateChange");
+
+}
+
+if(videonum==2)
+{
+   player3 = document.getElementById(playerId);
+   player3.addEventListener("onStateChange", "onytplayerStateChange");
+}
+
+if(videonum==3)
+{
+   player4 = document.getElementById(playerId);
+   player4.addEventListener("onStateChange", "onytplayerStateChange");
+}
+
+if(videonum==4)
+{
+   player5 = document.getElementById(playerId);
+   player5.addEventListener("onStateChange", "onytplayerStateChange");
+
+}
+videonum++;
+
+}
+
+function seek(to) {
+
+
+ if(player1 !== null)
+ {
+  player1.seekTo(to, true);
+ }
+ if(player2 !== null)
+  {
+  player2.seekTo(to, true);
+  }
+  if(player3 !== null)
+   {
+    player3.seekTo(to, true);
+  }
+  if(player4 !== null)
+   {
+    player4.seekTo(to, true);
+   }
+}
+function stopvideo() {
+
+ if(player1 !== null)
+ {
+  player1.stopVideo();
+ }
+ if(player2 !== null)
+  {
+  player2.stopVideo();
+  }
+  if(player3 !== null)
+   {
+    player3.stopVideo();
+  }
+  if(player4 !== null)
+   {
+    player4.stopVideo();
+   }
+}
+
+
+function doMove() {
+  foo.style.left = parseInt(foo.style.left)+1+'px';
+  setTimeout(doMove,20); // call doMove in 20msec
+}
+
+function init() {
+  foo = document.getElementById('fooObject'); // get the "foo" object
+  foo.style.left = '0px'; // set its initial position to 0px
+  foo.style.top = '100px';
+  //alert(  foo.style.top);
+  doMove(); // start animating
+}
+
+
+window.onload = init;

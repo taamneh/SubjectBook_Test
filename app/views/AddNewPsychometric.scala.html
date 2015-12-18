@@ -1,0 +1,278 @@
+@(userName: String, error: String = "")
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+
+        .markerStyle
+        {
+        position: absolute;
+        left: 40px;
+        top: 50px;
+        transition: left .5s ease-in, top .5s ease-in;
+        width:0.0em;
+        height:14.5em;
+        #border-left: thick solid #99ccff;
+        border-left: thick solid pink;
+        white-space:nowrap;
+        padding:0.5em;
+        z-index: 10;
+        }
+
+
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SubjectBook</title>
+    <link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/stylesheets/styles.css" rel="stylesheet">
+
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="/assets/javascripts/html5shiv.js"></script>
+    <script src="/assets/javascripts/respond.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/changevideo.js")'></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/signalwithtabNew.js")'></script>
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/jquery-ui-1.9.2.css">
+
+
+    <script src="/assets/javascripts/bootstrap.min.js"></script>
+    <script src="/assets/javascripts/chart.min.js"></script>
+    <script src="/assets/javascripts/chart-data.js"></script>
+    <script src="/assets/javascripts/easypiechart.js"></script>
+    <script src="/assets/javascripts/easypiechart-data.js"></script>
+    <script src="/assets/javascripts/bootstrap-datepicker.js"></script>
+    <script>
+
+		!function ($) {
+		    $(document).on("click","ul.nav li.parent > a > span.icon", function(){
+		        $(this).find('em:first').toggleClass("glyphicon-minus");
+		    });
+
+
+		    $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+        // this is to unfold the subject list
+        $(document).ready(function(){
+        $('ul.nav li.parent > a > span.icon').trigger("click");
+        });
+
+</script>
+
+
+
+
+
+
+
+
+
+    <!-- Ignite UI Required Combined CSS Files -->
+    <link href="/assets/stylesheets/infragistics.theme.css" rel="stylesheet">
+    <!-- <link href="http://cdn-na.infragistics.com/igniteui/2015.1/latest/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" /> -->
+    <!--  <link href="http://cdn-na.infragistics.com/igniteui/2015.1/latest/css/structure/infragistics.css" rel="stylesheet" />-->
+
+    <!-- Used to style the API Viewer and Explorer UI -->
+    <!--  <link href="http://www.igniteui.com/css/apiviewer.css" rel="stylesheet" type="text/css" /> -->
+
+    <!--<script src="http://modernizr.com/downloads/modernizr-latest.js"></script> -->
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+
+    <!-- Ignite UI Required Combined JavaScript Files -->
+    <script src="http://cdn-na.infragistics.com/igniteui/2015.1/latest/js/infragistics.core.js"></script>
+    <script src="http://cdn-na.infragistics.com/igniteui/2015.1/latest/js/infragistics.dv.js"></script>
+
+
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><span>Subject</span>Book</a> <a class="navbar-brand" href="/allStudies"><span></span>My Studies</a>
+            <a class="navbar-brand" href="#"><span></span>Share</a>
+            <a class="navbar-brand" href="/frontPage"><span></span>Help</a>
+            <ul class="user-menu">
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> @userName <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                        <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+    <form role="search">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+        </div>
+    </form>
+    <ul class="nav menu">
+        <!-- <li><a href="index.html"><span class="glyphicon glyphicon-dashboard"></span> Dashboard</a></li>
+        <li><a href="widgets.html"><span class="glyphicon glyphicon-th"></span> Widgets</a></li>
+        <li class="active"><a href="charts.html"><span class="glyphicon glyphicon-stats"></span> Charts</a></li> -->
+        <li><a href="/allStudies"><span class="glyphicon glyphicon-th"></span> My Studies </a></li>
+        <li><a href="/createStudy"><span class="glyphicon glyphicon-pencil"></span> New Study</a></li>
+        <!-- <li><a href="#"><span class="glyphicon glyphicon glyphicon-share"></span> Share study</a></li> -->
+        <!-- <li><a href="panels.html"><span class="glyphicon glyphicon-info-sign"></span> Alerts &amp; Panels</a></li> -->
+        <li role="presentation" class="divider"></li>
+        <!-- <li><a href="login.html"><span class="glyphicon glyphicon-user"></span> Login Page</a></li> -->
+    </ul>
+    <!-- <div class="attribution">Template by <a href="http://www.medialoot.com/item/lumino-admin-bootstrap-template/">Medialoot</a></div> -->
+</div><!--/.sidebar-->
+
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a href="/allStudies"><span class="glyphicon glyphicon-home"></span></a></li>
+            <li class="active"><a href="/showAllPsychometric"> All Psychometric </a> </li>
+        </ol>
+    </div><!--/.row-->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <!--<h1 class="page-header">Forms</h1> -->
+        </div>
+    </div><!--/.row-->
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"> Create a New Data Type</div>
+                <div class="panel-body">
+                    <div class="col-md-6">
+                        <!-- <form role="form">  -->
+                        @helper.form(action = routes.Application.ProcessNewPsychometric, 'enctype -> "multipart/form-data") {
+
+
+
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" class="form-control" name="pName">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>Min Value</label>
+                            <input type="text" class="form-control" name="min">
+                        </div>
+
+
+
+
+                        <div class="form-group">
+                            <label>Max Value</label>
+                            <input type="text" class="form-control" name="max">
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button type="reset" class="btn btn-default">Reset</button>
+                        }
+
+
+
+                        <!--<div class="form-group">
+                            <label>Text Input</label>
+                            <input class="form-control" placeholder="Placeholder">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control">
+                        </div>
+
+                        <div class="form-group checkbox">
+                            <label>
+                                <input type="checkbox">Remember me</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>File input</label>
+                            <input type="file">
+                            <p class="help-block">Example block-level help text here.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Text area</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <label>Validation</label>
+                        <div class="form-group has-success">
+                            <input class="form-control" placeholder="Success">
+                        </div>
+                        <div class="form-group has-warning">
+                            <input class="form-control" placeholder="Warning">
+                        </div>
+                        <div class="form-group has-error">
+                            <input class="form-control" placeholder="Error">
+                        </div> -->
+
+                    </div>
+
+
+
+
+                    <div class="col-md-6">
+
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.col-->
+    </div><!-- /.row -->
+
+    <h4 style="color:red"> @error </h4>
+
+</div><!--/.main-->
+
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/chart.min.js"></script>
+<script src="js/chart-data.js"></script>
+<script src="js/easypiechart.js"></script>
+<script src="js/easypiechart-data.js"></script>
+<script src="js/bootstrap-datepicker.js"></script>
+<script>
+		!function ($) {
+			$(document).on("click","ul.nav li.parent > a > span.icon", function(){
+				$(this).find('em:first').toggleClass("glyphicon-minus");
+			});
+			$(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+	</script>
+</body>
+
+</html>

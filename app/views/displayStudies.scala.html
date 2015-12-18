@@ -1,4 +1,4 @@
-@(userName: String, studies: List[(String,Int)])
+@(userName: String, studies: List[(String,Int)], report: String = "")
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -194,6 +194,10 @@
                                             });
                                      </script>
 
+                                </div>
+
+                                <div>
+                                    @report
                                 </div>
 
                             </div>

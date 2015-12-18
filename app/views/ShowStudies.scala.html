@@ -1,0 +1,271 @@
+@(userName: String, studies: List[((String,String),Int)], report: String = "")
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SubjectBook</title>
+
+
+
+    <link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/stylesheets/datepicker3.css" rel="stylesheet">
+    <link href="/assets/stylesheets/bootstrap-table.css" rel="stylesheet">
+    <link href="/assets/stylesheets/styles.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="/assets/javascripts/html5shiv.js"></script>
+    <script src="/assets/javascripts/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/assets/javascripts/jquery-1.11.1.min.js"></script>
+    <script src="/assets/javascripts/bootstrap.min.js"></script>
+    <script src="/assets/javascripts/chart.min.js"></script>
+    <script src="/assets/javascripts/bootstrap-datepicker.js"></script>
+    <script src="/assets/javascripts/bootstrap-table.js"></script>
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/funnel.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><span>Subject</span>Book</a> <a class="navbar-brand" href="/allStudies"><span></span>My Studies</a>
+            <a class="navbar-brand" href="#"><span></span>Share</a>
+            <a class="navbar-brand" href="/frontPage"><span></span>Help</a>
+            <ul class="user-menu">
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> @userName <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                        <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+    <form role="search">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+        </div>
+    </form>
+    <ul class="nav menu">
+        <!-- <li><a href="index.html"><span class="glyphicon glyphicon-dashboard"></span> Dashboard</a></li>
+        <li><a href="widgets.html"><span class="glyphicon glyphicon-th"></span> Widgets</a></li>
+        <li class="active"><a href="charts.html"><span class="glyphicon glyphicon-stats"></span> Charts</a></li> -->
+        <li><a href="/allStudies"><span class="glyphicon glyphicon-th"></span> My Studies </a></li>
+        <li><a href="/createStudy"><span class="glyphicon glyphicon-pencil"></span> New Study</a></li>
+        <!-- <li><a href="/showAddDataType"><span class="glyphicon glyphicon-pencil"></span> Add New Data Type</a></li> -->
+
+        <li><a href="/showAllDataTypes"><span class="glyphicon glyphicon-cog"></span> Manage your Data</a></li>
+        <li><a href="/showAllPsychometric"><span class="glyphicon glyphicon-cog"></span> Manage your Psychometric data</a></li>
+        <!-- <li><a href="#"><span class="glyphicon glyphicon glyphicon-share"></span> Share study</a></li> -->
+        <!-- <li><a href="panels.html"><span class="glyphicon glyphicon-info-sign"></span> Alerts &amp; Panels</a></li> -->
+        <li role="presentation" class="divider"></li>
+        <!-- <li><a href="login.html"><span class="glyphicon glyphicon-user"></span> Login Page</a></li> -->
+    </ul>
+    <!-- <div class="attribution">Template by <a href="http://www.medialoot.com/item/lumino-admin-bootstrap-template/">Medialoot</a></div> -->
+</div><!--/.sidebar-->
+
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a href="#"><span class="glyphicon glyphicon-home"></span></a></li>
+        </ol>
+    </div><!--/.row-->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Studies</h1>
+        </div>
+    </div><!--/.row-->
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Your Studies</div>
+
+
+
+                <div class="panel-body">
+                    <table data-toggle="table"  data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-sort-name="names" data-sort-order="desc">
+                        <thead>
+                        <tr>
+                            <th data-field="state" data-checkbox="true" >Item ID</th>
+                            <th data-field="name" data-sortable="false">Study Name</th>
+                            <!-- <th data-field="map"  data-sortable="false">Study Map</th> -->
+                            <th data-field="price" data-sortable="true">Owner</th>
+                            <th data-field="create" data-sortable="true">Create Summary</th>
+                            <th data-field="export" data-sortable="true">Export</th>
+                            <th data-field="delete" data-sortable="true">Delete</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        @import java.math.BigInteger; var j =1;
+                        @for(study <- studies) {
+                        <tr class="table_row_odd table_row_first">
+                            <td> </td>
+                            <td><a href="/showPyramid?studyNo=@study._2"><span>@study._1._1</span></a> </td>
+                            <!-- <td>  <div class="pyramid"  id="container@j" studyNum=@study._2 style="min-width: 180px; max-width: 200px; height: 140px; margin: 0 auto"></div> </td> -->
+                            @{j = j + 1;}
+                            <td> @study._1._2 </td>
+                            <td>
+                                <a href="/showAddTopSummary?studyId=@study._2"><span>Create Summary</span></a>
+                            </td>
+
+
+                            <td><a href="/downloadStudy?studyId=@study._2" class="export">Export</a></td>
+
+
+                            <td>
+                            <form action="/deleteStudy" method="POST" enctype="multipart/form-data" onclick="return confirm('Are you sure you want to delete this item?');">
+                            <input type="hidden" name="study_id" id="study_id" value= @study._2>
+                            @if(study._1._2 == userName) {
+
+                             <input type="submit" name="submit" value="delete">
+
+                            }
+                            </form>
+                            </td>
+
+
+
+                        </tr>
+                        }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div><!--/.row-->
+
+
+</div><!--/.main-->
+
+<div id="loading" style="display:none; position: fixed;height:100%; width:100%; background: rgba( 255, 255, 255, .8 ) url('/assets/images/ajax-loader.gif') 50% 50%    no-repeat;">
+    <p> Please wait, study is being created </p>
+</div>
+<script>
+
+
+$(document).ready(function(){
+
+
+   Highcharts.theme = {
+   colors: ["#55BF3B", "#888888", "#DF5353"]
+};
+var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
+
+$(".pyramid" ).each(function( index ) {
+
+var stdNo= $(this).attr('studyNum');
+
+
+var name = "#container" + stdNo
+
+ $(this).highcharts({
+                chart: {
+                    type: 'pyramid',
+                    marginRight: 10
+                },
+                title: {
+                    text: '',
+                    x: -50
+                },
+                tooltip: {
+            enabled: false
+        },
+                plotOptions: {
+                        series: {
+                           dataLabels: {
+                                enabled: false
+                                },
+                            cursor: 'pointer',
+                            point: {
+                                events: {
+                                    click: function (e) {
+                                       // var temp = this.series.data
+
+
+                                        if(this.x == 2){
+                                           window.location = '/showStudy/' + stdNo
+                                           }
+                                         else if(this.x ==1)
+                                           window.location = '/showStudySkipTop/'+ stdNo
+                                         else
+                                          window.location = '/displaySubject?studyNo=' + stdNo + '&SubjectId='
+                                    }
+                                }
+                            },
+                            marker: {
+                                lineWidth: 1
+                            }
+                        }
+                },
+                 credits: {
+                  enabled: false
+              },
+                legend: {
+                    enabled: false
+                },
+                exporting: { enabled: false } ,
+                series: [{
+                    name: 'Unique users',
+                    data: [
+                        ['Session view',   100],
+                        ['User Portrait',       100],
+                        ['Top Summary', 100],
+                    ]
+                }]
+            });
+
+});
+
+
+   $('.export').click(function() {
+           var link= $(this).attr('getLink');
+           // alert(link);
+          // Id of the element that was clicked
+         $("#loading").show();
+
+         $("#loading").hide();
+    });
+ });
+
+</script>
+<script>
+		!function ($) {
+			$(document).on("click","ul.nav li.parent > a > span.icon", function(){		  
+				$(this).find('em:first').toggleClass("glyphicon-minus");	  
+			}); 
+			$(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+	</script>
+</body>
+
+</html>

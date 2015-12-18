@@ -1,55 +1,113 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
-<head lang="en">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <meta charset="UTF-8">
-    <title></title>
+<html>
+<head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2004',  1000,      400],
+          ['2005',  1170,      460],
+          ['2006',  660,       1120],
+          ['2007',  1030,      540]
+        ]);
+
+        var options = {
+    title: 'Company Performance',
+    curveType: 'function',
+    legend: { position: 'bottom' }
+  };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
 </head>
 <body>
 
-<video controls="controls" id = "v">
-    <!-- <source src="https://drive.google.com/uc?id=0B2TDTGk9sqZLNDRMbnNPMktwUHc&export=download" type='video/mp4'/> -->
-    <source src="/videoB" type='video/webm'/>
+<div id="player">
+<object width='640' height='385'  id="video1">
+    <param name="id" value="myytplayer"> </param>
+    <embed id = "toto" src='https://video.google.com/get_player?docid=0B2TDTGk9sqZLWTNSNklUM0xKc2s&ps=docs&partnerid=30&cc_load_policy=1&controls=2&enablejsapi=1&playerapiid=player' type='application/x-shockwave-flash' allowfullscreen='true' allowScriptAccess='always' width='640' height='385'></embed>
+</object>
+
+</div>
+<!-- <video width="320" height="240" controls>
+    <source src="https://video.google.com/get_player?docid=0B-onIMU0j11bVVJoX0ZMUkZPS0E&ps=docs&partnerid=30&cc_load_policy=1&_=.mp4" type="video/mp4">
+    <source src="movie.ogg" type="video/ogg">
     Your browser does not support the video tag.
 </video>
 
-<video controls="controls">
-    <source src="https://drive.google.com/uc?id=0B2TDTGk9sqZLbC1BMVgzcVE0WjA&export=download" type='video/mp4'/>
-</video>
+<object width='640' height='385'>
+    <param name='movie' value='https://video.google.com/get_player?docid=0B5Y-fwYJF2hLMTY1NjA4NjktOGExOS00ZDQzLWEzZGYtZWQ1YTkzNDBlZmMx&ps=docs&partnerid=30'></param>
+    <param name='allowFullScreen' value='true'></param>
+    <param name='allowScriptAccess' value='always'></param>
+    <param name="autoplay" value="true"> </param>
+    <embed src='https://video.google.com/get_player?docid=0B5Y-fwYJF2hLMTY1NjA4NjktOGExOS00ZDQzLWEzZGYtZWQ1YTkzNDBlZmMx&ps=docs&partnerid=30' type='application/x-shockwave-flash' allowfullscreen='true' allowScriptAccess='always' width='640' height='385'></embed>
+</object>
+<object width='640' height='385'><param name='movie' value='https://video.google.com/get_player?docid=0B2TDTGk9sqZLQjlxcVRxYUNqOFE&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1'></param><param name='allowFullScreen' value='true'></param><param name='allowScriptAccess' value='always'></param><embed src='https://video.google.com/get_player?docid=0B2TDTGk9sqZLQjlxcVRxYUNqOFE&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1' type='application/x-shockwave-flash' allowfullscreen='true' allowScriptAccess='always' width='640' height='385'></embed></object>
+<object width='640' height='385'><param name='movie' value='https://video.google.com/get_player?docid=0B2TDTGk9sqZLaWwza1VhSWJBRWs&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1'></param><param name='allowFullScreen' value='true'></param><param name='allowScriptAccess' value='always'></param><embed src='https://video.google.com/get_player?docid=0B2TDTGk9sqZLaWwza1VhSWJBRWs&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1' type='application/x-shockwave-flash' allowfullscreen='true' allowScriptAccess='always' width='640' height='385'></embed></object>
+<object width='640' height='385' id='myytplayer'><embed src='https://video.google.com/get_player?docid=0B2TDTGk9sqZLWTNSNklUM0xKc2s&ps=docs&partnerid=30&cc_load_policy=1&amp;color=white&amp;autoplay=0&amp;enablejsapi=1&amp;start=20&amp;playerapiid=myytplayer' type='application/x-shockwave-flash' allowfullscreen='true' allowScriptAccess='always' width='640' height='385'></embed></object>
 
-<div>
-
-</div>
-<button id = "salah">Show Videos</button>
-<script type="text/javascript">
-    $(document).ready(function(){
- $('#salah').click(function() {
+-->
 
 
-   $('#v').attr("src", "https://www.youtube.com/watch?v=_qgn9TJEQNY" );
 
-            $.ajax({
-         url : '/videoB',
-         dataType : 'video/mp4',
-         type : 'get',
-         success : function(data) {
-           alert( data ); // alerts the response
-           $('#v').attr("src", data);
-         }
-});
- });
- });
 
+
+
+<script>
+
+    var player;
+    function onYouTubeIframeAPIReady() {
+	
+	if(document.getElementById('myytplayer')!=null)
+	{
+	   alert('exist')
+	}
+	   /* player = document.getElementById('player');
+		player.playVideo();
+		alert(ply);*/
+    }
+	function onYouTubePlayerReady(playerId)
+	{
+
+	    //playerId.seekTo(100, true);
+	   	player = document.getElementById("toto");
+	   	//ytplayer.playVideo()
+	   	player.addEventListener("onStateChange", "onytplayerStateChange");
+	   	alert('what' + playerId);
+	}
+    function onPlayerReady(evt) {
+	    alert('fuckl');
+        evt.target.playVideo();
+		
+    }
+    function onPlayerStateChange(evt) {
+    alert('fuckl');
+        if (evt.data == YT.PlayerState.PLAYING && !done) {
+            setTimeout(stopVideo, 6000);
+            done = true;
+        }
+    }
+    function stopVideo() {
+        player.stopVideo();
+    }
+
+    function play() {
+    alert('bef');
+  if (player) {
+    alert(player);
+
+    player.seekTo(60, true)
+    player.playVideo();
+    alert(player.getDuration())
+  }
+}
 </script>
-
-<!-- <video controls="controls">
-    <source src="https://googledrive.com/host/0B2TDTGk9sqZLNDRMbnNPMktwUHc" type='video/mp4'/>
-</video> -->
-
-<a href="https://drive.google.com/uc?id=0B2TDTGk9sqZLNDRMbnNPMktwUHc&export=download">Click please</a>
-
+<div id="chart_div" style="width: 900px; height: 500px;"></div>
+<a href="javascript:void(0);" onclick="play();">Play</a>
 </body>
 </html>
-
-
-

@@ -1,4 +1,4 @@
-@(userForm: Form[NewUser])
+
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -107,10 +107,6 @@
 											  </script>  -->
                                 <!-- <form accept-charset="UTF-8" action="?action=flow.transit&amp;flow.flow=registration&amp;flow.transition=save&amp;flow.reloadFlow=registration" enctype="application/x-www-form-urlencoded" id="form_user_registration" method="POST" name="user_registration"> -->
                                 @helper.form(action = routes.Application.submitRegistration) {
-                                <!-- <@helper.inputText(userForm("Full Name"), 'class->"text_field", 'onChange->"epoint.ow.forms.Utils.fieldValueChanged(this)", 'name->"fullName", 'maxlength -> "100" , 'd->"user_registration_fullName")
-                                @helper.inputText(userForm("email"))
-                                @helper.inputText(userForm("password"))
-                                @helper.inputText(userForm("retypePassword")) -->
                                     <!-- <input class="default_submit" name="default_submit" style="position: absolute; top: -2000px; left: -2000px" type="submit" id="user_registration_default_submit"> -->
                                     <div class="box_form_section" id="form_user_registration_section_other">
                                         <div class="box_form_content">

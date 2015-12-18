@@ -1,0 +1,17 @@
+.CodeMirror-vertabelo-editor {
+  border: solid 4px red;
+  padding: 1em;
+  position: fixed;
+  top: 100px; left: 100px; right: 100px; bottom: 100px;
+  height: auto;
+  z-index: 9;
+}
+
+#editor-window {}
+
+.CodeMirror-vertabelo-editor-field { height: 100%; }
+
+.popup-resizable-helper {
+	z-index: 5001 !important;
+	background: rgba(0, 0, 0, 0.25);
+}

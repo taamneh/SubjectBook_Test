@@ -1,0 +1,817 @@
+@(userName: String, explVar : List[(String, Int, Int)])(implicit request: RequestHeader)
+@import helper._
+<!DOCTYPE html>
+<html>
+<head>
+
+    <style type="text/css">
+
+        .kareem {
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            font-family: montserrat;
+            color: #2C3E50;
+            font-size: 13px;
+        }
+
+
+
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=1170" name="viewport"><meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <script type="text/javascript" src="/assets/javascripts/jquery-1.9.0.min.js"></script>
+    <title>SubjectBoo</title>
+
+    <link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/stylesheets/datepicker3.css" rel="stylesheet">
+    <link href="/assets/stylesheets/styles.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/multi.css">
+
+
+    <!--[if lt IE 9]>
+    <script src="/assets/javascripts/html5shiv.js"></script>
+    <script src="/assets/javascripts/respond.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="/assets/javascripts/showPicker.js"></script>
+    <script src="/assets/javascripts/bootstrap.min.js"></script>
+    <script src="/assets/javascripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/assets/javascripts/ow-all.js"></script>
+    <script type="text/javascript" src="/assets/javascripts/showCreateStudy.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/datePicker.css">
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/oneweb-salah.css">
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><span>Subject</span>Book</a> <a class="navbar-brand" href="/allStudies"><span></span>My Studies</a>
+            <a class="navbar-brand" href="#"><span></span>Share</a>
+            <a class="navbar-brand" href="/frontPage"><span></span>Help</a>
+            <ul class="user-menu">
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> @userName <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                        <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+    <form role="search">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+        </div>
+    </form>
+    <ul class="nav menu">
+        <li><a href="/allStudies"><span class="glyphicon glyphicon-th"></span> My Studies </a></li>
+        <li><a href="/createStudy"><span class="glyphicon glyphicon-pencil"></span> New Study</a></li>
+        <li role="presentation" class="divider"></li>
+
+    </ul>
+</div><!--/.sidebar-->
+
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a  href="#"><span class="glyphicon glyphicon-home"></span></a></li>
+            <li class="active">Forms</li>
+        </ol>
+    </div><!--/.row-->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Create New Study</h1>
+        </div>
+    </div><!--/.row-->
+    <!-- <div id= "newStudy"> -->
+    <div class="row">
+    <div class="col-sm-8">
+        <h3> <a href="/setUpStudy">see how to set up your data in SubjectBook </a> </h3>
+        <h3> <a href="/howToCreateNewStudy">See how to create a new study in SubjectBook </a> </h3>
+    </div>
+    </div>
+
+    <div class ="showontop" >
+
+    <form calss="salah" id="msform" method="post">
+    <!-- progressbar -->
+
+
+
+    @helper.form(action = routes.Application.InsertNewStudy, 'enctype -> "multipart/form-data", 'id-> "target") {
+        <ul class="taa" id="progressbar1">
+        <li class="active">Experimental Design</li>
+        <li> Explanatory Variables</li>
+        <li> Response Variable </li>
+        <li> covariates</li>
+       <!-- <li>Performance </li>  -->
+    </ul>
+    <!-- fieldsets -->
+
+        <fieldset>
+            <h2 class="fs-title">Experimental Design</h2>
+        <h3 class="fs-subtitle"></h3>
+        <table id="zob" cellspacing="0" class="data_table" id="add_sessions_table">
+
+            <tr>
+                <td class="cell_1">* Source type:</td>
+                <td>
+                    <select class="select_field"  id="sourcetype" name="study_type" >
+                        <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_1" value=1  selected ="selected">Google Drive</option>
+                       <!-- <option id="form_versions_avmMoOfAa88BZFkbhDIE2swy6EGJ6QVmwtW7KMk5SbtgxnVrVvxQINqa6aN2CIr4_select_2" value=2>CPL Server</option> -->
+                    </select>
+
+                </td>
+            </tr>
+            <tr>
+                <td class="cell_1">* Study name:</td>
+                <td id = "kareem">
+                    <input  size="200"  type="text" id="study_name" maxlength="50" name="study_name" prompttext="" required>
+                </td>
+            </tr>
+            <tr>
+                <td class="cell_1">* URL:</td>
+                <td id = "kareem">
+                    <input  size="200"  type="text" id="folder_name" maxlength="200" name="url" prompttext="" required>
+                        <input size="200"  type="hidden" id="folder_id" maxlength="50" name="folder_id" value="x">
+                </td>
+                <td id = "kareem">
+                    <input  type="button" name="Add" id="browseGD"class="" value="...." />
+                </td>
+                <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+            </tr>
+             <tr>
+                <td class="cell_1">* Number of subjects:</td>
+                <td id = "kareem">
+                    <input type="number" class="text_field" name="numSubj" id="numSubj" min="1" max="100" value = 1>
+                </td>
+            </tr>
+            <tr>
+                <td class="cell_1">* Sessions per subject:</td>
+                <td id = "kareem">
+                    <input  type="number" class="text_field" name="numSess" min="0" max="100" value = 1>
+                </td>
+            </tr>
+            <tr>
+                <td id = "kareem"><input  type="checkbox" id="publicCh" name="publicCh" value=1 style="width: 20px;">Public study&nbsp;&nbsp;&nbsp;&nbsp;<br> </td>
+                <td id = "kareem"><input type="checkbox" id="portraitCh" name="portraitCh" value=1 style="width: 20px">Generate Portrait&nbsp;&nbsp;&nbsp;<br> </td>
+                <input  type="hidden" name="public" id='public' value=0>
+                <input  type="hidden" name="portrait" id='portrait' value=0>
+            </tr>
+            <!-- <tr>
+                <td class="cell_1"> Runs per session:</td>
+                <td> -->
+            <input class="kareem" type="hidden" class="text_field" name="numRun" min="1" max="100" value = 1>
+            <!-- </td> -->
+
+            <!-- </tr>  -->
+        </table>
+        <input id ="firstNext"  type="button" name="next" class="next1 action-button" value="Next" />
+
+
+
+        </fieldset>
+        <fieldset>
+            <h2 class="fs-title">Explanatory Variables</h2>
+            <table cellspacing="0" class="data_table" id="add_sessions_table">
+                <tr>
+                    <td class="cell_1">Key Explanatory Variables:</td>
+                    <td>
+                        <select class="select_field"  id="explanatoryPrim" name="study_type"  style="width: 300px" required>
+                            @for(temp <- explVar){
+                            @if(temp._3 == 1 ) {
+                             <option id="op1" value=@temp._2  selected ="selected"> @temp._1 </option>
+                            }
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="cell_1">Secondary Explanatory Variables</td>
+                    <td>
+
+                        <div class="col-lg-12">
+                            <div class="button-group">
+                                <button type="button" style="width: 300px" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"> Select Variables <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    @for(temp <- explVar){
+                                    @if(temp._3 == 1 ) {
+                                    <li><a href="#" class="small1" data-value="@temp._2" tabIndex="-1"><input type="checkbox"/>&nbsp;@temp._1</a></li>
+                                     }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                    </td>
+
+                </tr>
+                <tr>
+                    <td class="cell_1">Static Data Before Sessions</td>
+                    <td>
+                        <select class="select_field"  id="staticB" name="study_type" >
+                            <option id="op1" value=-1 > none </option>
+                            @for(temp <- explVar){
+                            @if(temp._3 == 4) {
+                            <option id="op1" value="@temp._2" > @temp._1</option>
+                            }
+                            }
+                        </select>
+
+                    </td>
+
+                </tr>
+                <tr>
+                    <td class="cell_1">Static Data After Sessions</td>
+                    <td>
+                        <select class="select_field"  id="staticA" name="study_type" >
+                            <option id="op1" value=-1 > none </option>
+                            @for(temp <- explVar){
+                            @if(temp._3 == 4) {
+                            <option id="op1" value="@temp._2"  > @temp._1</option>
+                            }
+                            }
+                        </select>
+
+                    </td>
+
+                </tr>
+            </table>
+            <input type="button" name="previous" class="previous action-button" value="Previous" />
+            <input type="button" name="next" class="next2 action-button" value="Next" />
+            <!--<input type="submit" name="submit" class="submit action-button" value="Submit" id="createStudy"/> -->
+
+        </fieldset>
+        <fieldset>
+            <h2 class="fs-title">Response Variables</h2>
+            <table cellspacing="0" class="data_table" id="add_sessions_table">
+                <tr>
+                    <td class="cell_1">Key Response Variables:</td>
+                    <td>
+                        <select class="select_field"  id="responsePrim" name="study_type"  style="width: 300px">
+                            @for(temp <- explVar){
+                                @if(temp._3 == 1) {
+                                <option id="op1" value=@temp._2  selected ="selected"> @temp._1 </option>
+                                }
+                            }
+
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="cell_1">Secondary Response Variables</td>
+                    <td>
+                        <!-- <select class="select_field"  id="responseSec" name="study_type" >
+                            <option id="op1" value=1  selected ="selected"> EDA Palm</option>
+                        </select> -->
+
+                        <div class="col-lg-12">
+                            <div class="button-group">
+                                <button type="button" style="width: 300px" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"> Select Variables <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    @for(temp <- explVar){
+                                    @if(temp._3 == 1 ) {
+                                    <li><a href="#"   class="small2" data-value="@temp._2" tabIndex="-1"><input type="checkbox"/>&nbsp;@temp._1</a></li>
+                                    }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+
+                    </td>
+
+                </tr>
+
+            </table>
+            <input type="button" name="previous" class="previous action-button" value="Previous" />
+            <input type="button" name="next" class="next3 action-button" value="Next" />
+            <!--<input type="submit" name="submit" class="submit action-button" value="Submit" id="createStudy"/> -->
+
+        </fieldset>
+        <fieldset>
+            <h2 class="fs-title">Covariates</h2>
+            <h3 class="fs-subtitle"></h3>
+
+            <table cellspacing="0" class="data_table" id="add_sessions_table">
+                <tr>
+                    <td class="cell_1">Covariates</td>
+                    <td>
+                        <select class="select_field"  id="cov" name="study_type"  style="width: 300px">
+                            <option id="op1" value=-1 > none </option>
+                            @for(temp <- explVar){
+                            @if(temp._3 == 3 ) {
+                            <option id="op1" value=@temp._2  selected ="selected"> @temp._1</option>
+                            }
+                            }
+                        </select>
+
+                    </td>
+
+                </tr>
+                <!-- <tr>
+                    <td><input type="checkbox" id="Age" name="Age" value=1 style="width: 20px">Age&nbsp;&nbsp;&nbsp;&nbsp;<br> </td>
+                    <td><input type="checkbox" id="Height" name="Height" value=10 style="width: 20px">Height&nbsp;&nbsp;&nbsp;<br> </td>
+                    <td><input type="checkbox" id="Weight" name="Weight" value=100 style="width: 20px">Weight&nbsp;&nbsp;&nbsp;<br> </td>
+                    <td><input type="checkbox" id="Gender" name="Gender" value=1000 style="width: 20px">Gender&nbsp;&nbsp;&nbsp;<br> </td>
+                    <td><input type="checkbox" id="Ethnicity" name="Ethnicity" value=10000 style="width: 20px">Ethnicity<br> </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" id="Bio_other"  name="Bio_other" value=100000 style="width: 20px">Other&nbsp;<br> </td>
+
+                </tr> -->
+            </table>
+            <script>
+                    $(document).ready(function(){
+                    $('#publicCh').change(function() {
+                    if($(this).is(":checked")) {
+                           $("#public").val(1);
+                           }
+                           else
+                           {
+                            $("#public").val(0);
+                           }
+                         });
+                       $('#portraitCh').change(function() {
+                    if($(this).is(":checked")) {
+                           $("#portrait").val(1);
+                           }
+                           else
+                           {
+                            $("#portrait").val(0);
+                           }
+                         });
+                    $('#Age').change(function() {
+                        if($(this).is(":checked")) {
+                           var a =  parseInt($("#ir").val()) + 1
+                           $("#ir").val(a.toString() );
+                           }
+                           else
+                           {
+                            var a =  parseInt($("#ir").val()) - 1
+                           $("#ir").val(a.toString() );
+                           }
+                         });
+
+                         $('#Height').change(function() {
+                         if($(this).is(":checked")) {
+                             var a =  parseInt($("#ir").val()) + 10
+                           $("#ir").val(a.toString() );
+                           }
+                           else
+                           {
+                             var a =  parseInt($("#ir").val()) - 10
+                           $("#ir").val(a.toString() );
+                           }
+                         });
+
+                          $('#Weight').change(function() {
+                         if($(this).is(":checked")) {
+
+                           var a =  parseInt($("#ir").val()) + 100
+                           $("#ir").val(a.toString() );
+                           }
+                           else
+                           {
+                               var a =  parseInt($("#ir").val()) - 100
+                           $("#ir").val(a.toString() );
+                           }
+                         });
+
+                          $('#Gender').change(function() {
+                         if($(this).is(":checked")) {
+
+                           var a =  parseInt($("#ir").val()) + 1000
+                           $("#ir").val(a.toString() );
+                           }
+                           else
+                           {
+                               var a =  parseInt($("#ir").val()) - 1000
+                           $("#ir").val(a.toString() );
+                           }
+                         });
+
+                          $('#Ethnicity').change(function() {
+                         if($(this).is(":checked")) {
+
+                           var a =  parseInt($("#ir").val()) + 10000
+                           $("#ir").val(a.toString() );
+                           }
+                           else
+                           {
+                               var a =  parseInt($("#ir").val()) - 10000
+                           $("#ir").val(a.toString() );
+                           }
+                         });
+
+                          $('#Bio_other').change(function() {
+                         if($(this).is(":checked")) {
+
+                           var a =  parseInt($("#ir").val()) + 100000
+                           $("#ir").val(a.toString() );
+                           }
+                           else
+                           {
+                               var a =  parseInt($("#ir").val()) - 100000
+                           $("#ir").val(a.toString() );
+                           }
+                         });
+
+                     });
+                                        </script>
+            <input type="hidden" name="bio" id='ir' value=0>
+
+            <input type="button" name="previous" class="previous action-button" value="Previous" />
+           <!-- <input type="button" name="next" class="next action-button" value="Next" /> -->
+            <input type="submit" name="submit" class="submit action-button" value="Submit" id="createStudy"/>
+      </fieldset>
+    <!--<fieldset>
+        <h2 class="fs-title">Psychometrics</h2>
+        <h3 class="fs-subtitle"></h3>
+        <table cellspacing="0" class="data_table" id="add_sessions_table">
+            <tr>
+                <td class="cell_1"> State-Trait Anxiety Inventory: </td>
+                <td class="cell_2"><input type="checkbox" id="SAI" name="SAI" value=1 style="width: 20px">SAI&nbsp;&nbsp;&nbsp;&nbsp; </td>
+
+
+                <td class="cell_2"><input type="checkbox" id="TAI" name="STAI_other" value=1000 style="width: 20px">TAI</td>
+            </tr>
+            <tr>
+                <td class="cell_1"> Positive and Negative Affect Scales: </td>
+                <td class="cell_2"><input type="checkbox" id="PA" name="PA" value=10000 style="width: 20px">PA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+                <td class="cell_2"><input type="checkbox" id="NA" name="NA" value=100000 style="width: 20px">NA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+                <td class="cell_2"><input type="checkbox" id ="Trait_Other" name="Trait_Other" value=1000000 style="width: 20px">Other</td>
+                <td class="cell_2"></td>
+            </tr>
+        </table>
+
+        <script>
+                                                $(document).ready(function(){
+                                                    $('#SAI').change(function() {
+                                                    if($(this).is(":checked")) {
+                                                       var a =  parseInt($("#Psychometric").val()) + 1
+                                                       $("#Psychometric").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                        var a =  parseInt($("#Psychometric").val()) - 1
+                                                       $("#Psychometric").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                     $('#TAI').change(function() {
+                                                     if($(this).is(":checked")) {
+                                                       var a =  parseInt($("#Psychometric").val()) + 10
+                                                       $("#Psychometric").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                         var a =  parseInt($("#Psychometric").val()) - 10
+                                                       $("#Psychometric").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#PA').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#Psychometric").val()) + 100
+                                                       $("#Psychometric").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#Psychometric").val()) - 100
+                                                       $("#Psychometric").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#NA').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#Psychometric").val()) + 1000
+                                                       $("#Psychometric").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#Psychometric").val()) - 1000
+                                                       $("#Psychometric").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#Trait_Other').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#Psychometric").val()) + 10000
+                                                       $("#Psychometric").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#Psychometric").val()) - 10000
+                                                       $("#Psychometric").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                 });
+                                    </script>
+        <input type="hidden" name="psychometric" id='Psychometric' value=0>
+
+
+        <input type="button" name="previous" class="previous action-button" value="Previous" />
+        <input type="button" name="next" class="next action-button" value="Next" />
+    </fieldset> -->
+    <!-- <fieldset>
+        <h2 class="fs-title">Physiological</h2>
+        <h3 class="fs-subtitle"></h3>
+        <table cellspacing="0" class="data_table" id="add_sessions_table">
+            <tr>
+                <td  class="cell_2"><input type="checkbox" id="EDA" name="EDA" value=1 style="width: 20px">EDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+                <td  class="cell_2"><input type="checkbox" id="Motion" name="Motion" value=2 style="width: 20px">Motion&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+                <td  class="cell_2"><input type="checkbox" id= "GSR_Finger" name="GSR_Finger" value=3 style="width: 20px">GSR-Finger</td>
+            </tr>
+            <tr>
+                <td  class="cell_2"><input type="checkbox" id="Breathing_Belt" name="Breathing_Belt" value=4 style="width: 20px">Breathing-Belt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td  class="cell_2"><input type="checkbox" id="Breathing_Thermal" name="Breathing_Thermal" value=4 style="width: 20px">Breathing-Thermal&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td  class="cell_2"><input type="checkbox" id= "Heart_Rate" name="Heart_Rate" value=4 style="width: 20px">Heart Rate&nbsp;&nbsp;</td>
+
+            </tr>
+            <tr>
+                <td  class="cell_2"><input type="checkbox" id="Perspiration" name="Perspiration" value=4 style="width: 20px">Perspiration&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td class="cell_2"></td>
+                <td class="cell_2"></td>
+            </tr>
+
+        </table>
+        <script>
+                                                $(document).ready(function(){
+                                                $('#EDA').change(function() {
+                                                    if($(this).is(":checked")) {
+                                                       var a =  parseInt($("#physiology").val()) + 1
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                        var a =  parseInt($("#physiology").val()) - 1
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                     $('#Motion').change(function() {
+                                                     if($(this).is(":checked")) {
+                                                       var a =  parseInt($("#physiology").val()) + 10
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                         var a =  parseInt($("#physiology").val()) - 10
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#GSR_Finger').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#physiology").val()) + 100
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#physiology").val()) - 100
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#Breathing_Belt').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#physiology").val()) + 1000
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#physiology").val()) - 1000
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#Breathing_Thermal').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#physiology").val()) + 10000
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#physiology").val()) - 10000
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#Heart_Rate').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#physiology").val()) + 100000
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#physiology").val()) - 100000
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#Perspiration').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#physiology").val()) + 1000000
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#physiology").val()) - 1000000
+                                                       $("#physiology").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                 });
+                                    </script>
+
+
+        <input type="hidden" name="physiology" id='physiology' value=0>
+        <input type="button" name="previous" class="previous action-button" value="Previous" />
+        <input type="button" name="next" class="next action-button" value="Next" />
+    </fieldset> -->
+    <!--<fieldset>
+        <h2 class="fs-title">Observational</h2>
+        <h3 class="fs-subtitle"></h3>
+        <table cellspacing="0" class="data_table" id="add_sessions_table">
+            <tr>
+                <td class="cell_1"> Observational 1D: </td>
+                <td class="cell_2"><input type="checkbox" id="Accelerometer" name="Accelerometer" value=2 style="width: 20px">Accelerometer</td>
+                <td class="cell_2"><input type="checkbox" id="Obser_other" name="Obser_other" value=3 style="width: 20px">Other</td>
+            </tr>
+            <tr>
+                <td class="cell_1"> Observational 2D: </td>
+                <td class="cell_2"><input type="checkbox" id="Video_Face" name="Video_Face" value=2 style="width: 20px">Video-Face&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td class="cell_2"><input type="checkbox" id="Video_Room" name="Video_Room" value=4 style="width: 20px">Video-Room</td>
+            </tr>
+            <tr>
+                <td class="cell_1"></td>
+                <td class="cell_2"><input type="checkbox" id= "Video_Theater" name="Video_Theater" value=4 style="width: 20px">Video-Theater</td>
+                <td class="cell_2"><input type="checkbox" id="FACS" name="FACS" value=4 style="width: 20px">FACS</td>
+            </tr>
+            <tr>
+                <td class="cell_1"></td>
+                <td class="cell_2"><input type="checkbox" id="Obser2d_other" name="Obser2d_other" value=4 style="width: 20px">Other&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            </tr>
+        </table>
+
+        <script>
+                                                $(document).ready(function(){
+                                                $('#Accelerometer').change(function() {
+                                                    if($(this).is(":checked")) {
+                                                       var a =  parseInt($("#observation").val()) + 1
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                        var a =  parseInt($("#observation").val()) - 1
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                     $('#Obser_other').change(function() {
+                                                     if($(this).is(":checked")) {
+                                                       var a =  parseInt($("#observation").val()) + 10
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                         var a =  parseInt($("#observation").val()) - 10
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#Video_Face').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#observation").val()) + 100
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#observation").val()) - 100
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#Video_Room').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#observation").val()) + 1000
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#observation").val()) - 1000
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#Video_Theater').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#observation").val()) + 10000
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#observation").val()) - 10000
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#FACS').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#observation").val()) + 100000
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#observation").val()) - 100000
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                      $('#Obser2d_other').change(function() {
+                                                     if($(this).is(":checked")) {
+
+                                                       var a =  parseInt($("#observation").val()) + 1000000
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                       else
+                                                       {
+                                                           var a =  parseInt($("#observation").val()) - 1000000
+                                                       $("#observation").val(a.toString() );
+                                                       }
+                                                     });
+
+                                                 });
+                                    </script>
+
+        <input type="hidden" name="observation" id='observation' value=0>
+        <input type="button" name="previous" class="previous action-button" value="Previous" />
+        <input type="button" name="next" class="next action-button" value="Next" />
+    </fieldset> -->
+    <!--<fieldset>
+        <h2 class="fs-title">Performance</h2>
+        <h3 class="fs-subtitle"></h3>
+        <input type="text" name="Perfro_name" placeholder="Performance Name" />
+        <input type="text" name="Per_min" placeholder="Min" />
+        <input type="text" name="Per_mix" placeholder="Max" />
+        <input type="button" name="Add" class="next" value="Add" />
+        <input type="button" name="previous" class="previous action-button" value="Previous" />
+        <input type="submit" name="submit" class="submit action-button" value="Submit" id="createStudy"/>
+
+    </fieldset> -->
+    </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+    }
+    </form>
+
+    </div>
+
+
+
+</div><!--/.main-->
+
+ <div id="loading" style="display:none; position: fixed;height:100%; width:100%; background: rgba( 255, 255, 255, .8 ) url('/assets/images/ajax-loader.gif') 50% 50%    no-repeat;">
+     <p> Please wait, study is being created </p>
+ </div>
+
+<script>
+    var wsUri = "@routes.Application.socket.webSocketURL()";
+    var userName = "@userName"
+</script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+//
+// Skrypty JS modułu Registration
+//
+

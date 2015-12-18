@@ -31,13 +31,12 @@ Seq[Any](format.raw/*1.19*/("""
    <script type='text/javascript' src='"""),_display_(/*10.41*/routes/*10.47*/.Assets.at("js/changevideo.js")),format.raw/*10.78*/("""'></script>
 
 
-   <!-- <script type='text/javascript' src='"""),_display_(/*13.46*/routes/*13.52*/.Assets.at("js/index.js")),format.raw/*13.77*/("""'></script> -->
-   <script type='text/javascript' src='"""),_display_(/*14.41*/routes/*14.47*/.Assets.at("js/Intialization.js")),format.raw/*14.80*/("""'></script>
-   <script type='text/javascript' src='"""),_display_(/*15.41*/routes/*15.47*/.Assets.at("js/buildtree.js")),format.raw/*15.76*/("""'></script>
+   <script type='text/javascript' src='"""),_display_(/*13.41*/routes/*13.47*/.Assets.at("js/Intialization.js")),format.raw/*13.80*/("""'></script>
+   <script type='text/javascript' src='"""),_display_(/*14.41*/routes/*14.47*/.Assets.at("js/buildtree.js")),format.raw/*14.76*/("""'></script>
 
 
   <div style="background:#A0A0A0 ">
-      <img src='"""),_display_(/*19.18*/routes/*19.24*/.Assets.at("images/cpllogo.png")),format.raw/*19.56*/("""' alt="Mountain View" style="width:214px;height:123px">
+      <img src='"""),_display_(/*18.18*/routes/*18.24*/.Assets.at("images/cpllogo.png")),format.raw/*18.56*/("""' alt="Mountain View" style="width:214px;height:123px">
   </div>
 
 <br>
@@ -58,7 +57,7 @@ Seq[Any](format.raw/*1.19*/("""
      <div class="SubjectsDock">
      </div>
 </div>
-  """)))}),format.raw/*40.4*/("""
+  """)))}),format.raw/*39.4*/("""
 """))}
   }
 
@@ -71,11 +70,11 @@ Seq[Any](format.raw/*1.19*/("""
 }
               /*
                   -- GENERATED --
-                  DATE: Fri Sep 19 00:42:34 CDT 2014
-                  SOURCE: C:/Users/staamneh/Desktop/CPL-Lab/System Desgin/first_play/app/views/index.scala.html
-                  HASH: f737fd840eb7a55d81bfb24379427783d57be0e5
-                  MATRIX: 505->1|610->18|638->21|659->34|698->36|731->43|982->268|996->274|1045->303|1124->355|1139->361|1191->392|1277->451|1292->457|1338->482|1421->538|1436->544|1490->577|1569->629|1584->635|1634->664|1728->731|1743->737|1796->769|2420->1363
-                  LINES: 19->1|22->1|24->3|24->3|24->3|28->7|30->9|30->9|30->9|31->10|31->10|31->10|34->13|34->13|34->13|35->14|35->14|35->14|36->15|36->15|36->15|40->19|40->19|40->19|61->40
+                  DATE: Wed Dec 02 10:44:17 CST 2015
+                  SOURCE: C:/first_play/app/views/index.scala.html
+                  HASH: 9d9d5d97ed5d9a41c3518ccadc4e81318eb3abe7
+                  MATRIX: 505->1|610->18|638->21|659->34|698->36|731->43|982->268|996->274|1045->303|1124->355|1139->361|1191->392|1272->446|1287->452|1341->485|1420->537|1435->543|1485->572|1579->639|1594->645|1647->677|2271->1271
+                  LINES: 19->1|22->1|24->3|24->3|24->3|28->7|30->9|30->9|30->9|31->10|31->10|31->10|34->13|34->13|34->13|35->14|35->14|35->14|39->18|39->18|39->18|60->39
                   -- GENERATED --
               */
           

@@ -1,8 +1,5 @@
 $(document).ready(function(){
-
 document.getElementById('browseGD').addEventListener("click", function(){
-
-
 
       // The Browser API key obtained from the Google Developers Console.
          var developerKey = 'AIzaSyAwxXjelceSaJQIETuw8miWnkdCBXSDSA4';
@@ -52,6 +49,7 @@ document.getElementById('browseGD').addEventListener("click", function(){
                .addView(new google.picker.DocsView()
                .setIncludeFolders(true)
                 .setMimeTypes('application/vnd.google-apps.folder')
+                .setQuery(title = 'root')
                 .setSelectFolderEnabled(true))
                .setOAuthToken(oauthToken)
                .setDeveloperKey(developerKey)

@@ -6,8 +6,8 @@
 		module="first_play_2.10"
 		revision="1.0-SNAPSHOT"
 		conf="sources"
-		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20141104154711"/>
+		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool, echo-trace-compile, echo-trace-test, echo-weave, echo-sigar"
+		date="20151209194943"/>
 	<dependencies>
 	</dependencies>
 </ivy-report>

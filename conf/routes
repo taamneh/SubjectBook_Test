@@ -1,42 +1,104 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
+#Web Socket management
+GET		/ws							controllers.Application.socket
 
 # Home page
 
-GET     /                           controllers.Application.Main
+GET     /                           controllers.Application.Front
+
+GET     /home                       controllers.Application.Main
 
 GET     /display                    controllers.Application.ReceiveOauthData(state: String, code :String)
 
-GET     /getInfo                    controllers.Application.getInfo(task, subject, studyId: Int, signal_type: Int)
+GET     /portrait                   controllers.Application.getPortraitInfo(studyId: Int)
 
-GET     /getPsycho                  controllers.Application.getPsycho(task, subject, studyId: Int, signal_type: Int)
+GET     /getInfo                    controllers.Application.getInfo(task, subject, studyId: Int, signal_seq: Int)
 
-GET     /GetSignal                  controllers.Application.GetSignal(task, subject, studyId: Int, signal_type: Int)
+GET     /getPRF                     controllers.Application.getPRF(task, subject, studyId: Int, signal_type: Int)
 
-GET     /allStudies                controllers.Application.displayStudies
+GET     /getPsycho                  controllers.Application.getPsycho(task, subject, studyId: Int, signal_seq: Int)
+
+GET     /GetSignal                  controllers.Application.GetSignal(task, subject, studyId: Int, signal_type:Int, signal_sequence: Int)
+
+GET     /file                       controllers.Application.file(task, subject, studyId: Int, signal_type:Int, signal_sequence: Int)
+
+GET     /downloadStudy              controllers.Application.zip(studyId: Int)
+
+GET     /allStudies                 controllers.Application.displayStudies
+
+GET     /showPyramid                controllers.Application.showPyramid(studyNo: Int)
 
 GET     /showStudy/:studyNo         controllers.Application.showStudy(studyNo: Int)
 
+GET     /showStudySkipTop/:studyNo  controllers.Application.showStudySkipTop(studyNo: Int)
+
 GET     /displaySubject             controllers.Application.displaySubject(studyNo: Int, SubjectId: String)
 
-GET     /createStudy                controllers.Application.ShowCreateStudyForm()
+GET     /showRadar                  controllers.Application.showRadar(studyNo: Int, SubjectId: String)
 
-POST     /createStudy                controllers.Application.InsertNewStudy()
+GET     /getRadar                   controllers.Application.getRadar(studyNo: Int, SubjectId: String)
+
+GET      /createStudy               controllers.Application.ShowCreateStudyForm()
+
+POST     /createStudy               controllers.Application.InsertNewStudy()
+
+POST     /deleteStudy               controllers.Application.deleteStudy()
+
+POST     /processNewDataType        controllers.Application.ProcessNewDataType()
+
+POST     /processNewPsychometric    controllers.Application.ProcessNewPsychometric()
+
+POST     /ProcessNewTopSummary      controllers.Application.ProcessNewTopSummary()
+
+POST     /editExistingDataType      controllers.Application.EditDataType()
+
+POST     /editPsychometric          controllers.Application.EditPsychometric()
 
 POST    /logout                     controllers.Application.logout
+
+GET     /frontPage                  controllers.Application.Front
+
+GET     /setUpStudy                 controllers.Application.setUpStudy
+
+GET     /howToCreateNewStudy        controllers.Application.howToCreateNewStudy
+
+GET     /showAddDataType            controllers.Application.showAddDataType
+
+GET     /showAddPsychometric        controllers.Application.showAddPsychometric
+
+GET     /showAddTopSummary          controllers.Application.showAddTopSummary(studyId: Int)
+
+GET     /showAllDataTypes           controllers.Application.showAllDataTypes
+
+
+
+
+GET     /getDummy                   controllers.Application.Getdummy()
+
+GET     /showAllPsychometric        controllers.Application.showAllPsychometric
 
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 
+GET     /signalDataExample          controllers.Application.signalDataExample()
+
+GET     /InfoExample                 controllers.Application.InfoExample()
+
+GET     /PychometricExample          controllers.Application.PychometricExample()
+
+GET     /tabularExample          controllers.Application.tabularExample()
+
+GET     /videoExample          controllers.Application.videoExample()
 
 # Map static resources from the /public folder to the /assets URL path
 GET       /videoB                     controllers.Application.getVideo()
 
-GET       /video                     controllers.Application.getVideo2()
+GET       /test                     controllers.Application.test()
 
 # Orphans...
-GET     /file                       controllers.Application.file
+
 
 GET    /login                      controllers.Application.authentication
 

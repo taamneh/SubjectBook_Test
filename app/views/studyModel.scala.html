@@ -1,4 +1,4 @@
-@(userName: String, sub_sess: Map[String, List[( String, String)]], studyNo:Int)
+@(userName: String, sub_sess: Map[String, List[( String)]], studyNo:Int)
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -40,9 +40,6 @@
        <script type='text/javascript' src='@routes.Assets.at("js/run_activation.js")'></script>
 
 
-       <!-- <script type='text/javascript' src='@routes.Assets.at("js/index.js")'></script> -->
-    <!-- <script type='text/javascript' src='@routes.Assets.at("js/Intialization.js")'></script> -->
-    <!-- <script type='text/javascript' src='@routes.Assets.at("js/buildtree.js")'></script> -->
 
 
      <link rel="stylesheet" href="/assets/stylesheets/portrat.css" type="text/css" />
@@ -231,26 +228,29 @@
                                         <p hidden id = "studyNo" value = "123" subject ="S001">@studyNo</p>
                                                    <!-- <li><input type="checkbox" id="item-0" /><label for="item-0">Children Study</label> -->
                                                     <!-- <ul class ="subjects"> -->
-
+                                                        @import java.math.BigInteger; var i=1;
                                                         @for((subject,sessions) <- sub_sess){
                                                         <!-- <li><input type="checkbox" id="item-0-2" />@subject<label for="item-0"></label> -->
-                                                        <li> <div ><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label">@subject</span><span class="context-menu-trigger" data-label="table" data-what="tables"></span></div>
+                                                        <li> <div ><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label"><a href="/displaySubject?studyNo=@studyNo&SubjectId=@subject">@subject </a></span><span class="context-menu-trigger" data-label="table" data-what="tables"></span></div>
                                                             <ul>
                                                                 @for(session <- sessions){
-                                                                    <!-- <li><input type="checkbox" id="item-0-0-23" /><label for="item-0">@session._1</label> <ul id="@subject@session._1"> <li class="inner" subject=@subject session=@session._1><a >Run 1</a></li> </ul></li> -->
-                                                                <li><div ><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label">@session._1</span><span class="context-menu-trigger" data-label="table" data-what="tables"></span></div>
-                                                                    <ul id="@subject@session._1">
+                                                                    <!-- <li><input type="checkbox" id="item-0-0-23" /><label for="item-0">@session</label> <ul id="@subject@session"> <li class="inner" subject=@subject session=@session><a >Run 1</a></li> </ul></li> -->
+
+                                                                <li><div ><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label"><a href="/displaySubject?studyNo=@studyNo&SubjectId=@subject#@session">@session </a></span><span class="context-menu-trigger" data-label="table" data-what="tables"></span></div>
+                                                                   <!-- <ul id="@subject@session">
                                                                         <li>
                                                                             <div><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span>
-                                                                                <div class="inner" subject=@subject session=@session._1 > <span class="label">Run 1</span> </div>
+                                                                                <div class="inner" subject=@subject session=@session > <span class="label">Run 1</span> </div>
 
                                                                                 <span class="context-menu-trigger" data-label="table" data-what="tables"></span>
                                                                             </div>
                                                                         </li>
-                                                                    </ul>
+                                                                    </ul> -->
                                                                 </li>
+
                                                                 <!-- <li> <div ><span class="control"></span><span class="icon"><span class="icon_overlay"></span></span><span class="label">@subject</span><span class="context-menu-trigger" data-label="table" data-what="tables"></span></div> -->
                                                                 }
+
                                                              </ul>
                                                         </li>
                                                         }
