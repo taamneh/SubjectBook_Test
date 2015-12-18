@@ -1,6 +1,8 @@
 
 $(document).ready(function(){
 
+ alert('wait a minutesss');
+$( "#subNum" ).trigger( "click" );
 
 var studyParameters = {}
 
