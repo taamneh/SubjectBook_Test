@@ -6,7 +6,8 @@ import java.util
 import java.util.{Scanner, Iterator}
 import akka.actor.{ActorRef, Props, Actor}
 import akka.routing.RoundRobinPool
-import controllers.Start
+import controllers.CreatePortraitMessages._
+import controllers.CreatingStudyMessages._
 
 import scala.collection.JavaConverters._
 
@@ -26,19 +27,26 @@ import play.api.libs.json.{JsString, JsArray, Json, JsObject}
  * Created by staamneh on 6/12/2015.
  */
 
-case class SubjectID(name: String)
-case class Sai(value : TreeMap[String, BarPercentage] )
-case class Perf(subjectName: String, value: TreeMap[String, Double])
-case class PsycoMsg(subjectName: String, value : TreeMap[String, Double])
-case class Stress (subjectName: String, value: TreeMap[String, BarPercentage])
-case class Gender(subjectName: String, g: String)
-case class StartOfLoadedDrive(value: Double)
-case object FindLoadedPoint;
-case object FindRadar;
-case class FindPoint(service: Drive, subject: String);
-case class CreatePortraitForAsubject(service: Drive, subject:String, subName: String, username: String, failureThreshold : Double,  bio_code: Int )
 
-case class CreatePortraitForAsubjectAbstraction(service: Drive, subject:String, subName: String, username: String, topology: Abstraction)
+
+object CreatePortraitMessages {
+  case class ChildDone(SubjectName: String);
+  case class SubjectID(name: String)
+  case class Sai(value : TreeMap[String, BarPercentage] )
+  case class Perf(subjectName: String, value: TreeMap[String, Double])
+  case class PsycoMsg(subjectName: String, value : TreeMap[String, Double])
+  case class Stress (subjectName: String, value: TreeMap[String, BarPercentage])
+  case class Gender(subjectName: String, g: String)
+  case class StartOfLoadedDrive(value: Double)
+  case class Start(startTime: Long, studyNo: Int);
+  case object FindLoadedPoint;
+  case object FindRadar;
+  case class FindPoint(service: Drive, subject: String);
+  case class CreatePortraitForAsubject(service: Drive, subject:String, subName: String, username: String, failureThreshold : Double,  bio_code: Int )
+  case class CreatePortraitForAsubjectAbstraction(service: Drive, subject:String, subName: String, username: String, topology: Abstraction, descriptor: java.util.TreeMap[String, String])
+  case class CreatePortraitForAsubjectAbstractionWithSummary(service: Drive, subject:String, subName: String, username: String, topology: Abstraction, studyno: Int)
+}
+
 
 
 class CreatePortrait(folder_id: String, studyName: String, username: String, studyTopology: StudyTopology, bio_code: Int, Psycho_code: Int, physio_code: Int, studyNo: Int)  extends Actor {
@@ -133,7 +141,7 @@ class CreatePortrait(folder_id: String, studyName: String, username: String, stu
           js = js.:+(v)
         }
 
-        println(js);
+        //println(js);
         DataBaseOperations.InsertStudyRadar(studyNo, js.toString());
       }
 

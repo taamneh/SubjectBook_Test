@@ -5,6 +5,7 @@
  */
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import Models.*;
 import akka.actor.Actor;
@@ -83,6 +84,7 @@ public class GoogleDrive {
 
     private static GoogleAuthorizationCodeFlow flow = null;
     private final static int numberOfretry = 7;
+    public static long lastRequestTime = System.nanoTime();
 
 
     private final static String CLIENT_ID = "214102067690-01cnaes4gde0ufm03k1a4lpr8t7405eb.apps.googleusercontent.com";
@@ -361,7 +363,7 @@ public class GoogleDrive {
 
 
     static InputStream downloadFileByFileId(Drive service, String fileId) {
-        //if (file.getDownloadUrl() != null && file.getDownloadUrl().length() > 0) {
+
         Random randomGenerator = new Random();
         boolean x = false;
         for (int n =1 ; n <= numberOfretry; n++) {
@@ -436,7 +438,6 @@ public class GoogleDrive {
 
 
     static TreeMap<String, File> returnFilesInFolderJustForTest2(Drive service, String folderId, String query) throws IOException {
-
         TreeMap<String, File> mp= new TreeMap<String, File>();
         List<File> result = new ArrayList<File>();
         com.google.api.services.drive.Drive.Files.List request = service.files().list();
@@ -444,20 +445,18 @@ public class GoogleDrive {
         request.setQ(q);
         boolean exit = false;
         Random randomGenerator = new Random();
-
         do {
             for (int n = 1; n <= numberOfretry && !exit ; n++) {
                 try {
                     FileList files = request.execute();
-
-
                     result.addAll(files.getItems());
                     request.setPageToken(files.getNextPageToken());
+                    exit = true;
                 } catch (GoogleJsonResponseException e) {
                     Logger.error("returnFilesInFolder" + e.getMessage());
                     if ((e.getDetails().getErrors().get(0).getReason().equals("rateLimitExceeded")
                             || e.getDetails().getErrors().get(0).getReason().equals("userRateLimitExceeded"))) {
-                        Logger.error("in returnFilesInFolder rate limit exceeded(salah) " + e);
+                        Logger.error("in returnFilesInFoldertest2 rate limit exceeded(salah) " + e);
                         // Apply exponential backoff.
                         try {
                             Thread.sleep((1 << n) * 1000 + randomGenerator.nextInt(1001) * n);
@@ -669,6 +668,96 @@ public class GoogleDrive {
         SpreadsheetService service2 =  new SpreadsheetService("MySpreadsheetIntegration-v1");
 
     }
+    public  static JSONObject UpdatingRealTime( String user, String id)  throws AuthenticationException, MalformedURLException, IOException, ServiceException, URISyntaxException {
+
+        SpreadsheetService service2 = new SpreadsheetService("MySpreadsheetIntegration-v1");
+        //GoogleCredential credential = getCredentials("", "");
+        GoogleCredential googleCredential = getStoredCredentials(user);
+        service2.setOAuth2Credentials(googleCredential);
+
+
+        // TODO: Authorize the service object for a specific user (see other sections)
+
+        // Define the URL to request.  This should never change.
+        URL SPREADSHEET_FEED_URL = new URL(
+                "https://spreadsheets.google.com/feeds/spreadsheets/private/full");
+
+        // Make a request to the API and get all spreadsheets.
+        SpreadsheetFeed feed = service2.getFeed(SPREADSHEET_FEED_URL, SpreadsheetFeed.class);
+        List<SpreadsheetEntry> spreadsheets = feed.getEntries();
+
+        int loc = 0;
+        SpreadsheetEntry mySheet = spreadsheets.get(0);
+        // Iterate through all of the spreadsheets returned
+        for (SpreadsheetEntry spreadsheet : spreadsheets) {
+            // Print the title of this spreadsheet to the screen
+            System.out.println(spreadsheet.getTitle().getPlainText());
+            System.out.println(spreadsheet.getId().substring(spreadsheet.getId().lastIndexOf("/")+1));
+
+            if(spreadsheet.getId().substring(spreadsheet.getId().lastIndexOf("/")+1).equals(id)){
+                mySheet = spreadsheet;
+                System.out.println( "yes we have and it is : "  + spreadsheet.getId()  );
+            }
+
+        }
+
+
+        JSONObject all = new JSONObject();
+        JSONArray header = new JSONArray();
+
+        JSONObject obj = new JSONObject();
+        obj.put("id","");
+        obj.put("label","Time");
+        obj.put("type", "number");
+        header.add(obj);
+        obj = new JSONObject();
+        obj.put("id","");
+        obj.put("label","Signal");
+        obj.put("type", "number");
+        header.add(obj);
+
+        JSONArray content = new JSONArray();
+
+
+       // System.out.println(mySheet.getTitle().getPlainText());
+        WorksheetFeed worksheetFeed = service2.getFeed(
+                mySheet.getWorksheetFeedUrl(), WorksheetFeed.class);
+        List<WorksheetEntry> worksheets = worksheetFeed.getEntries();
+        WorksheetEntry worksheet = worksheets.get(0);
+
+        //URL listFeedUrl = worksheet.getListFeedUrl();
+        URL listFeedUrl = new URI(worksheet.getListFeedUrl().toString() + "?orderby=column:time").toURL();
+
+
+        System.out.println(listFeedUrl);
+
+
+        ListFeed listFeed = service2.getFeed(listFeedUrl, ListFeed.class);
+
+        for (ListEntry row : listFeed.getEntries()) {
+             obj = new JSONObject();
+            // Print the first column's cell value
+            //System.out.print(row.getTitle().getPlainText() + "\t");
+            // Iterate over the remaining columns, and print each cell value
+
+            JSONArray arrTemp= new JSONArray();
+            for (String tag : row.getCustomElements().getTags()) {
+                JSONObject firstVal = new JSONObject();
+                firstVal.put("v", row.getCustomElements().getValue(tag));
+               // System.out.print(row.getCustomElements().getValue(tag) + "\t");
+                arrTemp.add(firstVal);
+            }
+            obj.put("c", arrTemp);
+            content.add(obj);
+           // System.out.println();
+        }
+
+        all.put("cols" , header);
+        all.put("rows" , content);
+
+        //System.out.println(all);
+        return all;
+    }
 
     /**
      * Insert new file.
@@ -684,11 +773,7 @@ public class GoogleDrive {
     public  static File insertFile(Drive service, String title, String description,
                                    String parentId, String mimeType, String filename)  throws AuthenticationException, MalformedURLException, IOException, ServiceException {
 
-
-        SpreadsheetService service2 =
-                new SpreadsheetService("MySpreadsheetIntegration-v1");
-
-
+        SpreadsheetService service2 = new SpreadsheetService("MySpreadsheetIntegration-v1");
 
         // File's metadata.
         File body = new File();
@@ -718,7 +803,6 @@ public class GoogleDrive {
             // return null;
         }
 
-
         //GoogleCredential credential = getCredentials("", "");
         GoogleCredential googleCredential = getStoredCredentials("cplsubjectbook@gmail.com");
         service2.setOAuth2Credentials(googleCredential);
@@ -742,7 +826,7 @@ public class GoogleDrive {
             System.out.println(spreadsheet.getId().substring(spreadsheet.getId().lastIndexOf("/")+1));
 
             if(spreadsheet.getId().substring(spreadsheet.getId().lastIndexOf("/")+1).equals(file.getId())){
-                System.out.println( "yes we have and it is : "  +spreadsheet.getId()  );
+                System.out.println( "yes we have and it is : "  + spreadsheet.getId()  );
             }
 
         }
@@ -786,7 +870,6 @@ public class GoogleDrive {
         }*/
 
         URL listFeedUrl = worksheet.getListFeedUrl();
-        ListFeed listFeed = service2.getFeed(listFeedUrl, ListFeed.class);
 
 
      //   for(int i =0; i< 1000; i++) {
@@ -800,6 +883,8 @@ public class GoogleDrive {
             row2 = service2.insert(listFeedUrl, row2);
        // }
 
+
+        ListFeed listFeed = service2.getFeed(listFeedUrl, ListFeed.class);
 
         for (ListEntry row : listFeed.getEntries()) {
             // Print the first column's cell value
@@ -1003,27 +1088,30 @@ public class GoogleDrive {
 
 
     //SourceType 1: from server, 2: from Google drive
-    public static org.json.simple.JSONObject DownloadSignal(String username, String url, int sourceType, int signalType, int frameRate,int first_row, int first_col, String activityFile)  throws  Exception
+    public static org.json.simple.JSONObject DownloadSignal(String username, String url, int sourceType, int signalType, int frameRate,int first_row, int first_col, String activityFile, String baseLineFile, String descLoc)  throws  Exception
     {
+
+        ReadExcelJava tt = new ReadExcelJava();
 
         if (sourceType == SharedData.LOCALSERVER)
         {
             Logger.debug("Download the signal from the server, Signal Type is: \" + signalType);");
             InputStream input = new BufferedInputStream(
                     new FileInputStream(url));
+            String fileName = generateFileNameFromInputStream(input);
 
 
-            /*ReadExcelScala GetSignalAsJOSON = new ReadExcelScala("", "", " ",signalType );
-            return GetSignalAsJOSON.fromExcelInputParallel(input);*/
-
-            ActorRef myActor = Akka.system().actorOf(Props.create(ReadExcelScala.class, signalType, input));
+            /*ActorRef myActor = Akka.system().actorOf(Props.create(ReadExcelScala.class, signalType, input));
             Timeout timeout = new Timeout(Duration.create(100, "seconds"));
             Future<Object> future = Patterns.ask(myActor,signalType, timeout);
+            */
 
-            org.json.simple.JSONObject x = (org.json.simple.JSONObject) Await.result(future, timeout.duration());
+            org.json.simple.JSONObject x = null;
 
+            x = tt.fromExcelInputTemp(frameRate, fileName, first_row, first_col);
 
             input.close();
+
             return  x;
         }
         else {
@@ -1040,21 +1128,27 @@ public class GoogleDrive {
 
             org.json.simple.JSONObject x = null;
 
-
-
-            ReadExcelJava tt = new ReadExcelJava();
-
             if(input != null) {
                 // if the request file is required to be visulaized in column chart
                 if (signalType == 4) { //TODO: use constant name
                     //x = ReadExcelJava.fromExcelInputToChar(signalType, fileName);
-                    x = tt.fromExcelInputToCharTemp(signalType, fileName);
+                    if(descLoc != null)
+                        x = tt.fromExcelInputToCharTemp(signalType, fileName, CreatePortraitAbstraction.getStudyDescriptorJava(service, descLoc));
+                    else
+                        x = tt.fromExcelInputToCharTemp(signalType, fileName, null);
 
                 } else {
                     if (activityFile != null) {
                         Logger.info("Try to read from excel file with activity");
                         // x = ReadExcelJava.fromExcelInput(signalType, ReadExcelJava.readActivity(downloadFileByFileId(service, activityFile)), fileName);
-                        x = ReadExcelJava.fromExcelInputTemp(frameRate, ReadExcelJava.readActivity(downloadFileByFileId(service, activityFile)), fileName, first_row, first_col);
+                        if(baseLineFile != null) {
+                            InputStream input2 = downloadFileByFileId(service, baseLineFile);
+                            String fileName2 = generateFileNameFromInputStream(input2);
+                            //TODO replace 1 with something else that is specific for each signal(i.e, paransal should have 2)
+                            x = ReadExcelJava.fromExcelInputTemp(frameRate, ReadExcelJava.getAllSignalFromExcelAbstraction(fileName2, 1), ReadExcelJava.readActivity(downloadFileByFileId(service, activityFile)), fileName, first_row, first_col);
+                        }
+                        else
+                            x = ReadExcelJava.fromExcelInputTemp(frameRate,null, ReadExcelJava.readActivity(downloadFileByFileId(service, activityFile)), fileName, first_row, first_col);
                     } else {
                         Logger.info("Try to read from excel file without activity");
                         //x = ReadExcelJava.fromExcelInput(signalType, fileName);

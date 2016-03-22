@@ -1,0 +1,39 @@
+@(message: String)
+
+@main(message) {
+
+
+
+   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+   <script type='text/javascript' src='@routes.Assets.at("js/drawchart.js")'></script>
+   <script type='text/javascript' src='@routes.Assets.at("js/changevideo.js")'></script>
+
+
+   <script type='text/javascript' src='@routes.Assets.at("js/Intialization.js")'></script>
+   <script type='text/javascript' src='@routes.Assets.at("js/buildtree.js")'></script>
+
+
+  <div style="background:#A0A0A0 ">
+      <img src='@routes.Assets.at("images/cpllogo.png")' alt="Mountain View" style="width:214px;height:123px">
+  </div>
+
+<br>
+<br>
+<br>
+<div id="parent" style="border:1px solid;width:100%; float: left" >
+    <br>
+<div class="css-treeview" style="float:left;width:20%;height:1000px;">
+    <button id = "cv2"> Build the Tree </button>
+    <ul>
+        <li><input type="checkbox" id="item-0" /><label for="item-0">Children Study</label>
+            <ul class ="subjects">
+                <!--<ul id="signal"><li><a>Run 1</a></li></ul></li></ul> -->
+            </ul>
+        </li>
+    </ul>
+</div>
+     <div class="SubjectsDock">
+     </div>
+</div>
+  }

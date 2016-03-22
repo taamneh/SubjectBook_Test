@@ -15,7 +15,7 @@ public class PlainChartFromExcel extends JsonFromExcel {
 
 
     private JSONArray arrTemp= new JSONArray();
-    private ArrayList<Double> avergaSignal = new ArrayList<>(20);
+    private ArrayList<Double> avergaSignal = new ArrayList<>(40);
     private int ctrForArray =0;
     private int frameCtr=1;
 
@@ -31,7 +31,7 @@ public class PlainChartFromExcel extends JsonFromExcel {
     }
     public void intializeArray()
     {
-        for(int i=0; i<20; i++)
+        for(int i=0; i<40; i++)
             avergaSignal.add(-1.0);
     }
 

@@ -11,7 +11,6 @@ import java.util
 import java.util.{Scanner, Iterator}
 import akka.actor.{ActorRef, Props, Actor}
 import akka.routing.RoundRobinPool
-import controllers.Start
 
 import scala.collection.JavaConverters._
 
@@ -26,9 +25,92 @@ import com.google.api.services.drive.model.File
 import scala.collection.immutable.TreeMap
 import scala.util.control.Breaks._
 import play.api.libs.json.{JsString, JsArray, Json, JsObject}
+import controllers.CreatePortraitMessages._
+import controllers.CreatingStudyMessages._
 
 
 
+object CreatePortraitAbstraction
+{
+
+
+
+  def getStudyDescriptorJava (service : Drive, loc : String) : java.util.TreeMap[String, String] =
+  {
+
+     getStudyDescriptor (service , loc) match {
+       case Some(x) =>
+         var newMap : java.util.TreeMap[String, String] = new java.util.TreeMap[String, String];
+         for((key,value) <- x){
+           newMap put(key , value._1)
+         }
+         newMap
+       case None => null
+     }
+  }
+
+
+
+  def getStudyDescriptor (userName : String, loc : String): Option[TreeMap[String,(String,Boolean,Int, Boolean)] ] =
+  {
+
+    var googleCredential: GoogleCredential = GoogleDrive.getStoredCredentials(userName)
+    var service: Drive = GoogleDrive.buildService(googleCredential)
+
+
+
+    loc match {
+      case location =>
+        var allSessions : util.ArrayList[SessionDescription] = null
+        import scala.collection.JavaConversions._
+        val input: InputStream = GoogleDrive.downloadFileByFileId(service, location)
+        val tt: ReadExcelJava = new ReadExcelJava
+        allSessions = tt.getStudyDescription(4, GoogleDrive.generateFileNameFromInputStream(input))
+
+        if(allSessions != null){
+
+          var all :TreeMap[String,(String,Boolean,Int, Boolean)] = TreeMap.empty
+
+          allSessions.foreach(x=>
+            all += x.getName -> (x.getDesiredName, x.getHide, x.getOrder, x.getMutualEx)
+          )
+          println("SSSSSSSSSSSSSSSSSSS"    + all);
+          Option(all);
+        }
+        else
+          None
+      case null => null
+    }
+
+  }
+    def getStudyDescriptor (service : Drive, loc : String): Option[TreeMap[String,(String,Boolean,Int, Boolean)] ] =
+  {
+
+
+    loc match {
+      case location =>
+        var allSessions : util.ArrayList[SessionDescription] = null
+        import scala.collection.JavaConversions._
+        val input: InputStream = GoogleDrive.downloadFileByFileId(service, location)
+        val tt: ReadExcelJava = new ReadExcelJava
+        allSessions = tt.getStudyDescription(4, GoogleDrive.generateFileNameFromInputStream(input))
+
+        if(allSessions != null){
+
+          var all :TreeMap[String,(String,Boolean,Int, Boolean)] = TreeMap.empty
+
+          allSessions.foreach(x=>
+            all += x.getName -> (x.getDesiredName, x.getHide, x.getOrder, x.getMutualEx)
+          )
+          println("SSSSSSSSSSSSSSSSSSS"    + all);
+          Option(all);
+        }
+        else
+          None
+      case null => null
+    }
+  }
+}
 
 class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor {
 
@@ -49,15 +131,10 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
 
   // val failureThreshold: Double = GoogleDrive.findLoadedDrivingPoint(folder_id, username)  //TODO: parallize this
   var failureThreshold: Double = 0.0;
-
-
   // get the names of subjects folders
   val subjects =GoogleDrive.returnFilesInFolder(service, abst.studyLocation, "mimeType = 'application/vnd.google-apps.folder'")
-
-
   var titlteWithId: TreeMap[String, String] = new TreeMap[String, String]
   // put subject folder name and subject id in a tree map to sort them. {
-
   service = GoogleDrive.buildService(googleCredential)
   for (i <- 0 until subjects.size())  {
     titlteWithId+= GoogleDrive.waitUntilGetDGFile(service,subjects.get(i)).getTitle -> subjects.get(i)
@@ -70,6 +147,7 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
   var subject: String = null
   var sessionId: String = null
   var extension: String = null
+  var studyDescriptor : Option[TreeMap[String,(String,Boolean,Int, Boolean)] ] = None
   var allBarsForAllSubjs: Map[String,  TreeMap[String, BarPercentage]] = TreeMap.empty
   var allPerformanceForAllSubs: Map[String, TreeMap[String, Double]] =TreeMap.empty
   var allPsychometricForAllSubs: Map[String, TreeMap[String, Double]] = TreeMap.empty
@@ -93,8 +171,7 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
   def receive = {
     case FindLoadedPoint =>
 
-
-      startTimeStudy = System.nanoTime
+      //startTimeStudy = System.nanoTime
       for ((subName, subject) <- titlteWithId) {
         //al myActor= context.actorOf(Props[FindFailurePoint])
         Global.routerForPortrait ! FindPoint(service , subject)
@@ -122,7 +199,7 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
           js = js.:+(v)
         }
 
-        println(js);
+        //println(js);
         DataBaseOperations.InsertStudyRadar(studyNo, js.toString());
       }
 
@@ -146,29 +223,65 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
     //context.stop(sender())
 
     // case start will create a different actor for each subject, where each actor will calculate the grade, stress, sai, and gender and send it back here
-    case Start =>
+    case Start(sTime, sNo) =>
       startTimePortrait = System.nanoTime
+      startTimeStudy = sTime
+
+      var sessionNamesMapping : java.util.TreeMap[String, String] = null;
+      val desclocation = DataBaseOperations.getDescriptorLocation(sNo);
+      if( desclocation !=null)
+        {
+          studyDescriptor = CreatePortraitAbstraction.getStudyDescriptor(service,desclocation )
+
+          sessionNamesMapping= studyDescriptor match {
+            case Some(x) =>
+              var newMap : java.util.TreeMap[String, String] = new java.util.TreeMap[String, String];
+              for((key,value) <- x){
+                newMap put(key , value._1)
+              }
+              newMap
+            case None => null
+            case null => null
+          }
+        };
+
+
+
+
       Logger.info("Failure Point: "  +  failureThreshold)
       for ((subName, subject) <- titlteWithId) {
         //val myActor= context.actorOf(Props(new ScanSubjectPortrait))
-        Global.routerForPortraitAbstraction ! CreatePortraitForAsubjectAbstraction(service , subject , subName, abst.userName, abst)
+        Global.routerForPortraitAbstraction ! CreatePortraitForAsubjectAbstraction(service , subject , subName, abst.userName, abst, sessionNamesMapping)
       }
     // each subActor will tell once he finished proceessing a subject so that we know when everything is done
     case ChildDone(name) =>
       doneSubjects+=1;
       Logger.info("One subject is done......portrait                 : "+ name + "   " +  doneSubjects   + "/"  + subjects.size() )
-      //context.stop(sender())
       if(doneSubjects == subjects.size()) {
         Logger.info("All the subjects have been scaned now we are goining to create the portrit string")
         // set up the gender
         var i = 0;
-        queryString = generateQueryStringTemp(allBarsForAllSubjs, allPerformanceForAllSubs, allPsychometricForAllSubs, abst.studyName, genderList, traits, studyNo);
+
+
+
+        studyDescriptor match{
+          case Some(descriptiveStudy) =>
+            queryString = generateQueryStringTemp(allBarsForAllSubjs, allPerformanceForAllSubs, allPsychometricForAllSubs, abst.studyName, genderList, traits, studyNo, descriptiveStudy);
+          case None =>
+            queryString = generateQueryStringTempWithoutDescriptive(allBarsForAllSubjs, allPerformanceForAllSubs, allPsychometricForAllSubs, abst.studyName, genderList, traits, studyNo);
+        }
+
+
         Logger.info(queryString);
+
+        // to notify the sender that we finished creating the subjectportrait and top summary can start working.
+      //  context.parent ! DoneCreatingPortrait(studyNo)
 
         DataBaseOperations.InsertStudyPortraitString(studyNo, queryString);
         Logger.info("Time spent in creating the portrait is :" + (System.nanoTime - startTimePortrait)/60000000000.0)
         Logger.info("Time spent in creating the whole study is :" + (System.nanoTime - startTimeStudy)/60000000000.0)
         queryString;
+
         context.stop(self)
       }
     case Stress(subjectName, x) =>
@@ -184,35 +297,107 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
   }
 
 
-  def generateQueryStringTemp(allBarsForAllSubjs:Map[String,TreeMap[String, BarPercentage]], allPerformanceForAllSubs: Map[String,TreeMap[String, Double]], allPsychometricForAllSubs: Map[String,TreeMap[String, Double]], studyName: String, genderP: TreeMap[String, String],  traitsP: TreeMap[String, String], studyNo: Int): String = {
+// This fucntion will try to read the study descriptor (i.e., ".descriptor" file)and return it as a Map
 
 
+
+  def checkIfSessionThere( descriptiveStudy :TreeMap[String,(String,Boolean,Int, Boolean)], search: String): Boolean =
+  {
+    for((key, value) <- descriptiveStudy)
+      {
+        if(value._1.equalsIgnoreCase(search) && value._2)
+          return true;
+      }
+
+    return false;
+  }
+
+  def isMutual( descriptiveStudy :TreeMap[String,(String,Boolean,Int, Boolean)], search: String): Boolean =
+  {
+    for((key, value) <- descriptiveStudy)
+    {
+      if(key.equalsIgnoreCase(search) && value._4)
+        return true;
+      if(value._1.equalsIgnoreCase(search) && value._4)
+        return true;
+
+    }
+
+    return false;
+  }
+
+  // to generate a portrait for each 40 subject In order to avoid the problem of lengthy link
+  def generateQueryStringTemp(allBarsForAllSubjs:Map[String,TreeMap[String, BarPercentage]], allPerformanceForAllSubs: Map[String,TreeMap[String, Double]], allPsychometricForAllSubs: Map[String,TreeMap[String, Double]], studyName: String, genderP: TreeMap[String, String],  traitsP: TreeMap[String, String], studyNo: Int, descriptiveStudy :TreeMap[String,(String,Boolean,Int, Boolean)]): String = {
+
+    var perfSeq = Seq.empty[Double]
+    for((key,value) <- allPerformanceForAllSubs){
+      for((key2,value2) <- value){
+        perfSeq = perfSeq :+ value2;
+      }
+    }
+
+    var saifSeq = Seq.empty[Double]
+    for((key,value) <- allPsychometricForAllSubs){
+      for((key2,value2) <- value){
+        saifSeq = saifSeq :+ value2;
+      }
+    }
+
+    val perfPercentil = "&grade_Percentile=" + computePercentile(perfSeq, 25, true) + "," + computePercentile(perfSeq, 50, true) + "," + computePercentile(perfSeq, 75, true)
+    val saiPercenil = "&SAIs_Percentile=" + computePercentile(saifSeq, 25, true) + "," + computePercentile(saifSeq, 50, true) + "," + computePercentile(saifSeq, 75, true)
 
     Logger.info("We are in fun: generateQueryString")
     var queryString: String = ""
     var tai: String = ""
-    var sBars = "";
-    var examsNames ="";
-    var grades ="";
-    var genders = "";
+    var sBars = "" ;
+    var examsNames ="" ;
+    var grades ="" ;
+    var genders = "" ;
     var subjectNames = ""
     var triats = ""
-    var subjectCounter =0;
+    var subjectCounter =0 ;
     var finalQueryString=""
-    var subjectPerPAge = 50;
+    var subjectPerPAge = 40 ;
     var standardSessionListOrdered: TreeMap[String, String] = new TreeMap[String, String]
+
+
+
+
+
 
     // to generate a list of all available session and sorting them so that we are able to create a uniform seesion list for all subjects
     for ((key1,value1) <- allBarsForAllSubjs) {
       import scala.collection.JavaConversions._
       for ((key2, value2) <- value1) {
-        if (!standardSessionListOrdered.containsValue(key2.replaceFirst("(\\d*\\s*)", ""))) {
-          standardSessionListOrdered += key2 -> key2.replaceFirst("(\\d*\\s*)", "")
+        if (!standardSessionListOrdered.containsValue(key2.replaceFirst("(\\d*\\s*)", ""))){
+          if( descriptiveStudy.contains(key2.replaceFirst("(\\d*\\s*)", "")) ) {
+            if (descriptiveStudy(key2.replaceFirst("(\\d*\\s*)", ""))._2)
+              standardSessionListOrdered += descriptiveStudy(key2.replaceFirst("(\\d*\\s*)", ""))._3+key2 -> key2.replaceFirst("(\\d*\\s*)", "")
+          }
+          else
+              if( checkIfSessionThere(descriptiveStudy,key2.replaceFirst("(\\d*\\s*)", "") ) )
+              standardSessionListOrdered += key2 -> key2.replaceFirst("(\\d*\\s*)", "")
+
         }
       }
     }
 
-    val sessionNOP = standardSessionListOrdered.size - 1
+    println(standardSessionListOrdered)
+
+
+    // calucate the number of mutual execulsive sessions
+    var numES = 0;
+    for((key, value) <- descriptiveStudy)
+      {
+        if(value._4)
+          numES +=1;
+
+      }
+
+    if(numES > 0){
+      numES = numES -1;
+    }
+    val sessionNOP = standardSessionListOrdered.size - numES;
     var itr: Int = 0
     import scala.collection.JavaConversions._
     for ((subject, value) <- allBarsForAllSubjs) {
@@ -221,9 +406,9 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
       if(subjectCounter %subjectPerPAge ==0  && subjectCounter >0)
       {
         if(subjectCounter ==subjectPerPAge)
-          queryString =  "subjects=" + subjectPerPAge + "&cols=3&hideButton=yes&title=" + studyName + "&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames
+          queryString =  "subjects=" + subjectPerPAge + "&cols=3&hideButton=yes&title=" + studyName + "&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames + perfPercentil + saiPercenil
         else
-          queryString =  queryString + "~"+ "subjects=" + subjectPerPAge + "&cols=3&hideButton=yes&title=" + studyName + "&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames
+          queryString =  queryString + "~"+ "subjects=" + subjectPerPAge + "&cols=3&hideButton=yes&title=" + studyName + "&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames + perfPercentil +saiPercenil
 
         sBars = ""
         examsNames = ""
@@ -236,6 +421,165 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
 
       subjectCounter +=1;
 
+      subjectNames = subjectNames + subject + ","
+      triats = triats + traitsP(subject) +  ","
+      genders = genders + genderP(subject) + ","
+
+      val prf: TreeMap[String, Double] = allPerformanceForAllSubs(subject)
+      val sai_list: TreeMap[String, Double] = allPsychometricForAllSubs(subject)
+      itr += 1
+      var isFirst: Boolean = true
+      if (value.size > 0) {
+        import scala.collection.JavaConversions._
+        for ((sessionNameWithNumber, sessionSimplifiedName) <- standardSessionListOrdered) { // we start going over the global session
+
+        var sName = sessionSimplifiedName
+          if(descriptiveStudy.contains(sessionSimplifiedName))
+            sName = descriptiveStudy(sessionSimplifiedName)._1
+
+          var isthere: Boolean = false
+          val perf_temp: Long = 0
+          var performance: String = "NA"
+          var sai_temp: String = "NA"
+          var theOne: BarPercentage = null
+          import scala.collection.JavaConversions._
+          for ((sessionName, stressBar) <- value) { // check if the current sujbect has the global session
+            if (sessionName.replaceFirst("(\\d*\\s*)", "") == sessionSimplifiedName) {
+              isthere = true
+              theOne = stressBar
+              if (prf.containsKey(sessionSimplifiedName) && !org.apache.commons.lang3.StringUtils.containsIgnoreCase(sessionNameWithNumber, "tl")) {
+                //performance = Long.toString(prf.get(entry.getValue).round)
+                performance = prf.get(sessionSimplifiedName) match {
+                  case Some(x) => x.round.toString
+                  case None => "NA"
+                }
+              }
+              var neededKey: String = sName
+              if (org.apache.commons.lang3.StringUtils.containsIgnoreCase(sessionNameWithNumber, "fd")) neededKey = "FD"
+              if (sai_list.containsKey(neededKey) && !org.apache.commons.lang3.StringUtils.containsIgnoreCase(neededKey, "tl")) {
+                // sai_temp = Long.toString(sai_list.get(neededKey).round)
+                sai_temp =  {sai_list.get(neededKey)  match {case Some(x) => x.round}}.toString
+              }
+            }
+          }
+          if (isthere) { //This means that the current subject has a session similar to the current session in globabl session
+            if (isFirst) {
+              sBars = sBars + new DecimalFormat("#.##").format(theOne.relaxed) + "," + new DecimalFormat("#.##").format(theOne.normal) + "," + new DecimalFormat("#.##").format(theOne.stressed)
+              examsNames = examsNames + sName //descriptiveStudy(sessionSimplifiedName)._1//sessionNameWithNumber.replaceFirst("(\\d*\\s*)", "")
+              grades = grades + performance
+              tai = tai + sai_temp
+              isFirst = false
+            }
+            else {
+              sBars = sBars + ":" + new DecimalFormat("#.##").format(theOne.relaxed) + "," + new DecimalFormat("#.##").format(theOne.normal) + "," + new DecimalFormat("#.##").format(theOne.stressed)
+              examsNames = examsNames + "," + sName //descriptiveStudy(sessionSimplifiedName)._1 //sessionNameWithNumber.replaceFirst("(\\d*\\s*)", "")
+              grades = grades + "," + performance
+              tai = tai + ":" + sai_temp
+            }
+          }
+          //else if(!descriptiveStudy(sessionSimplifiedName)._4){   // this to handle the situation where there is a missing session in this subject
+          else if(!isMutual(descriptiveStudy,sessionSimplifiedName )){
+            // if (!org.apache.commons.lang3.StringUtils.containsIgnoreCase(sessionSimplifiedName, "fd")) {
+            if (isFirst) {
+              examsNames = examsNames + sName //descriptiveStudy(sessionSimplifiedName)._1 // sessionSimplifiedName.replaceFirst("(\\d*\\s*)", "")
+              grades = grades + "NA"
+              tai = tai + "NA"
+              isFirst = false
+            }
+            else {
+              examsNames = examsNames + "," + sName //descriptiveStudy(sessionSimplifiedName)._1 //sessionSimplifiedName.replaceFirst("(\\d*\\s*)", "")
+              sBars = sBars + ":"
+              grades = grades + ",NA"
+              tai = tai + ":NA"
+            }
+            // }
+          }
+        }
+      }
+      else {
+      }
+      sBars = sBars + ";"
+      examsNames = examsNames + ";"
+      grades = grades + ";"
+      tai = tai + ";"
+    }
+    if(subjectCounter % subjectPerPAge != 0  && subjectCounter > subjectPerPAge)
+    {
+      queryString =  queryString +  "~"+ "subjects=" + subjectCounter%subjectPerPAge + "&cols=3&hideButton=yes&title=" + studyName +"&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames + perfPercentil +saiPercenil
+    }
+    else
+      queryString =  "subjects=" + subjectCounter%subjectPerPAge + "&cols=3&hideButton=yes&title=" + studyName +"&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames + perfPercentil + saiPercenil
+
+    // queryString = queryString + "&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames
+    return queryString
+  }
+
+  // to generate a portrait for each 40 subject In order to avoid the problem of lengthy link
+  def generateQueryStringTempWithoutDescriptive(allBarsForAllSubjs:Map[String,TreeMap[String, BarPercentage]], allPerformanceForAllSubs: Map[String,TreeMap[String, Double]], allPsychometricForAllSubs: Map[String,TreeMap[String, Double]], studyName: String, genderP: TreeMap[String, String],  traitsP: TreeMap[String, String], studyNo: Int): String = {
+
+    var perfSeq = Seq.empty[Double]
+    for((key,value) <- allPerformanceForAllSubs){
+      for((key2,value2) <- value){
+        perfSeq = perfSeq :+ value2;
+      }
+    }
+
+    var saifSeq = Seq.empty[Double]
+    for((key,value) <- allPsychometricForAllSubs){
+      for((key2,value2) <- value){
+        saifSeq = saifSeq :+ value2;
+      }
+    }
+
+    val perfPercentil = "&grade_Percentile=" + computePercentile(perfSeq, 25, true) + "," + computePercentile(perfSeq, 50, true) + "," + computePercentile(perfSeq, 75, true)
+    val saiPercenil = "&SAIs_Percentile=" + computePercentile(saifSeq, 25, true) + "," + computePercentile(saifSeq, 50, true) + "," + computePercentile(saifSeq, 75, true)
+
+    Logger.info("We are in fun: generateQueryString")
+    var queryString: String = ""
+    var tai: String = ""
+    var sBars = "" ;
+    var examsNames ="" ;
+    var grades ="" ;
+    var genders = "" ;
+    var subjectNames = ""
+    var triats = ""
+    var subjectCounter =0 ;
+    var finalQueryString=""
+    var subjectPerPAge = 40 ;
+    var standardSessionListOrdered: TreeMap[String, String] = new TreeMap[String, String]
+
+    // to generate a list of all available session and sorting them so that we are able to create a uniform seesion list for all subjects
+    for ((key1,value1) <- allBarsForAllSubjs) {
+      import scala.collection.JavaConversions._
+      for ((key2, value2) <- value1) {
+        if (!standardSessionListOrdered.containsValue(key2.replaceFirst("(\\d*\\s*)", ""))) {
+            standardSessionListOrdered += key2 -> key2.replaceFirst("(\\d*\\s*)", "")
+        }
+      }
+    }
+
+    println(standardSessionListOrdered)
+    val sessionNOP = standardSessionListOrdered.size;
+    var itr: Int = 0
+    import scala.collection.JavaConversions._
+    for ((subject, value) <- allBarsForAllSubjs) {
+      if(subjectCounter %subjectPerPAge ==0  && subjectCounter >0)
+      {
+        if(subjectCounter ==subjectPerPAge)
+          queryString =  "subjects=" + subjectPerPAge + "&cols=3&hideButton=yes&title=" + studyName + "&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames + perfPercentil + saiPercenil
+        else
+          queryString =  queryString + "~"+ "subjects=" + subjectPerPAge + "&cols=3&hideButton=yes&title=" + studyName + "&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames + perfPercentil +saiPercenil
+
+        sBars = ""
+        examsNames = ""
+        grades = ""
+        tai =  ""
+        subjectNames =  ""
+        triats =   ""
+        genders = ""
+      }
+
+      subjectCounter +=1;
       subjectNames = subjectNames + subject + ","
       triats = triats + traitsP(subject) +  ","
       genders = genders + genderP(subject) + ","
@@ -272,7 +616,7 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
               }
             }
           }
-          if (isthere) {
+          if (isthere) { //This means that the current subject has a session similar to the current session in globabl session
             if (isFirst) {
               sBars = sBars + new DecimalFormat("#.##").format(theOne.relaxed) + "," + new DecimalFormat("#.##").format(theOne.normal) + "," + new DecimalFormat("#.##").format(theOne.stressed)
               examsNames = examsNames + sessionNameWithNumber.replaceFirst("(\\d*\\s*)", "")
@@ -288,20 +632,20 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
             }
           }
           else {   // this to handle the situation where there is a missing session in this subject
-            if (!org.apache.commons.lang3.StringUtils.containsIgnoreCase(sessionSimplifiedName, "fd")) {
-              if (isFirst) {
-                examsNames = examsNames + sessionSimplifiedName.replaceFirst("(\\d*\\s*)", "")
-                grades = grades + "NA"
-                tai = tai + "NA"
-                isFirst = false
-              }
-              else {
-                examsNames = examsNames + "," + sessionSimplifiedName.replaceFirst("(\\d*\\s*)", "")
-                sBars = sBars + ":"
-                grades = grades + ",NA"
-                tai = tai + ":NA"
-              }
+            // if (!org.apache.commons.lang3.StringUtils.containsIgnoreCase(sessionSimplifiedName, "fd")) {
+            if (isFirst) {
+              examsNames = examsNames +  sessionSimplifiedName.replaceFirst("(\\d*\\s*)", "")
+              grades = grades + "NA"
+              tai = tai + "NA"
+              isFirst = false
             }
+            else {
+              examsNames = examsNames + "," + sessionSimplifiedName.replaceFirst("(\\d*\\s*)", "")
+              sBars = sBars + ":"
+              grades = grades + ",NA"
+              tai = tai + ":NA"
+            }
+            // }
           }
         }
       }
@@ -314,17 +658,16 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
     }
     if(subjectCounter % subjectPerPAge != 0  && subjectCounter > subjectPerPAge)
     {
-      queryString =  queryString +  "~"+ "subjects=" + subjectCounter%subjectPerPAge + "&cols=3&hideButton=yes&title=" + studyName +"&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames
+      queryString =  queryString +  "~"+ "subjects=" + subjectCounter%subjectPerPAge + "&cols=3&hideButton=yes&title=" + studyName +"&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames + perfPercentil +saiPercenil
     }
     else
-      queryString =  "subjects=" + subjectCounter%subjectPerPAge + "&cols=3&hideButton=yes&title=" + studyName +"&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames
+      queryString =  "subjects=" + subjectCounter%subjectPerPAge + "&cols=3&hideButton=yes&title=" + studyName +"&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames + perfPercentil + saiPercenil
 
     // queryString = queryString + "&genders=" + genders + "&exams=" + sessionNOP + "&traits=" + triats + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjectNames + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames
     return queryString
   }
 
-
-
+  // this is to generate a single portrait for the whole study.
   def generateQueryString(allBarsForAllSubjs:Map[String,TreeMap[String, BarPercentage]], allPerformanceForAllSubs: Map[String,TreeMap[String, Double]], allPsychometricForAllSubs: Map[String,TreeMap[String, Double]], noOfSub: Int, studyName: String, gender: String,  traitsP: String, subjNamesP: String, studyNo: Int): String = {
 
     Logger.info("We are in fun: generateQueryString")
@@ -425,6 +768,36 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
     }
     queryString = queryString + "&genders=" + gender + "&exams=" + sessionNOP + "&traits=" + traitsP + "&SAIs=" + tai + "&grades=" + grades + "&sBars=" + sBars + "&namesSubjects=" + subjNamesP + "&titleGrades=ST&studyNo=" + studyNo + "&exLinks=http://subjectbook.times.uh.edu/displaySubject" + "&namesExams=" + examsNames
     return queryString
+  }
+
+  def computePercentile(vals: Seq[Double], tile: Double, unsorted: Boolean = true): Double = {
+    assert(tile >= 0 && tile <= 100)
+    if (vals.isEmpty) Double.NaN
+    else {
+      assert(vals.nonEmpty)
+      // Make sure the list is sorted, if that's what we've been told
+      if (!unsorted && vals.length >= 2) vals.sliding(2).foreach(l => assert(l(0) <= l(1))) else {}
+      // NIST method; data to be sorted in ascending order
+      val r =
+        if (unsorted) vals.sorted
+        else vals
+      val length = r.length
+      if (length == 1) r.head
+      else {
+        val n = (tile / 100d) * (length - 1)
+        val k = math.floor(n).toInt
+        val d = n - k
+        if (k <= 0) r.head
+        else {
+          val last = length
+          if (k + 1 >= length) {
+            r.last
+          } else {
+            r(k) + d * (r(k + 1) - r(k))
+          }
+        }
+      }
+    }
   }
 
 

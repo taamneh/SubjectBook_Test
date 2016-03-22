@@ -13,7 +13,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 javaOptions ++= Seq("-Xms1024M", "-Xmx2048M")
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.10.4"
 
 libraryDependencies ++= Seq(
   jdbc,

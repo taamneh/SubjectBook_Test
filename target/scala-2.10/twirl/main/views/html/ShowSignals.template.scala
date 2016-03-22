@@ -13,14 +13,14 @@ import play.api.data._
 import views.html._
 
 /**/
-object ShowSignals extends BaseScalaTemplate[play.twirl.api.HtmlFormat.Appendable,Format[play.twirl.api.HtmlFormat.Appendable]](play.twirl.api.HtmlFormat) with play.twirl.api.Template9[String,Map[String, List[scala.Tuple4[String, Int, Int, String]]],Int,String,Map[String, List[scala.Tuple2[String, String]]],Int,List[String],List[scala.Tuple3[Int, Int, Int]],String,play.twirl.api.HtmlFormat.Appendable] {
+object ShowSignals extends BaseScalaTemplate[play.twirl.api.HtmlFormat.Appendable,Format[play.twirl.api.HtmlFormat.Appendable]](play.twirl.api.HtmlFormat) with play.twirl.api.Template9[String,Map[String, scala.Tuple2[String, List[scala.Tuple7[String, Int, Int, Option[String], Option[java.math.BigDecimal], Option[java.math.BigDecimal], Int]]]],Int,String,Map[String, List[scala.Tuple2[String, String]]],Int,List[String],List[scala.Tuple3[Int, Int, Int]],String,play.twirl.api.HtmlFormat.Appendable] {
 
   /**/
-  def apply/*1.2*/(SubjectId: String, sub_sess:Map[String, List[(String, Int, Int, String)]], studyNo:Int, userName: String, videos:  Map[String, List[(String, String)]], study_type: Int, sub_sess_menu: List[String], generalList: List[(Int, Int, Int)], studyName: String):play.twirl.api.HtmlFormat.Appendable = {
+  def apply/*1.2*/(SubjectId: String, sub_sess:Map[String, (String, List[(String, Int, Int, Option[String], Option[java.math.BigDecimal], Option[java.math.BigDecimal], Int)])], studyNo:Int, userName: String, videos:  Map[String, List[(String, String)]], study_type: Int, sub_sess_menu: List[String], generalList: List[(Int, Int, Int)], studyName: String):play.twirl.api.HtmlFormat.Appendable = {
       _display_ {import java.math.BigInteger; var i=1;
 import java.math.BigInteger; var j =1;
 
-Seq[Any](format.raw/*1.255*/("""
+Seq[Any](format.raw/*1.338*/("""
 """),format.raw/*2.1*/("""<!DOCTYPE html>
 <html>
 <head>
@@ -59,7 +59,9 @@ Seq[Any](format.raw/*1.255*/("""
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type='text/javascript' src='"""),_display_(/*41.42*/routes/*41.48*/.Assets.at("javascripts/signalwithtabNew.js")),format.raw/*41.93*/("""'></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <!-- <script type='text/javascript' src='"""),_display_(/*41.46*/routes/*41.52*/.Assets.at("javascripts/changevideo.js")),format.raw/*41.92*/("""'></script> -->
+    <script type='text/javascript' src='"""),_display_(/*42.42*/routes/*42.48*/.Assets.at("javascripts/signalwithtabNew.js")),format.raw/*42.93*/("""'></script>
     <link rel="stylesheet" type="text/css" href="/assets/stylesheets/jquery-ui-1.9.2.css">
 
 
@@ -71,25 +73,25 @@ Seq[Any](format.raw/*1.255*/("""
     <script src="/assets/javascripts/bootstrap-datepicker.js"></script>
     <script>
 
-		!function ($) """),format.raw/*53.17*/("""{"""),format.raw/*53.18*/("""
-		    """),format.raw/*54.7*/("""$(document).on("click","ul.nav li.parent > a > span.icon", function()"""),format.raw/*54.76*/("""{"""),format.raw/*54.77*/("""
-		        """),format.raw/*55.11*/("""$(this).find('em:first').toggleClass("glyphicon-minus");
-		    """),format.raw/*56.7*/("""}"""),format.raw/*56.8*/(""");
+		!function ($) """),format.raw/*54.17*/("""{"""),format.raw/*54.18*/("""
+		    """),format.raw/*55.7*/("""$(document).on("click","ul.nav li.parent > a > span.icon", function()"""),format.raw/*55.76*/("""{"""),format.raw/*55.77*/("""
+		        """),format.raw/*56.11*/("""$(this).find('em:first').toggleClass("glyphicon-minus");
+		    """),format.raw/*57.7*/("""}"""),format.raw/*57.8*/(""");
 
 
 		    $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
-		"""),format.raw/*60.3*/("""}"""),format.raw/*60.4*/("""(window.jQuery);
+		"""),format.raw/*61.3*/("""}"""),format.raw/*61.4*/("""(window.jQuery);
 
-		$(window).on('resize', function () """),format.raw/*62.38*/("""{"""),format.raw/*62.39*/("""
-		  """),format.raw/*63.5*/("""if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
-		"""),format.raw/*64.3*/("""}"""),format.raw/*64.4*/(""")
-		$(window).on('resize', function () """),format.raw/*65.38*/("""{"""),format.raw/*65.39*/("""
-		  """),format.raw/*66.5*/("""if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
-		"""),format.raw/*67.3*/("""}"""),format.raw/*67.4*/(""")
+		$(window).on('resize', function () """),format.raw/*63.38*/("""{"""),format.raw/*63.39*/("""
+		  """),format.raw/*64.5*/("""if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		"""),format.raw/*65.3*/("""}"""),format.raw/*65.4*/(""")
+		$(window).on('resize', function () """),format.raw/*66.38*/("""{"""),format.raw/*66.39*/("""
+		  """),format.raw/*67.5*/("""if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		"""),format.raw/*68.3*/("""}"""),format.raw/*68.4*/(""")
         // this is to unfold the subject list
-        $(document).ready(function()"""),format.raw/*69.37*/("""{"""),format.raw/*69.38*/("""
-        """),format.raw/*70.9*/("""$('ul.nav li.parent > a > span.icon').trigger("click");
-        """),format.raw/*71.9*/("""}"""),format.raw/*71.10*/(""");
+        $(document).ready(function()"""),format.raw/*70.37*/("""{"""),format.raw/*70.38*/("""
+        """),format.raw/*71.9*/("""$('ul.nav li.parent > a > span.icon').trigger("click");
+        """),format.raw/*72.9*/("""}"""),format.raw/*72.10*/(""");
 
 </script>
 
@@ -129,11 +131,11 @@ Seq[Any](format.raw/*1.255*/("""
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#"><span>Subject</span>Book</a> <a class="navbar-brand" href="/allStudies"><span></span>My Studies</a>
-            <a class="navbar-brand" href="#"><span></span>Share</a>
+            <!-- <a class="navbar-brand" href="#"><span></span>Share</a> -->
             <a class="navbar-brand" href="/frontPage"><span></span>Help</a>
             <ul class="user-menu">
                 <li class="dropdown pull-right">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> """),_display_(/*115.128*/userName),format.raw/*115.136*/(""" """),format.raw/*115.137*/("""<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> """),_display_(/*116.128*/userName),format.raw/*116.136*/(""" """),format.raw/*116.137*/("""<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
                         <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
@@ -163,19 +165,19 @@ Seq[Any](format.raw/*1.255*/("""
                 <span class="glyphicon glyphicon-list"></span> Subjects <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="glyphicon glyphicon-s glyphicon-plus"></em></span>
             </a>
             <ul class="children collapse" id="sub-item-1">
-                """),_display_(/*145.18*/for(subject <- sub_sess_menu) yield /*145.47*/{_display_(Seq[Any](format.raw/*145.48*/("""
+                """),_display_(/*146.18*/for(subject <- sub_sess_menu) yield /*146.47*/{_display_(Seq[Any](format.raw/*146.48*/("""
 
-                """),format.raw/*147.17*/("""<li>
+                """),format.raw/*148.17*/("""<li>
 
-                    <a class="" href="/displaySubject?studyNo="""),_display_(/*149.64*/studyNo),format.raw/*149.71*/("""&SubjectId="""),_display_(/*149.83*/subject),format.raw/*149.90*/("""">
-                        <span class="glyphicon glyphicon-user"></span> """),_display_(/*150.73*/subject),format.raw/*150.80*/("""
-                    """),format.raw/*151.21*/("""</a>
+                    <a class="" href="/displaySubject?studyNo="""),_display_(/*150.64*/studyNo),format.raw/*150.71*/("""&SubjectId="""),_display_(/*150.83*/subject),format.raw/*150.90*/("""">
+                        <span class="glyphicon glyphicon-user"></span> """),_display_(/*151.73*/subject),format.raw/*151.80*/("""
+                    """),format.raw/*152.21*/("""</a>
                 </li>
 
 
-                """)))}),format.raw/*155.18*/("""
+                """)))}),format.raw/*156.18*/("""
 
-            """),format.raw/*157.13*/("""</ul>
+            """),format.raw/*158.13*/("""</ul>
         </li>
         <li role="presentation" class="divider"></li>
 
@@ -191,9 +193,9 @@ Seq[Any](format.raw/*1.255*/("""
     <div class="row">
         <ol class="breadcrumb">
             <li><a href="/allStudies"><span class="glyphicon glyphicon-home"></span></a></li>
-            <li class="active"><a href="/showStudy/"""),_display_(/*173.53*/studyNo),format.raw/*173.60*/("""">"""),_display_(/*173.63*/studyName),format.raw/*173.72*/(""" """),format.raw/*173.73*/("""</a> </li>
-            <li class="active"><a href="/showStudySkipTop/"""),_display_(/*174.60*/studyNo),format.raw/*174.67*/("""">User Portrait </a> </li>
-            <li>"""),_display_(/*175.18*/SubjectId),format.raw/*175.27*/("""</li>
+            <li class="active"><a href="/showStudy/"""),_display_(/*174.53*/studyNo),format.raw/*174.60*/("""">"""),_display_(/*174.63*/studyName),format.raw/*174.72*/(""" """),format.raw/*174.73*/("""</a> </li>
+            <li class="active"><a href="/showStudySkipTop/"""),_display_(/*175.60*/studyNo),format.raw/*175.67*/("""">User Portrait </a> </li>
+            <li>"""),_display_(/*176.18*/SubjectId),format.raw/*176.27*/("""</li>
 
 
 
@@ -207,87 +209,93 @@ Seq[Any](format.raw/*1.255*/("""
     <div class="row" id ="allInfo">
 
 
-        <a href="/showRadar?SubjectId="""),_display_(/*189.40*/SubjectId),format.raw/*189.49*/("""&studyNo="""),_display_(/*189.59*/studyNo),format.raw/*189.66*/(""""> Show Session view </a>
+        <!-- <a href="/showRadar?SubjectId="""),_display_(/*190.45*/SubjectId),format.raw/*190.54*/("""&studyNo="""),_display_(/*190.64*/studyNo),format.raw/*190.71*/(""""> Show Session view </a> -->
 
-        """),_display_(/*191.10*/for(temp <- generalList) yield /*191.34*/{_display_(Seq[Any](format.raw/*191.35*/("""
+        """),_display_(/*192.10*/for(temp <- generalList) yield /*192.34*/{_display_(Seq[Any](format.raw/*192.35*/("""
 
-        """),format.raw/*193.9*/("""<div class="col-md-4" id="generalData"""),_display_(/*193.47*/temp/*193.51*/._1),_display_(/*193.55*/temp/*193.59*/._2),format.raw/*193.62*/(""""  subject=""""),_display_(/*193.75*/SubjectId),format.raw/*193.84*/("""" session="sss" signalSequence=""""),_display_(/*193.117*/temp/*193.121*/._1),format.raw/*193.124*/("""" signalCode=""""),_display_(/*193.139*/temp/*193.143*/._2),format.raw/*193.146*/("""" dataType=""""),_display_(/*193.159*/temp/*193.163*/._3),format.raw/*193.166*/("""" style="display: none;">
+        """),format.raw/*194.9*/("""<div class="col-md-4" id="generalData"""),_display_(/*194.47*/temp/*194.51*/._1),_display_(/*194.55*/temp/*194.59*/._2),format.raw/*194.62*/(""""  subject=""""),_display_(/*194.75*/SubjectId),format.raw/*194.84*/("""" session="sss" signalSequence=""""),_display_(/*194.117*/temp/*194.121*/._1),format.raw/*194.124*/("""" signalCode=""""),_display_(/*194.139*/temp/*194.143*/._2),format.raw/*194.146*/("""" dataType=""""),_display_(/*194.159*/temp/*194.163*/._3),format.raw/*194.166*/("""" style="display: none;">
 
         </div>
 
-        """)))}),format.raw/*197.10*/("""
+        """)))}),format.raw/*198.10*/("""
 
 
 
-    """),format.raw/*201.5*/("""</div><!--/.row-->
+    """),format.raw/*202.5*/("""</div><!--/.row-->
     <div class="">
         <div class="panel panel-default">
             <div class="panel-body tabs">
-                """),format.raw/*206.1*/("""                """),format.raw/*206.17*/("""<ul class="nav nav-tabs">
-                    """),_display_(/*207.22*/for((name,session) <- sub_sess) yield /*207.53*/{_display_(Seq[Any](format.raw/*207.54*/("""
-                    """),_display_(/*208.22*/if(i == 1)/*208.32*/ {_display_(Seq[Any](format.raw/*208.34*/("""
-                    """),format.raw/*209.21*/("""<li class="active"><a  href="#"""),_display_(/*209.52*/name),format.raw/*209.56*/("""" id="link"""),_display_(/*209.67*/name),format.raw/*209.71*/("""" class="onesignal" subject=""""),_display_(/*209.101*/SubjectId),format.raw/*209.110*/("""" session=""""),_display_(/*209.122*/name),format.raw/*209.126*/("""" studyId="""),_display_(/*209.137*/studyNo),format.raw/*209.144*/("""  """),format.raw/*209.146*/("""occupied ="no" data-toggle="tab">"""),_display_(/*209.180*/name),format.raw/*209.184*/("""</a></li>
-                    """)))}/*210.23*/else/*210.28*/{_display_(Seq[Any](format.raw/*210.29*/("""
-                    """),format.raw/*211.21*/("""<li><a  href="#"""),_display_(/*211.37*/name),format.raw/*211.41*/("""" id="link"""),_display_(/*211.52*/name),format.raw/*211.56*/("""" class="onesignal" subject=""""),_display_(/*211.86*/SubjectId),format.raw/*211.95*/("""" session=""""),_display_(/*211.107*/name),format.raw/*211.111*/("""" studyId="""),_display_(/*211.122*/studyNo),format.raw/*211.129*/("""  """),format.raw/*211.131*/("""occupied ="no" data-toggle="tab">"""),_display_(/*211.165*/name),format.raw/*211.169*/("""</a></li>
-                    """)))}),format.raw/*212.22*/("""
-                    """),_display_(/*213.22*/{i = i + 1;}),format.raw/*213.34*/("""
-                    """)))}),format.raw/*214.22*/("""
-                """),format.raw/*215.17*/("""</ul>
+                """),format.raw/*207.1*/("""                """),format.raw/*207.17*/("""<ul class="nav nav-tabs">
+                    """),_display_(/*208.22*/for((name,session) <- sub_sess) yield /*208.53*/{_display_(Seq[Any](format.raw/*208.54*/("""
+                    """),_display_(/*209.22*/if(i == 1)/*209.32*/ {_display_(Seq[Any](format.raw/*209.34*/("""
+                    """),format.raw/*210.21*/("""<li class="active"><a  href="#"""),_display_(/*210.52*/session/*210.59*/._1),format.raw/*210.62*/("""" id="link"""),_display_(/*210.73*/session/*210.80*/._1),format.raw/*210.83*/("""" class="onesignal" subject=""""),_display_(/*210.113*/SubjectId),format.raw/*210.122*/("""" session=""""),_display_(/*210.134*/session/*210.141*/._1),format.raw/*210.144*/("""" newSessionName=""""),_display_(/*210.163*/name),format.raw/*210.167*/("""" studyId="""),_display_(/*210.178*/studyNo),format.raw/*210.185*/("""  """),format.raw/*210.187*/("""occupied ="no" data-toggle="tab">"""),_display_(/*210.221*/name/*210.225*/.replaceFirst("(\\d*\\s*)", "")),format.raw/*210.256*/("""</a></li>
+                    """)))}/*211.23*/else/*211.28*/{_display_(Seq[Any](format.raw/*211.29*/("""
+                    """),format.raw/*212.21*/("""<li><a  href="#"""),_display_(/*212.37*/session/*212.44*/._1),format.raw/*212.47*/("""" id="link"""),_display_(/*212.58*/session/*212.65*/._1),format.raw/*212.68*/("""" class="onesignal" subject=""""),_display_(/*212.98*/SubjectId),format.raw/*212.107*/("""" session=""""),_display_(/*212.119*/session/*212.126*/._1),format.raw/*212.129*/("""" studyId="""),_display_(/*212.140*/studyNo),format.raw/*212.147*/("""  """),format.raw/*212.149*/("""occupied ="no" data-toggle="tab">"""),_display_(/*212.183*/name/*212.187*/.replaceFirst("(\\d*\\s*)", "")),format.raw/*212.218*/("""</a></li>
+                    """)))}),format.raw/*213.22*/("""
+                    """),_display_(/*214.22*/{i = i + 1;}),format.raw/*214.34*/("""
+                    """)))}),format.raw/*215.22*/("""
+                """),format.raw/*216.17*/("""</ul>
 
                 <div class="tab-content">
 
-                    """),format.raw/*220.1*/("""                    """),_display_(/*220.22*/for((name,sessions) <- sub_sess) yield /*220.54*/{_display_(Seq[Any](format.raw/*220.55*/("""
-                            """),_display_(/*221.30*/if(j == 1)/*221.40*/ {_display_(Seq[Any](format.raw/*221.42*/("""
-                             """),format.raw/*222.30*/("""<div id=""""),_display_(/*222.40*/name),format.raw/*222.44*/("""" class="tab-pane fade in active">
-                            """)))}/*223.31*/else/*223.36*/{_display_(Seq[Any](format.raw/*223.37*/("""
-                            """),format.raw/*224.29*/("""<div id=""""),_display_(/*224.39*/name),format.raw/*224.43*/("""" class="tab-pane fade">
-                            """)))}),format.raw/*225.30*/("""
-                            """),_display_(/*226.30*/{j = j + 1;}),format.raw/*226.42*/("""
-                                """),_display_(/*227.34*/for(signal <- sessions) yield /*227.57*/{_display_(Seq[Any](format.raw/*227.58*/("""
-                                    """),format.raw/*228.37*/("""<!-- to avoid the non signal files -->
-                                        """),_display_(/*229.42*/if(signal._3 == 1 || signal._3 == 3 || signal._3 == 4|| signal._3 == 5)/*229.113*/ {_display_(Seq[Any](format.raw/*229.115*/("""
-                                        """),format.raw/*230.41*/("""<div  id="dashboard_div"""),_display_(/*230.65*/name),_display_(/*230.70*/signal/*230.76*/._2),format.raw/*230.79*/("""">
-                                            <div id="chart"""),_display_(/*231.60*/name),_display_(/*231.65*/signal/*231.71*/._2),format.raw/*231.74*/("""" class="chart" subject=""""),_display_(/*231.100*/SubjectId),format.raw/*231.109*/("""" session=""""),_display_(/*231.121*/name),format.raw/*231.125*/("""" signalSequence=""""),_display_(/*231.144*/signal/*231.150*/._2),format.raw/*231.153*/("""" signalType=""""),_display_(/*231.168*/signal/*231.174*/._3),format.raw/*231.177*/("""" yTitle = """"),_display_(/*231.190*/signal/*231.196*/._4),format.raw/*231.199*/(""""  style="height: 250px;">
+                    """),format.raw/*221.1*/("""                    """),_display_(/*221.22*/for((name,sessions) <- sub_sess) yield /*221.54*/{_display_(Seq[Any](format.raw/*221.55*/("""
+                            """),_display_(/*222.30*/if(j == 1)/*222.40*/ {_display_(Seq[Any](format.raw/*222.42*/("""
+                             """),format.raw/*223.30*/("""<div id=""""),_display_(/*223.40*/sessions/*223.48*/._1),format.raw/*223.51*/("""" class="tab-pane fade in active">
+                            """)))}/*224.31*/else/*224.36*/{_display_(Seq[Any](format.raw/*224.37*/("""
+                            """),format.raw/*225.29*/("""<div id=""""),_display_(/*225.39*/sessions/*225.47*/._1),format.raw/*225.50*/("""" class="tab-pane fade">
+                            """)))}),format.raw/*226.30*/("""
+                            """),_display_(/*227.30*/{j = j + 1;}),format.raw/*227.42*/("""
+                                """),_display_(/*228.34*/for(signal <- sessions._2) yield /*228.60*/{_display_(Seq[Any](format.raw/*228.61*/("""
+                                    """),format.raw/*229.37*/("""<!-- to avoid the non signal files -->
+                                        """),_display_(/*230.42*/if(signal._3 == 1 || signal._3 == 3 || signal._3 == 4|| signal._3 == 5)/*230.113*/ {_display_(Seq[Any](format.raw/*230.115*/("""
+                                        """),format.raw/*231.41*/("""<div  id="dashboard_div"""),_display_(/*231.65*/sessions/*231.73*/._1),_display_(/*231.77*/signal/*231.83*/._2),format.raw/*231.86*/("""">
+                                            <div id="chart"""),_display_(/*232.60*/sessions/*232.68*/._1),_display_(/*232.72*/signal/*232.78*/._2),format.raw/*232.81*/("""" class="chart" subject=""""),_display_(/*232.107*/SubjectId),format.raw/*232.116*/("""" session=""""),_display_(/*232.128*/sessions/*232.136*/._1),format.raw/*232.139*/("""" signalSequence=""""),_display_(/*232.158*/signal/*232.164*/._2),format.raw/*232.167*/("""" signalType=""""),_display_(/*232.182*/signal/*232.188*/._3),format.raw/*232.191*/("""" yTitle = """"),_display_(/*232.204*/signal/*232.210*/._4),format.raw/*232.213*/("""" ymin =""""),_display_(/*232.223*/signal/*232.229*/._5),format.raw/*232.232*/("""" ymax =""""),_display_(/*232.242*/signal/*232.248*/._6),format.raw/*232.251*/(""""  log = """"),_display_(/*232.262*/signal/*232.268*/._7),format.raw/*232.271*/("""" style="height: 250px;">
                                             </div>
                                         </div>
                                         <!--<br> -->
 
                                         <!--<br> -->
-                                            """),_display_(/*237.46*/if(signal._3 == 1)/*237.64*/{_display_(Seq[Any](format.raw/*237.65*/("""
-                                                """),format.raw/*238.49*/("""&nbsp;<div id="videoboard"""),_display_(/*238.75*/name),_display_(/*238.80*/signal/*238.86*/._2),format.raw/*238.89*/("""" class= "video-board" name="videoboard"""),_display_(/*238.129*/name),_display_(/*238.134*/signal/*238.140*/._2),format.raw/*238.143*/("""" style="position:relative; left: 40px; width: 80%; height: 400px; overflow-x:scroll;  white-space: nowrap;" hidden>
-                                                <div class="button-station"> <a id = "showvideo"""),_display_(/*239.97*/name),_display_(/*239.102*/signal/*239.108*/._2),format.raw/*239.111*/("""" class = "btn btn-default show-video" >Hide Videos</a>  </div>
-                                                """),_display_(/*240.50*/{import java.math.BigInteger; var i=1}),format.raw/*240.88*/("""
-                                                    """),_display_(/*241.54*/for((sess,videoList) <- videos) yield /*241.85*/{_display_(Seq[Any](format.raw/*241.86*/("""
-                                                        """),_display_(/*242.58*/if(sess == name)/*242.74*/ {_display_(Seq[Any](format.raw/*242.76*/("""
-                                                            """),_display_(/*243.62*/for(video <- videoList) yield /*243.85*/{_display_(Seq[Any](format.raw/*243.86*/("""
-                                                                """),_display_(/*244.66*/if(study_type == 1)/*244.85*/ {_display_(Seq[Any](format.raw/*244.87*/("""
-                                                                """),format.raw/*245.65*/("""<object id=""""),_display_(/*245.78*/video),format.raw/*245.83*/("""">
+                                            """),_display_(/*238.46*/if(signal._3 == 1)/*238.64*/{_display_(Seq[Any](format.raw/*238.65*/("""
+                                                """),format.raw/*239.49*/("""&nbsp;<div id="videoboard"""),_display_(/*239.75*/sessions/*239.83*/._1),_display_(/*239.87*/signal/*239.93*/._2),format.raw/*239.96*/("""" class= "video-board" name="videoboard"""),_display_(/*239.136*/sessions/*239.144*/._1),_display_(/*239.148*/signal/*239.154*/._2),format.raw/*239.157*/("""" style="position:relative; left: 40px; width: 80%; height: 400px; overflow-x:scroll;  white-space: nowrap;" hidden>
+                                                <div class="button-station"> <a id = "showvideo"""),_display_(/*240.97*/sessions/*240.105*/._1),_display_(/*240.109*/signal/*240.115*/._2),format.raw/*240.118*/("""" class = "btn btn-default show-video" >Hide Videos</a>  </div>
+                                                """),_display_(/*241.50*/{import java.math.BigInteger; var i=1}),format.raw/*241.88*/("""
+                                                    """),_display_(/*242.54*/for((sess,videoList) <- videos) yield /*242.85*/{_display_(Seq[Any](format.raw/*242.86*/("""
+                                                        """),_display_(/*243.58*/if(sess == signal._1)/*243.79*/ {_display_(Seq[Any](format.raw/*243.81*/("""
+                                                            """),_display_(/*244.62*/for(video <- videoList) yield /*244.85*/{_display_(Seq[Any](format.raw/*244.86*/("""
+                                                                """),_display_(/*245.66*/if(study_type == 1)/*245.85*/ {_display_(Seq[Any](format.raw/*245.87*/("""
+                                                                """),format.raw/*246.65*/("""<object id=""""),_display_(/*246.78*/video),format.raw/*246.83*/("""">
                                                                     <param name='movie' value='https://video.google.com/get_player?docid=0B2TDTGk9sqZLQjlxcVRxYUNqOFE&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1'></param>
                                                                     <param name='allowFullScreen' value='true'></param>
                                                                     <param name='allowScriptAccess' value='always'></param>
-                                                                    <embed id='video"""),_display_(/*249.86*/video/*249.91*/._2),_display_(/*249.95*/signal/*249.101*/._2),format.raw/*249.104*/("""' src='https://video.google.com/get_player?docid="""),_display_(/*249.154*/video/*249.159*/._2),format.raw/*249.162*/("""&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1&amp;color=white&amp;autoplay=0&amp;enablejsapi=1&amp;playerapiid=video"""),_display_(/*249.284*/video/*249.289*/._2),_display_(/*249.293*/signal/*249.299*/._2),format.raw/*249.302*/("""' type='application/x-shockwave-flash' allowfullscreen='true' allowScriptAccess='always' width=50% height='300'></embed>
+                                                                    <embed id='video"""),_display_(/*250.86*/video/*250.91*/._2),_display_(/*250.95*/signal/*250.101*/._2),format.raw/*250.104*/("""' src='https://video.google.com/get_player?docid="""),_display_(/*250.154*/video/*250.159*/._2),format.raw/*250.162*/("""&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1&amp;color=white&amp;autoplay=0&amp;enablejsapi=1&amp;playerapiid=video"""),_display_(/*250.284*/video/*250.289*/._2),_display_(/*250.293*/signal/*250.299*/._2),format.raw/*250.302*/("""' type='application/x-shockwave-flash' allowfullscreen='true' allowScriptAccess='always' width=50% height='300'></embed>
                                                                 </object>
-                                                                """)))}/*251.67*/else/*251.72*/{_display_(Seq[Any](format.raw/*251.73*/("""
-                                                                """),format.raw/*252.65*/("""<object width='400' height='250' id=""""),_display_(/*252.103*/video),format.raw/*252.108*/("""">
-                                                                    <embed src='"""),_display_(/*253.82*/video/*253.87*/._2),format.raw/*253.90*/("""' type='video/x-ms-wm' allowfullscreen='true' play ='false' autostart="false"  allowScriptAccess='always' width='350' height='250'></embed></object>
-                                                                """)))}),format.raw/*254.66*/(""" """),format.raw/*254.67*/("""<!-- else -->
-                                                            """),_display_(/*255.62*/{i = i + 1}),format.raw/*255.73*/("""
-                                                            """)))}),format.raw/*256.62*/(""" """),format.raw/*256.63*/("""<!-- video List -->
-                                                        """)))}),format.raw/*257.58*/(""" """),format.raw/*257.59*/("""<!-- if sess== session._1 -->
-                                                    """)))}),format.raw/*258.54*/("""<!-- main for for videos -->
+                                                                """)))}/*252.67*/else/*252.72*/{_display_(Seq[Any](format.raw/*252.73*/("""
+
+                                                                """),format.raw/*254.65*/("""<video id=""""),_display_(/*254.77*/video),format.raw/*254.82*/("""" width="640" height="264" controls>
+                                                                    <source src="/videoB" controls type='video/mp4' >
+                                                                    <source src="file:///"""),_display_(/*256.91*/video/*256.96*/._2),format.raw/*256.99*/(""""
+                                                                            type='video/ogg; codecs="theora, vorbis"'>
+                                                                    Your user agent does not support the HTML5 Video element.
+                                                                </video>
+
+                                                                """)))}),format.raw/*261.66*/(""" """),format.raw/*261.67*/("""<!-- else -->
+                                                            """),_display_(/*262.62*/{i = i + 1}),format.raw/*262.73*/("""
+                                                            """)))}),format.raw/*263.62*/(""" """),format.raw/*263.63*/("""<!-- video List -->
+                                                        """)))}),format.raw/*264.58*/(""" """),format.raw/*264.59*/("""<!-- if sess== session._1 -->
+                                                    """)))}),format.raw/*265.54*/("""<!-- main for for videos -->
                                                 <br>
-                                                <a id = "stopvideo"""),_display_(/*260.68*/name),_display_(/*260.73*/signal/*260.79*/._2),format.raw/*260.82*/(""""  class="btn btn-default">Stop Videos</a>   &nbsp; &nbsp;
+                                                <a id = "stopvideo"""),_display_(/*267.68*/sessions/*267.76*/._1),_display_(/*267.80*/signal/*267.86*/._2),format.raw/*267.89*/(""""  class="btn btn-default">Stop Videos</a>   &nbsp; &nbsp;
                                                 </div>
 
-                                            """)))}),format.raw/*263.46*/(""" """),format.raw/*263.47*/("""<!-- check the sequence number  -->
-                                        """)))}),format.raw/*264.42*/(""" """),format.raw/*264.43*/("""<!-- check the type of signal -->
+                                            """)))}),format.raw/*270.46*/(""" """),format.raw/*270.47*/("""<!-- check the sequence number  -->
+                                        """)))}),format.raw/*271.42*/(""" """),format.raw/*271.43*/("""<!-- check the type of signal -->
 
 
-                            """)))}),format.raw/*267.30*/("""
-                            """),format.raw/*268.29*/("""</div>
-                        """)))}),format.raw/*269.26*/("""
+                            """)))}),format.raw/*274.30*/("""
+                            """),format.raw/*275.29*/("""</div>
+                        """)))}),format.raw/*276.26*/("""
 
-                    """),format.raw/*271.21*/("""</div>
+                    """),format.raw/*278.21*/("""</div>
                 </div>
             </div><!--/.panel-->
         </div><!--/.col-->
@@ -310,20 +318,20 @@ Seq[Any](format.raw/*1.255*/("""
 """))}
   }
 
-  def render(SubjectId:String,sub_sess:Map[String, List[scala.Tuple4[String, Int, Int, String]]],studyNo:Int,userName:String,videos:Map[String, List[scala.Tuple2[String, String]]],study_type:Int,sub_sess_menu:List[String],generalList:List[scala.Tuple3[Int, Int, Int]],studyName:String): play.twirl.api.HtmlFormat.Appendable = apply(SubjectId,sub_sess,studyNo,userName,videos,study_type,sub_sess_menu,generalList,studyName)
+  def render(SubjectId:String,sub_sess:Map[String, scala.Tuple2[String, List[scala.Tuple7[String, Int, Int, Option[String], Option[java.math.BigDecimal], Option[java.math.BigDecimal], Int]]]],studyNo:Int,userName:String,videos:Map[String, List[scala.Tuple2[String, String]]],study_type:Int,sub_sess_menu:List[String],generalList:List[scala.Tuple3[Int, Int, Int]],studyName:String): play.twirl.api.HtmlFormat.Appendable = apply(SubjectId,sub_sess,studyNo,userName,videos,study_type,sub_sess_menu,generalList,studyName)
 
-  def f:((String,Map[String, List[scala.Tuple4[String, Int, Int, String]]],Int,String,Map[String, List[scala.Tuple2[String, String]]],Int,List[String],List[scala.Tuple3[Int, Int, Int]],String) => play.twirl.api.HtmlFormat.Appendable) = (SubjectId,sub_sess,studyNo,userName,videos,study_type,sub_sess_menu,generalList,studyName) => apply(SubjectId,sub_sess,studyNo,userName,videos,study_type,sub_sess_menu,generalList,studyName)
+  def f:((String,Map[String, scala.Tuple2[String, List[scala.Tuple7[String, Int, Int, Option[String], Option[java.math.BigDecimal], Option[java.math.BigDecimal], Int]]]],Int,String,Map[String, List[scala.Tuple2[String, String]]],Int,List[String],List[scala.Tuple3[Int, Int, Int]],String) => play.twirl.api.HtmlFormat.Appendable) = (SubjectId,sub_sess,studyNo,userName,videos,study_type,sub_sess_menu,generalList,studyName) => apply(SubjectId,sub_sess,studyNo,userName,videos,study_type,sub_sess_menu,generalList,studyName)
 
   def ref: this.type = this
 
 }
               /*
                   -- GENERATED --
-                  DATE: Tue Dec 01 16:24:59 CST 2015
+                  DATE: Tue Mar 22 12:56:51 CDT 2016
                   SOURCE: C:/first_play/app/views/ShowSignals.scala.html
-                  HASH: 67a1ac5e15893dc368eea4ca5b13abd0cb4f6106
-                  MATRIX: 686->1|1104->254|1132->256|1252->350|1280->351|1316->361|1674->692|1703->693|1740->703|2608->1544|2623->1550|2684->1590|2765->1644|2780->1650|2846->1695|3414->2235|3443->2236|3478->2244|3575->2313|3604->2314|3644->2326|3735->2390|3763->2391|3876->2477|3904->2478|3989->2535|4018->2536|4051->2542|4150->2614|4178->2615|4246->2655|4275->2656|4308->2662|4408->2735|4436->2736|4550->2822|4579->2823|4616->2833|4708->2898|4737->2899|6845->4978|6876->4986|6907->4987|8541->6593|8587->6622|8627->6623|8676->6643|8775->6714|8804->6721|8844->6733|8873->6740|8977->6816|9006->6823|9057->6845|9139->6895|9184->6911|9840->7539|9869->7546|9900->7549|9931->7558|9961->7559|10060->7630|10089->7637|10162->7682|10193->7691|10498->7968|10529->7977|10567->7987|10596->7994|10662->8032|10703->8056|10743->8057|10783->8069|10849->8107|10863->8111|10888->8115|10902->8119|10927->8122|10968->8135|10999->8144|11061->8177|11076->8181|11102->8184|11146->8199|11161->8203|11187->8206|11229->8219|11244->8223|11270->8226|11358->8282|11398->8294|11568->8476|11613->8492|11689->8540|11737->8571|11777->8572|11828->8595|11848->8605|11889->8607|11940->8629|11999->8660|12025->8664|12064->8675|12090->8679|12149->8709|12181->8718|12222->8730|12249->8734|12289->8745|12319->8752|12351->8754|12414->8788|12441->8792|12493->8825|12507->8830|12547->8831|12598->8853|12642->8869|12668->8873|12707->8884|12733->8888|12791->8918|12822->8927|12863->8939|12890->8943|12930->8954|12960->8961|12992->8963|13055->8997|13082->9001|13146->9033|13197->9056|13231->9068|13286->9091|13333->9109|13435->9224|13484->9245|13533->9277|13573->9278|13632->9309|13652->9319|13693->9321|13753->9352|13791->9362|13817->9366|13902->9432|13916->9437|13956->9438|14015->9468|14053->9478|14079->9482|14166->9537|14225->9568|14259->9580|14322->9615|14362->9638|14402->9639|14469->9677|14578->9758|14660->9829|14702->9831|14773->9873|14825->9897|14851->9902|14867->9908|14892->9911|14983->9974|15009->9979|15025->9985|15050->9988|15105->10014|15137->10023|15178->10035|15205->10039|15253->10058|15270->10064|15296->10067|15340->10082|15357->10088|15383->10091|15425->10104|15442->10110|15468->10113|15779->10396|15807->10414|15847->10415|15926->10465|15980->10491|16006->10496|16022->10502|16047->10505|16116->10545|16143->10550|16160->10556|16186->10559|16428->10773|16455->10778|16472->10784|16498->10787|16640->10901|16700->10939|16783->10994|16831->11025|16871->11026|16958->11085|16984->11101|17025->11103|17116->11166|17156->11189|17196->11190|17291->11257|17320->11276|17361->11278|17456->11344|17497->11357|17524->11362|18114->11924|18129->11929|18154->11933|18171->11939|18197->11942|18276->11992|18292->11997|18318->12000|18469->12122|18485->12127|18511->12131|18528->12137|18554->12140|18836->12403|18850->12408|18890->12409|18985->12475|19052->12513|19080->12518|19193->12603|19208->12608|19233->12611|19480->12826|19510->12827|19614->12903|19647->12914|19742->12977|19772->12978|19882->13056|19912->13057|20028->13141|20207->13292|20233->13297|20249->13303|20274->13306|20469->13469|20499->13470|20609->13548|20639->13549|20739->13617|20798->13647|20863->13680|20916->13704
-                  LINES: 19->1|23->1|24->2|30->8|30->8|31->9|42->20|42->20|45->23|62->40|62->40|62->40|63->41|63->41|63->41|75->53|75->53|76->54|76->54|76->54|77->55|78->56|78->56|82->60|82->60|84->62|84->62|85->63|86->64|86->64|87->65|87->65|88->66|89->67|89->67|91->69|91->69|92->70|93->71|93->71|137->115|137->115|137->115|167->145|167->145|167->145|169->147|171->149|171->149|171->149|171->149|172->150|172->150|173->151|177->155|179->157|195->173|195->173|195->173|195->173|195->173|196->174|196->174|197->175|197->175|211->189|211->189|211->189|211->189|213->191|213->191|213->191|215->193|215->193|215->193|215->193|215->193|215->193|215->193|215->193|215->193|215->193|215->193|215->193|215->193|215->193|215->193|215->193|215->193|219->197|223->201|227->206|227->206|228->207|228->207|228->207|229->208|229->208|229->208|230->209|230->209|230->209|230->209|230->209|230->209|230->209|230->209|230->209|230->209|230->209|230->209|230->209|230->209|231->210|231->210|231->210|232->211|232->211|232->211|232->211|232->211|232->211|232->211|232->211|232->211|232->211|232->211|232->211|232->211|232->211|233->212|234->213|234->213|235->214|236->215|240->220|240->220|240->220|240->220|241->221|241->221|241->221|242->222|242->222|242->222|243->223|243->223|243->223|244->224|244->224|244->224|245->225|246->226|246->226|247->227|247->227|247->227|248->228|249->229|249->229|249->229|250->230|250->230|250->230|250->230|250->230|251->231|251->231|251->231|251->231|251->231|251->231|251->231|251->231|251->231|251->231|251->231|251->231|251->231|251->231|251->231|251->231|251->231|257->237|257->237|257->237|258->238|258->238|258->238|258->238|258->238|258->238|258->238|258->238|258->238|259->239|259->239|259->239|259->239|260->240|260->240|261->241|261->241|261->241|262->242|262->242|262->242|263->243|263->243|263->243|264->244|264->244|264->244|265->245|265->245|265->245|269->249|269->249|269->249|269->249|269->249|269->249|269->249|269->249|269->249|269->249|269->249|269->249|269->249|271->251|271->251|271->251|272->252|272->252|272->252|273->253|273->253|273->253|274->254|274->254|275->255|275->255|276->256|276->256|277->257|277->257|278->258|280->260|280->260|280->260|280->260|283->263|283->263|284->264|284->264|287->267|288->268|289->269|291->271
+                  HASH: 6c9174efdd89968e34003230d286953a479bd22c
+                  MATRIX: 781->1|1282->337|1310->339|1430->433|1458->434|1494->444|1852->775|1881->776|1918->786|2883->1724|2898->1730|2959->1770|3044->1828|3059->1834|3125->1879|3693->2419|3722->2420|3757->2428|3854->2497|3883->2498|3923->2510|4014->2574|4042->2575|4155->2661|4183->2662|4268->2719|4297->2720|4330->2726|4429->2798|4457->2799|4525->2839|4554->2840|4587->2846|4687->2919|4715->2920|4829->3006|4858->3007|4895->3017|4987->3082|5016->3083|7133->5171|7164->5179|7195->5180|8829->6786|8875->6815|8915->6816|8964->6836|9063->6907|9092->6914|9132->6926|9161->6933|9265->7009|9294->7016|9345->7038|9427->7088|9472->7104|10128->7732|10157->7739|10188->7742|10219->7751|10249->7752|10348->7823|10377->7830|10450->7875|10481->7884|10791->8166|10822->8175|10860->8185|10889->8192|10959->8234|11000->8258|11040->8259|11080->8271|11146->8309|11160->8313|11185->8317|11199->8321|11224->8324|11265->8337|11296->8346|11358->8379|11373->8383|11399->8386|11443->8401|11458->8405|11484->8408|11526->8421|11541->8425|11567->8428|11655->8484|11695->8496|11865->8678|11910->8694|11986->8742|12034->8773|12074->8774|12125->8797|12145->8807|12186->8809|12237->8831|12296->8862|12313->8869|12338->8872|12377->8883|12394->8890|12419->8893|12478->8923|12510->8932|12551->8944|12569->8951|12595->8954|12643->8973|12670->8977|12710->8988|12740->8995|12772->8997|12835->9031|12850->9035|12904->9066|12956->9099|12970->9104|13010->9105|13061->9127|13105->9143|13122->9150|13147->9153|13186->9164|13203->9171|13228->9174|13286->9204|13318->9213|13359->9225|13377->9232|13403->9235|13443->9246|13473->9253|13505->9255|13568->9289|13583->9293|13637->9324|13701->9356|13752->9379|13786->9391|13841->9414|13888->9432|13990->9547|14039->9568|14088->9600|14128->9601|14187->9632|14207->9642|14248->9644|14308->9675|14346->9685|14364->9693|14389->9696|14474->9762|14488->9767|14528->9768|14587->9798|14625->9808|14643->9816|14668->9819|14755->9874|14814->9905|14848->9917|14911->9952|14954->9978|14994->9979|15061->10017|15170->10098|15252->10169|15294->10171|15365->10213|15417->10237|15435->10245|15460->10249|15476->10255|15501->10258|15592->10321|15610->10329|15635->10333|15651->10339|15676->10342|15731->10368|15763->10377|15804->10389|15823->10397|15849->10400|15897->10419|15914->10425|15940->10428|15984->10443|16001->10449|16027->10452|16069->10465|16086->10471|16112->10474|16151->10484|16168->10490|16194->10493|16233->10503|16250->10509|16276->10512|16316->10523|16333->10529|16359->10532|16669->10814|16697->10832|16737->10833|16816->10883|16870->10909|16888->10917|16913->10921|16929->10927|16954->10930|17023->10970|17042->10978|17068->10982|17085->10988|17111->10991|17353->11205|17372->11213|17398->11217|17415->11223|17441->11226|17583->11340|17643->11378|17726->11433|17774->11464|17814->11465|17901->11524|17932->11545|17973->11547|18064->11610|18104->11633|18144->11634|18239->11701|18268->11720|18309->11722|18404->11788|18445->11801|18472->11806|19062->12368|19077->12373|19102->12377|19119->12383|19145->12386|19224->12436|19240->12441|19266->12444|19417->12566|19433->12571|19459->12575|19476->12581|19502->12584|19784->12847|19798->12852|19838->12853|19935->12921|19975->12933|20002->12938|20277->13185|20292->13190|20317->13193|20740->13584|20770->13585|20874->13661|20907->13672|21002->13735|21032->13736|21142->13814|21172->13815|21288->13899|21467->14050|21485->14058|21510->14062|21526->14068|21551->14071|21746->14234|21776->14235|21886->14313|21916->14314|22016->14382|22075->14412|22140->14445|22193->14469
+                  LINES: 19->1|23->1|24->2|30->8|30->8|31->9|42->20|42->20|45->23|63->41|63->41|63->41|64->42|64->42|64->42|76->54|76->54|77->55|77->55|77->55|78->56|79->57|79->57|83->61|83->61|85->63|85->63|86->64|87->65|87->65|88->66|88->66|89->67|90->68|90->68|92->70|92->70|93->71|94->72|94->72|138->116|138->116|138->116|168->146|168->146|168->146|170->148|172->150|172->150|172->150|172->150|173->151|173->151|174->152|178->156|180->158|196->174|196->174|196->174|196->174|196->174|197->175|197->175|198->176|198->176|212->190|212->190|212->190|212->190|214->192|214->192|214->192|216->194|216->194|216->194|216->194|216->194|216->194|216->194|216->194|216->194|216->194|216->194|216->194|216->194|216->194|216->194|216->194|216->194|220->198|224->202|228->207|228->207|229->208|229->208|229->208|230->209|230->209|230->209|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|231->210|232->211|232->211|232->211|233->212|233->212|233->212|233->212|233->212|233->212|233->212|233->212|233->212|233->212|233->212|233->212|233->212|233->212|233->212|233->212|233->212|233->212|234->213|235->214|235->214|236->215|237->216|241->221|241->221|241->221|241->221|242->222|242->222|242->222|243->223|243->223|243->223|243->223|244->224|244->224|244->224|245->225|245->225|245->225|245->225|246->226|247->227|247->227|248->228|248->228|248->228|249->229|250->230|250->230|250->230|251->231|251->231|251->231|251->231|251->231|251->231|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|252->232|258->238|258->238|258->238|259->239|259->239|259->239|259->239|259->239|259->239|259->239|259->239|259->239|259->239|259->239|260->240|260->240|260->240|260->240|260->240|261->241|261->241|262->242|262->242|262->242|263->243|263->243|263->243|264->244|264->244|264->244|265->245|265->245|265->245|266->246|266->246|266->246|270->250|270->250|270->250|270->250|270->250|270->250|270->250|270->250|270->250|270->250|270->250|270->250|270->250|272->252|272->252|272->252|274->254|274->254|274->254|276->256|276->256|276->256|281->261|281->261|282->262|282->262|283->263|283->263|284->264|284->264|285->265|287->267|287->267|287->267|287->267|287->267|290->270|290->270|291->271|291->271|294->274|295->275|296->276|298->278
                   -- GENERATED --
               */
           

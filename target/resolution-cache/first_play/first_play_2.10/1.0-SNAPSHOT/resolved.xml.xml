@@ -4,7 +4,7 @@
 		module="first_play_2.10"
 		revision="1.0-SNAPSHOT"
 		status="integration"
-		publication="20151209194943"
+		publication="20160316120803"
 	>
 		<description>
 		first_play
@@ -49,6 +49,8 @@
 		<dependency org="com.typesafe.play" name="play-cache_2.10" rev="2.3.6" conf="compile->default(compile)"/>
 		<dependency org="com.typesafe.play" name="play-ws_2.10" rev="2.3.6" conf="compile->default(compile)"/>
 		<dependency org="com.typesafe.play" name="play-java_2.10" rev="2.3.6" conf="compile->default(compile)"/>
+		<dependency org="org.nuiton.thirdparty" name="REngine" rev="1.7-3" conf="compile->default(compile)"/>
+		<dependency org="org.nuiton.thirdparty" name="Rserve" rev="1.7-3" conf="compile->default(compile)"/>
 		<dependency org="org.sorm-framework" name="sorm" rev="0.3.8" conf="compile->default(compile)"/>
 		<dependency org="com.monitorjbl" name="xlsx-streamer" rev="0.2.6" conf="compile->default(compile)"/>
 		<dependency org="com.google.http-client" name="google-http-client-jackson2" rev="1.15.0-rc" conf="compile->default(compile)"/>
@@ -82,6 +84,7 @@
 			<exclude org="com.sun.jmx" module="jmxri" name="*" type="*" ext="*" conf="" matcher="exact"/>
 		</dependency>
 		<dependency org="com.googlecode.json-simple" name="json-simple" rev="1.1.1" conf="compile->default(compile)"/>
+		<dependency org="com.google.gdata" name="core" rev="1.47.1" conf="compile->default(compile)"/>
 		<dependency org="com.typesafe.trace" name="trace-play-2.3.6_2.10" rev="0.1.7" conf="echo-trace-compile->default(compile)"/>
 	</dependencies>
 </ivy-module>

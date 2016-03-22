@@ -386,10 +386,12 @@ public class QueryStudy {
             }
             metric = line.substring(0,lastIndex);
             score = line.substring(lastIndex + 1, line.length());
-            metric  = metric.trim();
+            metric  = metric.trim().toUpperCase();
             score = score.trim();
 
             System.out.println("--------------" + metric);
+
+            System.out.println("--------------" + lstOfPy);
 
             if(lstOfPy.containsKey(metric))
             {

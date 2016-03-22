@@ -8,6 +8,7 @@ import akka.actor.Actor
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.services.drive.model.{ChildList, File}
+import controllers.CreatePortraitMessages._
 import org.json.simple.{JSONArray, JSONObject}
 import play.Logger
 import scala.collection.{JavaConverters, JavaConversions}
@@ -29,8 +30,8 @@ case class FindNewMultiModal(service: Drive, subject: String, name:String, difni
 
 case class RadarForSorting(sub: String, x: JsObject)
 class ScanSubjectPortrait extends Actor {
-  private val GOOGLE_DRIVE: Int = 1
-  private val LOCALSERVER: Int = 2
+ // private val GOOGLE_DRIVE: Int = 1
+ // private val LOCALSERVER: Int = 2
 
   var SubjectNames: List[String] = List()  /// to be deleted
 
@@ -206,7 +207,7 @@ class ScanSubjectPortrait extends Actor {
 
 
 
-      println(js);
+      //println(js);
 
 
       DataBaseOperations.InsertSubjectRadar(subName, js.toString())
@@ -356,7 +357,7 @@ class ScanSubjectPortrait extends Actor {
         threshold = 0
       }
       val tws = AddNewStudy.getStressThreshold(baseLineSignalsStress, threshold)
-      var tt: TreeMap[String, BarPercentage] = getPortraitStateIndiactors(username, threshold, signalsForIndicator, GOOGLE_DRIVE, 4)
+      var tt: TreeMap[String, BarPercentage] = getPortraitStateIndiactors(username, threshold, signalsForIndicator, SharedData.GOOGLE_DRIVE, 4)
       //tt.put("0TL",  new BarPercentage(0.0, 100, 0.0));
       if (ld1SessionName != null) //tt.put(ld1SessionName, new BarPercentage(0.0, 100, 0.0))
         tt += ld1SessionName -> new BarPercentage(0.0, 100, 0.0)
@@ -381,7 +382,7 @@ class ScanSubjectPortrait extends Actor {
       names.add(file0.getTitle());*/
       ///////////////////////////////////////////////////////////////////////////////////////////
       // Get the perfromance for all sessions of the current subject
-      var tt2 = getPortraitPerformance(username,  AddNewStudy.getPerformanceThreshold(baseLineSignalsPerformance), signalsForPerformance, GOOGLE_DRIVE, 4)
+      var tt2 = getPortraitPerformance(username,  AddNewStudy.getPerformanceThreshold(baseLineSignalsPerformance), signalsForPerformance, SharedData.GOOGLE_DRIVE, 4)
       tt2 += "TL" -> 0.0
       sender() ! Perf(subName,tt2)
       sender() ! PsycoMsg(subName, generatePsychometricForPortrait(service, returnFilesInFolder(service, subject, "mimeType != 'application/vnd.google-apps.folder'")))
@@ -495,7 +496,7 @@ class ScanSubjectPortrait extends Actor {
     val signal: TreeMap[String, String] = new TreeMap[String, String]
     val resl: util.ArrayList[TreeMap[String, BarPercentage]] = new util.ArrayList[TreeMap[String, BarPercentage]]
     var sessionCutoff: TreeMap[String, Double] = new TreeMap[String, Double]
-    if (sourceType == LOCALSERVER) {
+    if (sourceType == SharedData.LOCALSERVER) {
       return sessionCutoff
     }
     else {
@@ -562,7 +563,7 @@ class ScanSubjectPortrait extends Actor {
     val signal: TreeMap[String, String] = new TreeMap[String, String]
     val resl: util.ArrayList[TreeMap[String, BarPercentage]] = new util.ArrayList[TreeMap[String, BarPercentage]]
     var sessionCutoff: TreeMap[String, BarPercentage] = new TreeMap[String, BarPercentage]
-    if (sourceType == LOCALSERVER) {
+    if (sourceType == SharedData.LOCALSERVER) {
       return sessionCutoff
     }
     else {

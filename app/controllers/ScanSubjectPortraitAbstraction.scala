@@ -19,17 +19,19 @@ import scala.collection.{JavaConverters, JavaConversions}
 import scala.util.Random
 import scala.util.control.Breaks._
 
-import scala.collection.JavaConverters._
-
 import com.google.api.services.drive.Drive
 
 import scala.collection.immutable.TreeMap
 import play.api.libs.json.{JsObject, JsArray, Json}
 
+import controllers.CreatePortraitMessages._
+
+import scala.collection.JavaConverters._
+import scala.collection.immutable.TreeMap
+
 
 class ScanSubjectPortraitAbstraction extends Actor {
-  private val GOOGLE_DRIVE: Int = 1
-  private val LOCALSERVER: Int = 2
+
 
   var SubjectNames: List[String] = List()
 
@@ -147,14 +149,13 @@ class ScanSubjectPortraitAbstraction extends Actor {
 
 
 
-      println(js);
+     // println(js);
 
 
       DataBaseOperations.InsertSubjectRadar(subName, js.toString())
       sender() ! RadarForSorting(subName, Json.obj(subName -> js))
 
     case FindPoint(service, subject) =>
-
       var sent = false;
 
       val titleWithIdSession = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType = 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
@@ -192,11 +193,26 @@ class ScanSubjectPortraitAbstraction extends Actor {
 
       if (!sent)
         sender() ! StartOfLoadedDrive(-100.0)
-    case CreatePortraitForAsubjectAbstraction(service, subject, subName, userName, abst) => {
+
+    /*case CreatePortraitForAsubjectAbstractionWithSummary(service, subject, subName, userName, abst,study_no ) => {
+
+
+      ///////////
+      var pointsForAllSession = Map.empty[String, Map[String, Double]]
+      var totoalSubjectPointsWithResponse : Map[String, Map[String,  Map[String, Double]]] = Map.empty
+      var numberOfPoints = 0;
+      var sessionNo =0;
+
+      var sessionFileNames = Map.empty[String, (scala.collection.Map[java.lang.Double, java.lang.Double], scala.collection.Map[java.lang.Double, java.lang.Double],java.util.ArrayList[Activity]) ]
+      var blSignal: scala.collection.Map[java.lang.Double, java.lang.Double] = null; // to save the baseline signal
+      var blSignalSecondary: scala.collection.Map[java.lang.Double, java.lang.Double] = null; // to save the baseline signal
+      var activity : java.util.ArrayList[Activity] = null;
+      var session_no: Int = 1
+      //////////////
+
       var baseLineSignalsStress: util.ArrayList[String] = new util.ArrayList()
       var baseLineSignalsPerformance: util.ArrayList[String] = new util.ArrayList()
       val file0 = GoogleDrive.waitUntilGetDGFile(service, subject)
-
 
       //var sessions = GoogleDrive.returnFilesInFolder(service, subject, "mimeType = 'application/vnd.google-apps.folder'")
 
@@ -224,6 +240,260 @@ class ScanSubjectPortraitAbstraction extends Actor {
         var signals = GoogleDrive.returnFilesInFolderJustForTest2(service, sessionId, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
         import scala.collection.JavaConversions._
         for ((signalId, signalInfo) <- signals) {
+
+            var SessionName: String = sessionInfo.getTitle
+            SessionName = SessionName.replaceFirst("(\\d*\\s*)", "")
+            if(SessionName.equalsIgnoreCase(abst.baseLine))
+            {
+
+                if (!signalInfo.getTitle.contains("~")) {
+                  val extension = signalInfo.getFileExtension
+                  if (extension.equalsIgnoreCase(abst.primaryRes)) {
+                    val input: InputStream = GoogleDrive.downloadFileByFileId(service, signalInfo.getId)
+                    val name = GoogleDrive.generateFileNameFromInputStream(input)
+                    blSignal = ReadExcelJava.getAllSignalFromExcelAbstraction(name, abst.explColNo)
+
+                    if (org.apache.commons.lang3.StringUtils.containsIgnoreCase(SessionName, abst.baseLine)) {
+                      val name2 = GoogleDrive.generateFileNameFromInputStream(input)
+                      baseLineSignalsPerformance.add(name2)
+                    }
+                    else {
+                      signalsForPerformance = new SessionsBar(SessionName.replaceFirst("(\\d*\\s*)", ""), signalInfo.getId) :: signalsForPerformance
+                    }
+                  }
+                  if (extension.equals(abst.primaryExp)) {
+                    val input: InputStream = GoogleDrive.downloadFileByFileId(service, signalInfo.getId)
+                    val name = GoogleDrive.generateFileNameFromInputStream(input)
+                    blSignalSecondary = ReadExcelJava.getAllSignalFromExcelAbstraction(name, abst.respColNo)
+                    if (org.apache.commons.lang3.StringUtils.containsIgnoreCase(SessionName, abst.baseLine)) {
+                      val name2 = GoogleDrive.generateFileNameFromInputStream(input)
+                      baseLineSignalsStress.add(name2)
+                    }
+                    else {
+                      signalsForIndicator = new SessionsBar(SessionName, signalInfo.getId) :: signalsForIndicator
+                    }
+                  }
+
+                }
+
+          }
+            else if(! SessionName.equalsIgnoreCase("fdl") && !SessionName.equalsIgnoreCase("fdn")){  //This is onaly a special case for driving study
+            var thereIsAc = false;
+              var fileName ="";
+              var fileNameSecondary ="";
+
+              for((signalId,signalInfo) <- signals){ // iterate over signals
+                if(SignalType.isActivity(signalInfo.getFileExtension)){  // works for both .activity or .stm
+                  thereIsAc = true
+                  activity = ReadExcelJava.readActivity(GoogleDrive.downloadFileByFileId(service, signalId))
+                }
+                else if(signalInfo.getFileExtension.equalsIgnoreCase(abst.primaryExp)){
+                  val input: InputStream = GoogleDrive.downloadFileByFileId(service, signalInfo.getId)
+                  fileName = GoogleDrive.generateFileNameFromInputStream(input)
+                  signalsForPerformance = new SessionsBar(SessionName.replaceFirst("(\\d*\\s*)", ""), signalInfo.getId) :: signalsForPerformance
+                }
+                else if(signalInfo.getFileExtension.equalsIgnoreCase(abst.primaryRes)){
+                  val input: InputStream = GoogleDrive.downloadFileByFileId(service, signalInfo.getId)
+                  fileNameSecondary = GoogleDrive.generateFileNameFromInputStream(input)
+                  signalsForIndicator = new SessionsBar(SessionName, signalInfo.getId) :: signalsForIndicator
+                }
+              }
+              if(thereIsAc && fileName != "" && fileNameSecondary != ""){ // only if there is a explor and response variables
+                sessionFileNames +=  SessionName -> (ReadExcelJava.getAllSignalFromExcelAbstraction(fileName, abst.explColNo).asScala.mapValues(x=>x),
+                  ReadExcelJava.getAllSignalFromExcelAbstraction(fileNameSecondary, abst.respColNo).asScala.mapValues(x=>x), activity); // for each session that has activity file
+              }
+
+            }
+          else
+          {
+            for((signalId,signalInfo) <- signals){
+
+              if (!signalInfo.getTitle.contains("~")) {
+                val extension = signalInfo.getFileExtension
+                if (extension.equalsIgnoreCase(abst.primaryRes)) {
+
+                    signalsForPerformance = new SessionsBar(SessionName.replaceFirst("(\\d*\\s*)", ""), signalInfo.getId) :: signalsForPerformance
+
+                }
+                if (extension.equals(abst.primaryExp)) {
+
+                    signalsForIndicator = new SessionsBar(SessionName, signalInfo.getId) :: signalsForIndicator
+
+                }
+
+              }
+
+            }
+
+          }
+        }
+      }
+      // Get the stress indicator for all sessions of the current subject
+      //double threshold =  tws.threshold;
+      var temp: MeanAndSizeOfSignal = null
+      var threshold: Double = .0
+      if (ld1FileName != null) {
+        temp = ReadExcelJava.findMeanFromExcel(ld1FileName)
+        threshold = temp.mean
+      }
+      else {
+        threshold = 0
+      }
+
+
+      if(baseLineSignalsStress.size() >0){
+        temp = ReadExcelJava.findMeanFromExcel(baseLineSignalsStress.get(0))
+        threshold = temp.mean
+      }
+
+      var tt: TreeMap[String, BarPercentage] = getPortraitStateIndiactors(abst.userName, threshold, signalsForIndicator, GOOGLE_DRIVE, 4)
+
+
+
+      sender() ! Stress(subName, tt)
+
+      SubjectNames = file0.getTitle :: SubjectNames
+
+      // Get the perfromance for all sessions of the current subject
+      var tempTS = AddNewStudy.getPerformanceThresholdAbstraction(baseLineSignalsPerformance, abst.respColNo)
+      // println("Sho 6le3 threadshold  "  +tempTS );
+
+      var tt2 = getPortraitPerformance(abst.userName,tempTS, signalsForPerformance, GOOGLE_DRIVE, 4, abst.respColNo)
+      tt2 += "TL" -> 0.0
+      sender() ! Perf(subName, tt2)
+      sender() ! PsycoMsg(subName, generatePsychometricForPortrait(service, returnFilesInFolder(service, subject, "mimeType != 'application/vnd.google-apps.folder'")))
+      sender() ! Gender(subName, generateGenderForPortrait(service, returnFilesInFolder(service, subject, "mimeType != 'application/vnd.google-apps.folder'"), 111))
+      sender() ! ChildDone(subName)
+
+      /////
+      // we only do caculation if there is a baseline for explanatory and response varialbes
+      if( blSignal!=null && blSignalSecondary!=null ){
+        for((name, data) <- sessionFileNames){
+
+          var pointsPerSession = Map.empty[String, Double]
+          var pointsPerSessionResponse = Map.empty[String, Double]
+          var pointsInBL = Map.empty[String, Double];
+          var pointsInBLResponse = Map.empty[String, Double];
+          var pointNoTemp = 0;
+          var previous =0.0;
+          for(act  <- data._3) { // find the corresponding point in basline
+            //////////////////////before the start point unitl the beinging of the current start point ///////////////
+            pointsInBL += pointNoTemp.toString -> findMeanOfInterval(blSignal, previous,act.startTime, false )
+            pointsInBLResponse += pointNoTemp.toString -> findMeanOfInterval(blSignalSecondary, previous,act.startTime, true )
+            pointNoTemp = pointNoTemp + 1;
+            previous = act.endTime
+            //////////////////////////////////////////////////////////////////////////////////////////
+            pointsInBL += pointNoTemp.toString -> findMeanOfInterval(blSignal, act.startTime,act.endTime, false )
+            pointsInBLResponse += pointNoTemp.toString -> findMeanOfInterval(blSignalSecondary, act.startTime,act.endTime, true )
+            pointNoTemp = pointNoTemp + 1;
+          }
+          ////////////////////from the last end time to the end
+          pointsInBL += pointNoTemp.toString -> findMeanOfInterval(blSignal, previous, -1, false)
+          pointsInBLResponse += pointNoTemp.toString -> findMeanOfInterval(blSignalSecondary, previous,-1, true )
+
+          numberOfPoints = pointNoTemp
+
+
+          ///////////////////// the explantory interval
+          var pointNo = 0;
+          var previous2 =0.0;
+          for(act <-  data._3) {
+            ///////////////////////////////   for the interval between points
+            pointsInBL.get(pointNo.toString)  match
+            { case Some(x) =>
+              pointsPerSession += pointNo.toString -> (Math.log(findMeanOfInterval(data._1, previous2, act.startTime, false)) - Math.log(x)) // distract the value from the correspoingd value in baseline
+            case None =>
+            }
+
+            pointsInBLResponse.get(pointNo.toString)  match
+            { case Some(x) =>
+              pointsPerSessionResponse += pointNo.toString -> (Math.log(findMeanOfInterval(data._2, previous2, act.startTime, true)) - Math.log(x)) // distract the value from the correspoingd value in baseline
+            case None =>
+            }
+
+            pointNo = pointNo + 1;
+            previous2 = act.endTime
+            pointsInBL.get(pointNo.toString)  match
+            {
+              case Some(x) =>
+                pointsPerSession += pointNo.toString ->  (Math.log(findMeanOfInterval(data._1, act.startTime, act.endTime, false)) - Math.log(x)) // distract the value from the correspoingd value in baseline
+              case None =>
+            }
+            pointsInBLResponse.get(pointNo.toString)  match
+            { case Some(x) =>
+              pointsPerSessionResponse += pointNo.toString -> (Math.log(findMeanOfInterval(data._2,  act.startTime, act.endTime, true)) - Math.log(x)) // distract the value from the correspoingd value in baseline
+            case None =>
+            }
+
+            pointNo = pointNo + 1;
+          }
+          ////////////////////from the last end time to the end
+          pointsInBL.get(pointNo.toString)  match
+          {
+            case Some(x) =>
+              pointsPerSession += pointNo.toString -> (Math.log(findMeanOfInterval(data._1, previous2, -1, false)) - Math.log(x)) // distract the value from the correspoingd value in baseline
+            case None =>
+          }
+          pointsInBLResponse.get(pointNo.toString)  match
+          { case Some(x) =>
+            pointsPerSessionResponse += pointNo.toString -> (Math.log(findMeanOfInterval(data._2,  previous2, -1, true)) - Math.log(x)) // distract the value from the correspoingd value in baseline
+          case None =>
+          }
+
+          totoalSubjectPointsWithResponse += name -> Map("E"->pointsPerSession, "R" -> pointsPerSessionResponse)
+          //pointsForAllSession += name ->pointsPerSession
+        }
+
+      }
+      else{
+        Logger.debug("Shoooooooooooooooooooof this subject has no sim2 files+ " +  file0.getTitle)
+      }
+      sender() ! OneSubjectPointsDone(study_no, totoalSubjectPointsWithResponse, numberOfPoints+1);
+
+      /////
+
+
+
+
+
+    }*/
+    case CreatePortraitForAsubjectAbstraction(service, subject, subName, userName, abst, descriptor) => {
+
+      var baseLineSignalsStress: util.ArrayList[String] = new util.ArrayList()
+      var tempbaseLineSignalsStress: util.ArrayList[String] = new util.ArrayList()// this is used to handle situation when np is measured not pp
+
+      var baseLineSignalsPerformance: util.ArrayList[String] = new util.ArrayList()
+      val file0 = GoogleDrive.waitUntilGetDGFile(service, subject)
+
+      //var sessions = GoogleDrive.returnFilesInFolder(service, subject, "mimeType = 'application/vnd.google-apps.folder'")
+
+      val titleWithIdSession = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType = 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+
+      sender() ! SubjectID(file0.getTitle())
+
+      var signalsForIndicator: List[SessionsBar] = List()
+      var signalsForIndicatorTemp: List[SessionsBar] = List()
+
+      var signalsForPerformance: List[SessionsBar] = List()
+
+
+
+      //Iterator itSession = titleWithIdSession.entrySet().iterator();
+
+      var ld1FileName: String = null;
+      var ld1SessionName: String = null;
+      var fdFilenmae: String = null;
+      var fdSessionName: String = null;
+      var fdActList: util.ArrayList[Activity] = null
+      var sessionsWithStreesBL: TreeMap[String, BarPercentage] = TreeMap.empty
+
+      for ((sessionId, sessionInfo) <- titleWithIdSession) {
+
+        //val file = GoogleDrive.waitUntilGetDGFile(service, sessionId)
+        //var signals = GoogleDrive.returnFilesInFolder(service, sessionId, "mimeType != 'application/vnd.google-apps.folder'")
+        var signals = GoogleDrive.returnFilesInFolderJustForTest2(service, sessionId, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+        import scala.collection.JavaConversions._
+        for ((signalId, signalInfo) <- signals) {
           //val file2: File = GoogleDrive.waitUntilGetDGFile(service, signalId)
           val SessionName: String = sessionInfo.getTitle
           if (!signalInfo.getTitle.contains("~")) {
@@ -233,26 +503,41 @@ class ScanSubjectPortraitAbstraction extends Actor {
 
 
             if (extension.equalsIgnoreCase(abst.primaryRes)) {
-              println("*************************+" + abst.primaryRes)
+              //println("*************************+" + abst.primaryRes)
               if (org.apache.commons.lang3.StringUtils.containsIgnoreCase(SessionName, abst.baseLine)) {
                 val input: InputStream = GoogleDrive.downloadFileByFileId(service, signalInfo.getId)
                 baseLineSignalsPerformance.add(GoogleDrive.generateFileNameFromInputStream(input))
+                signalsForPerformance = new SessionsBar(SessionName.replaceFirst("(\\d*\\s*)", ""), signalInfo.getId) :: signalsForPerformance
               }
               else {
                 signalsForPerformance = new SessionsBar(SessionName.replaceFirst("(\\d*\\s*)", ""), signalInfo.getId) :: signalsForPerformance
                 //signalsForPerformance.add(new GoogleDrive.SessionsBar(SessionName.replaceFirst("(\\d*\\s*)", ""), file2.getId))
               }
             }
-              if (extension.equals(abst.primaryExp)) {
-                println("&&&&&&&&&&&&&&&&&&&&&&&&&" + abst.primaryExp)
-                if (org.apache.commons.lang3.StringUtils.containsIgnoreCase(SessionName, abst.baseLine)) {
-                  val input: InputStream = GoogleDrive.downloadFileByFileId(service, signalInfo.getId)
-                  baseLineSignalsStress.add(GoogleDrive.generateFileNameFromInputStream(input))
+
+             if(extension.equalsIgnoreCase(abst.primaryExp)) {
+                if(org.apache.commons.lang3.StringUtils.containsIgnoreCase(SessionName, abst.baseLine)) {
+                    val input: InputStream = GoogleDrive.downloadFileByFileId(service, signalInfo.getId)
+                    baseLineSignalsStress.add(GoogleDrive.generateFileNameFromInputStream(input))
+                    sessionsWithStreesBL += SessionName -> new BarPercentage(0, 100, 0)
                 }
                 else {
                   //else signalsForIndicator.add(new GoogleDrive.SessionsBar(SessionName, file2.getId))
-                  signalsForIndicator = new SessionsBar(SessionName, signalInfo.getId) :: signalsForIndicator
+                    signalsForIndicator = new SessionsBar(SessionName, signalInfo.getId) :: signalsForIndicator
                 }
+              }
+
+            if(extension.equalsIgnoreCase("np") ) {  // this is to keep track of "NP" and we check later if no PP we use this insted
+              if(org.apache.commons.lang3.StringUtils.containsIgnoreCase(SessionName, abst.baseLine)) {
+                val input: InputStream = GoogleDrive.downloadFileByFileId(service, signalInfo.getId)
+                tempbaseLineSignalsStress.add(GoogleDrive.generateFileNameFromInputStream(input))
+                sessionsWithStreesBL += SessionName -> new BarPercentage(0, 100, 0)
+                  }
+                else {
+                //else signalsForIndicator.add(new GoogleDrive.SessionsBar(SessionName, file2.getId))
+                signalsForIndicatorTemp = new SessionsBar(SessionName, signalInfo.getId) :: signalsForIndicatorTemp
+              }
+
               }
 
             }
@@ -262,47 +547,49 @@ class ScanSubjectPortraitAbstraction extends Actor {
         //double threshold =  tws.threshold;
         var temp: MeanAndSizeOfSignal = null
         var threshold: Double = .0
-        if (ld1FileName != null) {
-          temp = ReadExcelJava.findMeanFromExcel(ld1FileName)
-          threshold = temp.mean
-        }
-        else {
-          threshold = 0
-        }
 
 
       if(baseLineSignalsStress.size() >0){
         temp = ReadExcelJava.findMeanFromExcel(baseLineSignalsStress.get(0))
         threshold = temp.mean
       }
+      else if (tempbaseLineSignalsStress.size() >0){
+        signalsForIndicator = signalsForIndicatorTemp
+        temp = ReadExcelJava.findMeanFromExcel(tempbaseLineSignalsStress.get(0))
+        threshold = temp.mean
 
-        var tt: TreeMap[String, BarPercentage] = getPortraitStateIndiactors(abst.userName, threshold, signalsForIndicator, GOOGLE_DRIVE, 4)
+      }
 
+        var sessionsWithStrees: TreeMap[String, BarPercentage] = getPortraitStateIndiactors(abst.userName, threshold, signalsForIndicator, SharedData.GOOGLE_DRIVE, 4)
 
+        for((key, value) <- sessionsWithStreesBL){
+          sessionsWithStrees += key -> value
+        }
 
-        sender() ! Stress(subName, tt)
+        sender() ! Stress(subName, sessionsWithStrees)
 
         SubjectNames = file0.getTitle :: SubjectNames
         /////////////////////////////Calculate for Dr. P///////////////////////////////////////////
         /*double max =0;
-for( SessionsBar tem : signalsForIndicator) {
-  InputStream input = downloadFileByFileId(service, tem.location);
-  MeanAndSizeOfSignal t = ReadExcelJava.findMeanFromExcel(generateFileNameFromInputStream(input));
-  double mean = t.mean;
-  if(mean-threshold > max) max= mean-threshold;
-}
+        for( SessionsBar tem : signalsForIndicator) {
+          InputStream input = downloadFileByFileId(service, tem.location);
+          MeanAndSizeOfSignal t = ReadExcelJava.findMeanFromExcel(generateFileNameFromInputStream(input));
+          double mean = t.mean;
+          if(mean-threshold > max) max= mean-threshold;
+        }
 
-maxes.add(max);
-names.add(file0.getTitle());*/
+        maxes.add(max);
+        names.add(file0.getTitle());*/
         ///////////////////////////////////////////////////////////////////////////////////////////
         // Get the perfromance for all sessions of the current subject
       var tempTS = AddNewStudy.getPerformanceThresholdAbstraction(baseLineSignalsPerformance, abst.respColNo)
-          println("Sho 6le3 threadshold  "  +tempTS );
+         // println("Sho 6le3 threadshold  "  +tempTS );
 
-        var tt2 = getPortraitPerformance(abst.userName,tempTS, signalsForPerformance, GOOGLE_DRIVE, 4, abst.respColNo)
-        tt2 += "TL" -> 0.0
+        var tt2 = getPortraitPerformance(abst.userName,tempTS, signalsForPerformance, SharedData.GOOGLE_DRIVE, 4, abst.respColNo)
+        //tt2 += "TL" -> 0.0
         sender() ! Perf(subName, tt2)
-        sender() ! PsycoMsg(subName, generatePsychometricForPortrait(service, returnFilesInFolder(service, subject, "mimeType != 'application/vnd.google-apps.folder'")))
+
+        sender() ! PsycoMsg(subName, generatePsychometricForPortrait(service, returnFilesInFolder(service, subject, "mimeType != 'application/vnd.google-apps.folder'"), descriptor))
         sender() ! Gender(subName, generateGenderForPortrait(service, returnFilesInFolder(service, subject, "mimeType != 'application/vnd.google-apps.folder'"), 111))
         sender() ! ChildDone(subName)
       }
@@ -414,7 +701,7 @@ names.add(file0.getTitle());*/
         val signal: TreeMap[String, String] = new TreeMap[String, String]
         val resl: util.ArrayList[TreeMap[String, BarPercentage]] = new util.ArrayList[TreeMap[String, BarPercentage]]
         var sessionCutoff: TreeMap[String, Double] = new TreeMap[String, Double]
-        if (sourceType == LOCALSERVER) {
+        if (sourceType == SharedData.LOCALSERVER) {
           return sessionCutoff
         }
         else {
@@ -442,7 +729,8 @@ names.add(file0.getTitle());*/
 
       //@throws(classOf[IOException])
       //@throws(classOf[Exception])
-      def generatePsychometricForPortrait(service: Drive, infos: List[String]): TreeMap[String, Double] = {
+      def generatePsychometricForPortrait(service: Drive, infos: List[String], descriptor : java.util.TreeMap[String, String]): TreeMap[String, Double] = {
+
         var sessionCutoff: TreeMap[String, Double] = new TreeMap[String, Double]
         val gender: String = ""
         import scala.collection.JavaConversions._
@@ -457,13 +745,27 @@ names.add(file0.getTitle());*/
             if (SignalType.isBar(extension)) {
               val input: InputStream = GoogleDrive.downloadFileByFileId(service, fileInfo.getId)
               if (input != null) {
-                val tmp = ReadExcelJava.findTotalNASA(11, GoogleDrive.generateFileNameFromInputStream(input))
-                if (tmp.size() > 0) sessionCutoff += "ND" -> tmp(0) //sessionCutoff.put("ND", tmp(0))
+                //val tmp = ReadExcelJava.findTotalNASA(11, GoogleDrive.generateFileNameFromInputStream(input))
+                    val tmp = ReadExcelJava.findTotalNASAWithHeader(11, GoogleDrive.generateFileNameFromInputStream(input),descriptor)
+                    for((key, value) <- tmp)
+                    {
+                      sessionCutoff += key -> value
+                    }
+                //sessionCutoff = tmp;
+
+                /*if (tmp.size() > 0) sessionCutoff += "ND" -> tmp(0) //sessionCutoff.put("ND", tmp(0))
                 if (tmp.size() > 1) sessionCutoff += "LD1" -> tmp(1) //sessionCutoff.put("LD1", tmp(1))
                 if (tmp.size() > 2) sessionCutoff += "LD2" -> tmp(2) //sessionCutoff.put("LD2", tmp(2))
                 if (tmp.size() > 3) sessionCutoff += "LD3" -> tmp(3) //sessionCutoff.put("LD3", tmp(3))
                 if (tmp.size() > 4) sessionCutoff += "LD4" -> tmp(4) //sessionCutoff.put("LD4", tmp(4))
-                if (tmp.size() > 5) sessionCutoff += "FD" -> tmp(5) //sessionCutoff.put("FD", tmp(5))
+                if (tmp.size() > 5) sessionCutoff += "FD" -> tmp(5) //sessionCutoff.put("FD", tmp(5))*/
+
+                /*if (tmp.size() > 0) sessionCutoff += "Practice-Drive" -> tmp(0) //sessionCutoff.put("ND", tmp(0))
+                if (tmp.size() > 1) sessionCutoff += "Motoric-Drive" -> tmp(1) //sessionCutoff.put("LD1", tmp(1))
+                if (tmp.size() > 2) sessionCutoff += "Cognitive-Drive" -> tmp(2) //sessionCutoff.put("LD2", tmp(2))
+                if (tmp.size() > 3) sessionCutoff += "Cognitive-Failure-Drive" -> tmp(3) //sessionCutoff.put("LD3", tmp(3))
+                if (tmp.size() > 4) sessionCutoff += "Motoric-Failure-Drive" -> tmp(4) //sessionCutoff.put("LD4", tmp(4))
+                if (tmp.size() > 5) sessionCutoff += "Normal-Failure-Drive" -> tmp(5) //sessionCutoff.put("FD", tmp(5))*/
               }
               //break //todo: break is not supported
             }
@@ -473,6 +775,28 @@ names.add(file0.getTitle());*/
       }
 
 
+  def findMeanOfInterval(interval: scala.collection.Map[java.lang.Double, java.lang.Double], start: Double, end: Double, abs: Boolean ): Double =
+  {
+    var tempMean = 0.0;
+    val tempFirst= end match {
+      case -1 => interval.filter {case (k,v) => (k >= start) }
+      case _ => interval.filter {case (k,v) => (k >= start) && (k < end) }
+    }
+
+    //tempFirst.map{case (k,v) => tempMean = tempMean + v}
+    if(abs)
+      tempFirst.map{case (k,v) => tempMean = tempMean + Math.abs(v)}
+    else
+      tempMean= tempFirst.foldLeft(0.0)(_+_._2) // sum all the number
+
+    tempMean = tempMean/ tempFirst.size
+
+    return tempMean
+    /*pointsInBL += pointNoTemp.toString -> tempMean
+    pointNoTemp = pointNoTemp + 1;
+    previous = act.endTime*/
+  }
+
       // @throws(classOf[IOException])
       // @throws(classOf[Exception])
       def getPortraitStateIndiactors(username: String, max: Double, url: List[SessionsBar], sourceType: Int, signalType: Int): TreeMap[String, BarPercentage] = {
@@ -480,7 +804,7 @@ names.add(file0.getTitle());*/
         val signal: TreeMap[String, String] = new TreeMap[String, String]
         val resl: util.ArrayList[TreeMap[String, BarPercentage]] = new util.ArrayList[TreeMap[String, BarPercentage]]
         var sessionCutoff: TreeMap[String, BarPercentage] = new TreeMap[String, BarPercentage]
-        if (sourceType == LOCALSERVER) {
+        if (sourceType == SharedData.LOCALSERVER) {
           return sessionCutoff
         }
         else {

@@ -4,6 +4,7 @@ import java.io.InputStream
 import java.net.SocketTimeoutException
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
+import controllers.CreatingStudyMessages._
 
 import scala.collection.immutable.TreeMap
 import util.control.Breaks._
@@ -28,8 +29,6 @@ case class SubjectsInStudy(subjects: List[String], folder_id: String, studyName:
 case class SubjectsInStudyAbstract(subjects: List[String], topology: Abstraction, study_no: Int)
 class ScanSubject extends Actor{
 
-  private val GOOGLE_DRIVE: Int = 1
-  private val LOCALSERVER: Int = 2
 
   def findMeanOfInterval(interval: scala.collection.Map[java.lang.Double, java.lang.Double], start: Double, end: Double, abs: Boolean ): Double =
   {
@@ -54,6 +53,226 @@ class ScanSubject extends Actor{
   }
 
   def receive = {
+    case ScanStudyAbstract(topology) =>
+      var study_no: Int = 0
+
+      var descLoc :String = null;
+      if(topology.sourceType ==SharedData.GOOGLE_DRIVE) {  // if we are reading from google drive
+        var report: String = ""
+        val googleCredential: GoogleCredential = GoogleDrive.getStoredCredentials(topology.userName)
+        val acc: AccessRefreshString = DataBaseOperations.getStoredCredentials(topology.userName)
+        val service: Drive = GoogleDrive.buildService(googleCredential)
+        /////share the folder with every body. Later it has to be some parameter to specify it the user want to make public or not
+        if (topology.public) {
+          //val fl: File = service.files.get(folder_id).execute
+          val fl: File = GoogleDrive.waitUntilGetDGFile(service, topology.studyLocation)
+          val newPermission: Permission = new Permission
+          newPermission.setValue("")
+          newPermission.setType("anyone")
+          newPermission.setRole("reader")
+          service.permissions.insert(fl.getId, newPermission).execute
+        }
+
+        //TODO replace  returnFilesInFolder with returnFilesInFolderJustForTest2
+        val subjects = GoogleDrive.returnFilesInFolder(service, topology.studyLocation, "mimeType = 'application/vnd.google-apps.folder'")
+        var signals = GoogleDrive.returnFilesInFolderJustForTest2(service, topology.studyLocation, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+
+        // searach if this study has descriptor
+        for ((signalId, signalInfo) <- signals) {
+          //val file2: File = GoogleDrive.waitUntilGetDGFile(service, signalId)
+          if (!signalInfo.getTitle.contains("~")) {
+            val extension = signalInfo.getFileExtension
+
+            if(extension.equalsIgnoreCase("descriptor")) {
+              descLoc = signalInfo.getId
+            }
+
+          }
+        }
+
+        if (subjects.size > 0) {
+          var share = 0;
+          if (topology.public)
+            share = 1;
+          study_no = DataBaseOperations.GenerateStudyNoGD(topology.studyName, topology.userName, SharedData.GOOGLE_DRIVE, share, descLoc)
+        }
+        sender() ! SubjectsInStudyAbstract(subjects.toList, topology, study_no)
+      }
+      else{
+        var file = new java.io.File(topology.studyLocation);
+        if (file.exists && file.isDirectory) {
+          val temp = file.listFiles.filter(_.isDirectory).toList
+          val subjects = temp.map(x=> x.getAbsolutePath)
+          println("%%%%%%%%%%%%%" + subjects)
+          if (subjects.size > 0) {
+            var share = 0;
+            if (topology.public)
+              share = 1;
+
+            // TODO search for descirptor on server
+            study_no = DataBaseOperations.GenerateStudyNoGD(topology.studyName, topology.userName, SharedData.LOCALSERVER, share, null)
+          }
+          sender() ! SubjectsInStudyAbstract(subjects, topology, study_no)
+        } else {
+          List[File]()
+        }
+
+      }
+
+    case SubjectFolderAbstract(subject, service, study_no, topology, userDefinedExtension) =>
+      if(topology.sourceType ==SharedData.GOOGLE_DRIVE) {
+        Logger.info("We started reading a new subject for Study No = " + study_no)
+        var report: String = "";
+        val file0: File = getFolderId(service, subject);
+        DataBaseOperations.InsertSubjectGD(file0.getTitle, study_no, 111, 11, 11)
+        val sessions = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType = 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+        var session_no: Int = 1
+
+        import scala.collection.JavaConversions._
+        for ((sessionId, sessionInfo) <- sessions) {
+          var file: File = sessionInfo
+          var sessionName: String = sessionInfo.getTitle
+          sessionName = sessionName.replaceAll("\\s+", "")
+          val Signals = GoogleDrive.returnFilesInFolderJustForTest2(service, sessionId, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+          var signal_code: Int = 1
+          breakable {
+            for ((signalId, signalInfo) <- Signals) {
+              var order = 0;
+
+              var isBl = false;
+
+              var shouldICommit = true;
+
+              if (!signalInfo.getTitle.contains("~")) {
+                val extension: String = signalInfo.getFileExtension
+                if (extension.equalsIgnoreCase(topology.primaryExp)) {
+                  order = 2;
+                }
+               // TODO in case there is NO primary explantory varialbe make the secondary to appear first
+                else if (extension.equalsIgnoreCase(topology.primaryRes)) {
+                  order = 1;
+                }
+
+                else if (extension.equalsIgnoreCase("FACS") || extension.equalsIgnoreCase("expression")){
+                  order = -1;
+                }
+
+
+                if (sessionName.replaceFirst("(\\d*\\s*)", "").equalsIgnoreCase(topology.baseLine) && (extension.equalsIgnoreCase(topology.primaryExp) || topology.secondadryExp.contains(extension))) {
+                  isBl = true;
+                }
+                if (userDefinedExtension.contains(extension.toLowerCase) && !extension.equalsIgnoreCase("sim2")) {
+                  signal_code = userDefinedExtension.get(extension.toLowerCase) match {
+                    case Some(x) => x
+                    case None =>  0  // should never reach here
+                  }
+                }
+                else
+                  shouldICommit = false //todo: continue is not supported
+                if (shouldICommit)
+                  DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, sessionName, signal_code, signalInfo.getId, 0, isBl, order)
+              }
+            }
+          }
+          session_no += 1
+
+        }
+
+
+        //Check the missing Signal
+        val infos = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+        import scala.collection.JavaConversions._
+        for ((info, fileInfo) <- infos) {
+          //var fileInfo: File = getFolderId(service, info)
+
+          if (fileInfo.getTitle.contains("~")) break //todo: continue is not supported
+          val extension: String = fileInfo.getFileExtension
+          if (userDefinedExtension.contains(extension.toLowerCase)) {
+            var signal_code = userDefinedExtension.get(extension.toLowerCase) match {
+              case Some(x) => x
+            }
+            DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, "GENERAL", signal_code, fileInfo.getId, 1, false, 0)
+          }
+        }
+      }
+
+      else{
+        Logger.info("We started reading a new subject for Study No = " + study_no)
+        var report: String = "";
+        //val file0: File = getFolderId(service, subject);
+        var subjectTitle = subject.substring(subject.lastIndexOf("\\")+1)
+        DataBaseOperations.InsertSubjectGD(subjectTitle, study_no, 111, 11, 11)
+        //val sessions = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType = 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+        val sessions = returnFileFromFolderLocalMachine(subject, true);
+        var session_no: Int = 1
+
+        import scala.collection.JavaConversions._
+        for (session <- sessions) {
+         // var file: File = sessionInfo
+          var sessionName: String = session.substring(session.lastIndexOf("\\")+1)
+          sessionName = sessionName.replaceAll("\\s+", "")
+          //val Signals = GoogleDrive.returnFilesInFolderJustForTest2(service, sessionId, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+          val Signals = returnFileFromFolderLocalMachine(session, false)
+          var signal_code: Int = 1
+          breakable {
+            for (signal <- Signals) {
+              var order = 0;
+
+              var isBl = false;
+
+              var shouldICommit = true;
+              var signalTitle = signal.substring(signal.lastIndexOf("\\")+1)
+              if (!signalTitle.contains("~")) {
+                val extension: String = signal.substring(signal.lastIndexOf(".")+1)
+                if (extension.equalsIgnoreCase(topology.primaryExp)) {
+                  order = 2;
+                }
+                else if (extension.equalsIgnoreCase(topology.primaryRes)) {
+                  order = 1;
+                }
+                if (sessionName.replaceFirst("(\\d*\\s*)", "").equalsIgnoreCase(topology.baseLine) && extension.equalsIgnoreCase(topology.primaryExp)) {
+                  isBl = true;
+                }
+                if (userDefinedExtension.contains(extension.toLowerCase) && !extension.equalsIgnoreCase("sim2")) {
+                  signal_code = userDefinedExtension.get(extension.toLowerCase) match {
+                    case Some(x) => x
+                    case None => 0  // should never be implemetned
+                  }
+                }
+                else
+                  shouldICommit = false //todo: continue is not supported
+                if (shouldICommit)
+                  DataBaseOperations.InsertSessionGD(subjectTitle, study_no, session_no, sessionName, signal_code, signal, 0, isBl, order)
+              }
+            }
+          }
+          session_no += 1
+
+        }
+
+
+        //Check the missing Signal
+       // val infos = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+        val infos = returnFileFromFolderLocalMachine(subject, false)
+        import scala.collection.JavaConversions._
+        for (info <- infos) {
+          //var fileInfo: File = getFolderId(service, info)
+          var infoTitle = info.substring(info.lastIndexOf("\\")+1)
+
+          if (infoTitle.contains("~")) break //todo: continue is not supported
+          val extension: String = info.substring(subject.lastIndexOf(".")+1)
+          if (userDefinedExtension.contains(extension)) {
+            var signal_code = userDefinedExtension.get(extension) match {
+              case Some(x) => x
+            }
+            DataBaseOperations.InsertSessionGD(infoTitle, study_no, session_no, "GENERAL", signal_code, info, 1, false, 0)
+          }
+        }
+
+      }
+
+      sender() ! OneSubjectDoneAbstract(study_no)
+
     case SubjectFolderAbstractSummary(subject, service, study_no, topology, userDefinedExtension) =>
       var pointsForAllSession = Map.empty[String, Map[String, Double]]
       var totoalSubjectPointsWithResponse : Map[String, Map[String,  Map[String, Double]]] = Map.empty
@@ -82,7 +301,7 @@ class ScanSubject extends Actor{
         if(sessionName.equalsIgnoreCase(topology.baseLine))
           {
 
-            println("We found the baseline folder")
+            //println("We found the baseline folder")
             // save the explaontory varialbe file in somewere
             breakable {
               for ((signalId,signalInfo) <- Signals) {
@@ -92,14 +311,14 @@ class ScanSubject extends Actor{
 
                   if (extension.equalsIgnoreCase(topology.primaryExp)) {
 
-                    println("We are saving the primary singal in baseline")
+                   // println("We are saving the primary singal in baseline")
                       val input: InputStream = GoogleDrive.downloadFileByFileId(service, signalInfo.getId)
                       val name = GoogleDrive.generateFileNameFromInputStream(input)
                      blSignal = ReadExcelJava.getAllSignalFromExcelAbstraction( name, topology.explColNo)
                   }
                   else if(extension.equalsIgnoreCase(topology.primaryRes)){
 
-                    println("We are saving the Response signal in baseline")
+                    //println("We are saving the Response signal in baseline")
                     val input: InputStream = GoogleDrive.downloadFileByFileId(service, signalInfo.getId)
                     val name = GoogleDrive.generateFileNameFromInputStream(input)
                     blSignalSecondary = ReadExcelJava.getAllSignalFromExcelAbstraction( name, topology.respColNo)
@@ -114,7 +333,7 @@ class ScanSubject extends Actor{
           var fileNameSecondary ="";
 
           for((signalId,signalInfo) <- Signals){ // iterate over signals
-            if(SignalType.isActivity(signalInfo.getFileExtension)){
+            if(SignalType.isActivity(signalInfo.getFileExtension)){  // works for both .activity or .stm
               thereIsAc = true
               activity = ReadExcelJava.readActivity(GoogleDrive.downloadFileByFileId(service, signalId))
             }
@@ -218,68 +437,10 @@ class ScanSubject extends Actor{
 
       }
       else{
-        Logger.debug("Shoooooooooooooooooooof this subject has no sim2 files+ " +  file0.getTitle)
-
+        Logger.debug("Shoooooooooooooooooooof this subject has no response file+ " +  file0.getTitle)
       }
-
       sender() ! OneSubjectPointsDone(study_no, totoalSubjectPointsWithResponse, numberOfPoints+1);
 
-    case SubjectFolderAbstract(subject, service, study_no, topology, userDefinedExtension) =>
-      Logger.info("We started reading a new subject for Study No = " + study_no)
-      var report : String ="";
-      val file0: File =getFolderId(service, subject);
-      DataBaseOperations.InsertSubjectGD(file0.getTitle, study_no, 111, 11, 11)
-      val sessions = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType = 'application/vnd.google-apps.folder'").asScala.mapValues(x=>x);
-      var session_no: Int = 1
-
-      import scala.collection.JavaConversions._
-      for (( sessionId, sessionInfo) <- sessions) {
-
-        var file :File = sessionInfo
-        var sessionName: String = sessionInfo.getTitle
-        sessionName = sessionName.replaceAll("\\s+", "")
-
-        val Signals = GoogleDrive.returnFilesInFolderJustForTest2(service, sessionId, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x=>x);
-        var signal_code: Int = 1
-        breakable {
-          for ((signalId,signalInfo) <- Signals) {
-
-            var shouldICommit = true;
-
-            if (!signalInfo.getTitle.contains("~")) {
-
-              val extension: String = signalInfo.getFileExtension
-
-              if(userDefinedExtension.contains(extension)){
-                signal_code = userDefinedExtension.get(extension) match { case Some(x) => x}
-              }
-
-              else shouldICommit= false //todo: continue is not supported
-              if(shouldICommit)
-                DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, sessionName, signal_code, signalInfo.getId, 0)
-            }
-          }
-        }
-        session_no += 1
-
-      }
-
-
-      //Check the missing Signal
-      val infos = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x=>x);
-      import scala.collection.JavaConversions._
-      for ((info, fileInfo) <- infos) {
-        //var fileInfo: File = getFolderId(service, info)
-
-        if (fileInfo.getTitle.contains("~")) break //todo: continue is not supported
-        val extension: String = fileInfo.getFileExtension
-        if(userDefinedExtension.contains(extension)){
-          var signal_code = userDefinedExtension.get(extension) match { case Some(x) => x}
-          DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, "GENERAL", signal_code, fileInfo.getId, 1)
-        }
-      }
-
-      sender() ! OneSubjectDoneAbstract(study_no)
 
 
     case SubjectFolder(subject, service, study_no, studyTopology ,bio_code, psycho_code, physio_code, perf_code, userDefinedExtension)=>
@@ -316,71 +477,18 @@ class ScanSubject extends Actor{
           for ((signalId,signalInfo) <- Signals) {
 
             var shouldICommit = true;
-            /*var passed: Boolean = false
-            var file2: File = null
-            while (!passed) {
-              try {
-                //file2 = service.files.get(signalId).execute
-                file2 = getFolderId(service,signalId)
-                passed = true
-              }
-              catch {
-                case e: SocketTimeoutException => {
-                  Logger.debug("We have socketTimeOutException Salah while search for signal")
-                }
-              }
-            }*/
+
             if (!signalInfo.getTitle.contains("~")) {
 
               val extension: String = signalInfo.getFileExtension
-              /*if (SignalType.isEda(extension)) {
-                if (studyTopology.physiology.EDA != 1) shouldICommit= false //todo: continue is not supported
-                signal_type = SignalType.getEDACode
-                eda = 1
-              }
-              else if (SignalType.isMotion(extension)) {
-                if (studyTopology.physiology.Motion != 1) shouldICommit= false //todo: continue is not supported
-                signal_type = SignalType.getMotionCode
-                motion = 1
-              }
-              else if (SignalType.isPerspiration(extension)) {
-                if (studyTopology.physiology.Perspiration != 1) shouldICommit= false //todo: continue is not supported
-                signal_type = SignalType.getPerspirationCode
-                perspiration = 1
-              }
-              else if (SignalType.isBreathing(extension)) {
-                if (studyTopology.physiology.Breathing_Thermal != 1) shouldICommit= false //todo: continue is not supported
-                signal_type = SignalType.getBreathingCode
-                thermal_breath = 1
-              }
-              else if (SignalType.isHeartRate(extension)) {
-                if (studyTopology.physiology.Heart_Rate != 1) shouldICommit= false //todo: continue is not supported
-                signal_type = SignalType.getHeartRateCode
-                heart_rate = 1
-              }
-              else if (SignalType.isBeltBreathing(extension)) {
-                if (studyTopology.physiology.Breathing_Belt != 1) shouldICommit= false //todo: continue is not supported
-                signal_type = SignalType.getBeltBreathingCode
-                belt_breath = 1
-              }
-              else if (SignalType.isSimulation(extension)) {
-                signal_type = SignalType.getSimulationCode
-              }
-              else if (SignalType.isNPerspiration(extension)) signal_type = SignalType.getNPerspirationCode
-              else if (SignalType.isTemperature(extension)) signal_type = SignalType.getTemperatureCode
-              else if (SignalType.isVideo(extension)) signal_type = SignalType.getVideoCode
-              else if (SignalType.isActivity(extension)) signal_type = SignalType.getActivityCode
-              else if (SignalType.isHRV(extension)) signal_type = SignalType.getHRV
-              else if (SignalType.isExpression(extension)) signal_type = SignalType.getExpression
-              else if(SignalType.isEyeTracking(extension)) signal_type = SignalType.getEyeTrackingCode
-              */
+
               if(userDefinedExtension.contains(extension)){
                 signal_code = userDefinedExtension.get(extension) match { case Some(x) => x}
               }
 
               else shouldICommit= false //todo: continue is not supported
               if(shouldICommit)
-                DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, sessionName, signal_code, signalInfo.getId, 0)
+                DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, sessionName, signal_code, signalInfo.getId, 0, false,0)
             }
           }
         }
@@ -422,23 +530,9 @@ class ScanSubject extends Actor{
 
         if(userDefinedExtension.contains(extension)){
           var signal_code = userDefinedExtension.get(extension) match { case Some(x) => x}
-          DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, "GENERAL", signal_code, fileInfo.getId, 1)
+          DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, "GENERAL", signal_code, fileInfo.getId, 1, false,0)
         }
-       /* if (SignalType.isInfo(extension)) {
-          DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, "INFO", SignalType.getInfoCode, fileInfo.getId, 1)
-        }
-        else if (SignalType.isPsychometric(extension)) {
-          DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, "PM", SignalType.getPsychometricCode, fileInfo.getId, 1)
-        }
-        else if (SignalType.isPerfromance(extension)) {
-          DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, "PRF", SignalType.getPerformanceCode, fileInfo.getId, 1)
-        }
-        else if (SignalType.isBar(extension)) {
-          DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, "BAR", SignalType.getBarChatCode, fileInfo.getId, 1)
-        }
-        else if (SignalType.isPerspiration(extension)) {
-          DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, " ", SignalType.getPerspirationCode, fileInfo.getId, 1)
-        }*/
+
       }
 
       sender() ! OneSubjectDone(study_no)
@@ -464,63 +558,39 @@ class ScanSubject extends Actor{
       else if (subjects.size < studyTopology.noOfSubjects) report = report + "You have fewer subjects than the number you have selected\n"
       var study_no: Int = 0
       if (subjects.size > 0) {
-        study_no = DataBaseOperations.GenerateStudyNoGD(studyName, username, GOOGLE_DRIVE, shareStudy)
+        study_no = DataBaseOperations.GenerateStudyNoGD(studyName, username, SharedData.GOOGLE_DRIVE, shareStudy, null)
       }
       sender() ! SubjectsInStudy(subjects.toList,folder_id, studyName, username, studyTopology, bio_code, psycho_code, physio_code, perf_code, createPortrait, study_no)
 
-      /*if (createPortrait == 1) {
-        Logger.info("Now we start creating the portrait")
-        val startTime: Long = System.nanoTime
-        var query: String = ""
-        if(studyName.toLowerCase().contains("toyota")){
-          val portrait = context.actorOf(Props(new  CreatePortrait(folder_id, studyName, username, studyTopology, bio_code, psycho_code, physio_code, study_no)))
-            portrait ! FindLoadedPoint
-           // portrait ! FindRadar
-        }else{
-          query = AddNewStudy.studyToPortrat(folder_id, studyName, username, studyTopology, bio_code, psycho_code, physio_code, study_no, DataBaseOperations.listOfFileExtensionPortrait(username))
 
-          val portrait = context.actorOf(Props(new  CreatePortrait(folder_id, studyName, username, studyTopology, bio_code, psycho_code, physio_code, study_no)))
-        //  portrait ! FindRadar
-          //TODO implement study to portrat in scala using actors
-        }
-
-
-      }*/
-
-
-    case ScanStudyAbstract(topology) =>
-      var report: String = ""
-      val googleCredential: GoogleCredential = GoogleDrive.getStoredCredentials(topology.userName)
-      val acc: AccessRefreshString = DataBaseOperations.getStoredCredentials(topology.userName)
-      val service: Drive = GoogleDrive.buildService(googleCredential)
-      /////share the folder with every body. Later it has to be some parameter to specify it the user want to make public or not
-      if (topology.public) {
-        //val fl: File = service.files.get(folder_id).execute
-        val fl: File = GoogleDrive.waitUntilGetDGFile(service, topology.studyLocation)
-
-        val newPermission: Permission = new Permission
-        newPermission.setValue("")
-        newPermission.setType("anyone")
-        newPermission.setRole("reader")
-        service.permissions.insert(fl.getId, newPermission).execute
-      }
-      val subjects = GoogleDrive.returnFilesInFolder(service, topology.studyLocation, "mimeType = 'application/vnd.google-apps.folder'")
-      //test number of subjects
-      //if (subjects.size > studyTopology.noOfSubjects) report = report + "Your selected " + studyTopology.noOfSubjects + " as the number of subjects in your study but you have: " + subjects.size + "\n"
-      //else if (subjects.size < studyTopology.noOfSubjects) report = report + "You have fewer subjects than the number you have selected\n"
-      var study_no: Int = 0
-      if (subjects.size > 0) {
-        var share = 0;
-        if(topology.public)
-          share = 1;
-        study_no = DataBaseOperations.GenerateStudyNoGD(topology.studyName, topology.userName, GOOGLE_DRIVE, share)
-      }
-      sender() ! SubjectsInStudyAbstract(subjects.toList, topology,  study_no)
   }
 
   def getFolderId (service: Drive, folder: String) :File ={
     var file0: File = null;
     val randomGenerator = new Random();
     return GoogleDrive.waitUntilGetDGFile(service, folder)
+  }
+
+  def returnFileFromFolderLocalMachine (folder: String, isFolder :Boolean) : List[String]= {
+
+    if(isFolder) {
+      var file = new java.io.File(folder);
+      if (file.exists && file.isDirectory) {
+        val temp = file.listFiles.filter(_.isDirectory).toList
+        val subjects = temp.map(x => x.getAbsolutePath)
+        return subjects
+
+      }
+    }
+    else{
+      var file = new java.io.File(folder);
+      if (file.exists && file.isDirectory) {
+        val temp = file.listFiles.filter(_.isFile).toList
+        val subjects = temp.map(x => x.getAbsolutePath)
+        return subjects
+      }
+    }
+    return List.empty  // this is the folder was not correct
+
   }
 }

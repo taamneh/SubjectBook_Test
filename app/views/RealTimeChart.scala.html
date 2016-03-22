@@ -1,0 +1,298 @@
+@(userName: String, id: String)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style type="text/css">
+
+        .markerStyle
+        {
+        position: absolute;
+        left: 40px;
+        top: 50px;
+        transition: left .5s ease-in, top .5s ease-in;
+        width:0.0em;
+        height:14.5em;
+        #border-left: thick solid #99ccff;
+        border-left: thick solid pink;
+        white-space:nowrap;
+        padding:0.5em;
+        z-index: 10;
+        }
+
+
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SubjectBook</title>
+    <link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/stylesheets/styles.css" rel="stylesheet">
+
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="/assets/javascripts/html5shiv.js"></script>
+    <script src="/assets/javascripts/respond.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/changevideo.js")'></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/signalwithtabNew.js")'></script>
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/jquery-ui-1.9.2.css">
+
+
+    <script src="/assets/javascripts/bootstrap.min.js"></script>
+    <script src="/assets/javascripts/chart.min.js"></script>
+    <script src="/assets/javascripts/chart-data.js"></script>
+    <script src="/assets/javascripts/easypiechart.js"></script>
+    <script src="/assets/javascripts/easypiechart-data.js"></script>
+    <script src="/assets/javascripts/bootstrap-datepicker.js"></script>
+
+    <script type="text/javascript" src="/assets/javascripts/realTimeChart.js"></script>
+    <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script>
+
+		!function ($) {
+		    $(document).on("click","ul.nav li.parent > a > span.icon", function(){
+		        $(this).find('em:first').toggleClass("glyphicon-minus");
+		    });
+
+
+		    $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+        // this is to unfold the subject list
+        $(document).ready(function(){
+        $('ul.nav li.parent > a > span.icon').trigger("click");
+        });
+
+</script>
+
+
+
+
+
+
+
+
+
+    <!-- Ignite UI Required Combined CSS Files -->
+    <link href="/assets/stylesheets/infragistics.theme.css" rel="stylesheet">
+    <!-- <link href="http://cdn-na.infragistics.com/igniteui/2015.1/latest/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" /> -->
+    <!--  <link href="http://cdn-na.infragistics.com/igniteui/2015.1/latest/css/structure/infragistics.css" rel="stylesheet" />-->
+
+    <!-- Used to style the API Viewer and Explorer UI -->
+    <!--  <link href="http://www.igniteui.com/css/apiviewer.css" rel="stylesheet" type="text/css" /> -->
+
+    <!--<script src="http://modernizr.com/downloads/modernizr-latest.js"></script> -->
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+
+    <!-- Ignite UI Required Combined JavaScript Files -->
+    <script src="http://cdn-na.infragistics.com/igniteui/2015.1/latest/js/infragistics.core.js"></script>
+    <script src="http://cdn-na.infragistics.com/igniteui/2015.1/latest/js/infragistics.dv.js"></script>
+
+
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><span>Subject</span>Book</a> <a class="navbar-brand" href="/allStudies"><span></span>My Studies</a>
+            <a class="navbar-brand" href="#"><span></span>Share</a>
+            <a class="navbar-brand" href="/frontPage"><span></span>Help</a>
+            <ul class="user-menu">
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> @userName <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                        <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+    <form role="search">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+        </div>
+    </form>
+    <ul class="nav menu">
+
+        <li><a href="/allStudies"><span class="glyphicon glyphicon-th"></span> My Studies </a></li>
+        <li><a href="/createStudy"><span class="glyphicon glyphicon-pencil"></span> New Study</a></li>
+        <li><a href="/showAllDataTypes"><span class="glyphicon glyphicon-cog"></span> Manage your Data</a></li>
+        <li><a href="/showAllPsychometric"><span class="glyphicon glyphicon-cog"></span> Manage your Psychometric data</a></li>
+        <li class="parent ">
+            <a href="#">
+                <span class="glyphicon glyphicon-list"></span> Subjects <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="glyphicon glyphicon-s glyphicon-plus"></em></span>
+            </a>
+            <ul class="children collapse" id="sub-item-1">
+
+
+            </ul>
+        </li>
+        <li role="presentation" class="divider"></li>
+
+    </ul>
+
+</div><!--/.sidebar-->
+
+<div id = 'main' class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+
+    <!-- <img src="/assets/images/ajax-loader.gif" alt="Mountain View" style="width:304px;height:228px"> -->
+    <!-- <img src="/assets/images/ajax-loader.gif" alt="Mountain View" style="width:304px;height:228px"> -->
+
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a href="/allStudies"><span class="glyphicon glyphicon-home"></span></a></li>
+
+
+
+            <!-- <li><button id ='hideSideBar'><a href="/file">toggle</a></button></li> -->
+        </ol>
+    </div><!--/.row-->
+    <div class="row">
+        </br>
+    </div>
+
+    <div class="row" id ="allInfo">
+
+
+
+        <div class="col-md-4" id="generalDatatemp._1temp._2"  subject="SubjectId" session="sss" signalSequence="temp._1" signalCode="temp._2" dataType="">
+            <div class="panel panel-info">
+                <div class="panel-heading" > Biography <a><span data-toggle="collapse" href="#" class="icon pull-right"><em class="glyphicon glyphicon-chevron-down"></em></span> </a>
+                </div>
+                <div id="" class="panel-body">
+                    <span class="glyphicons glyphicons-girl"></span>
+                    <p style="font-weight: bold">   Age   :    30  </p>
+                    <p style="font-weight: bold">   Gender:     M  </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-8" id="generalDatatemp._1temp._3"  subject="SubjectId" session="sss" signalSequence="temp._1" signalCode="temp._2" dataType="">
+                <div class="panel panel-info">
+                        <div class="panel-heading" >
+                                Psychometric <a><span data-toggle="collapse" href="#" class="icon pull-right"><em class="glyphicon glyphicon-chevron-down"></em></span> </a>
+                            </div>
+                            <div id="2" class="panel-body">
+                                <div style="font-weight: bold" > SAI:  120 </div> <div style="height:60px"> <div id="malcom"></div> </div> &nbsp; &nbsp;
+                        </div>
+                 </div>
+
+        </div>
+
+        <script>
+            var min_value =20;
+            var max_value = 80;
+            var score = 50;
+            var jump = (max_value-min_value)/5;
+
+     $("#malcom").igLinearGauge({
+                    height: "60px",
+                    width: "100%",
+                     value: score,
+                    minimumValue: min_value,
+                    maximumValue: max_value,
+                    ranges: [
+                        {
+                            brush: '#FFFFCC',
+                            startValue: min_value, endValue:min_value + jump, name: "range1"
+                        },
+                        {
+                             brush: '#FFFF99',
+                            startValue: min_value + jump, endValue: min_value + (2*jump), name: "range2"
+                        },
+                        {
+                        brush: '#FFFF66',
+                            startValue: min_value + (2*jump), endValue: min_value + (3*jump), name: "range3"
+                        },
+                        {
+                       brush: '#FFFF33',
+                            startValue: min_value + (3*jump), endValue: min_value + (4*jump), name: "range4"
+                        },
+                        {
+                           brush: '#FFFF00',
+                            startValue: min_value + (4*jump), endValue: min_value + (5*jump), name: "range5"
+                        },
+                    ]
+                });
+        </script>
+
+
+
+
+
+    </div><!--/.row-->
+    <div class="">
+        <div class="panel panel-default">
+            <div class="panel-body tabs">
+                <ul class="nav nav-tabs">
+
+                    <li class="active"><a  href="#name" id="linkname" class="onesignal" subject="SubjectId" session="name" studyId=studyNo  occupied ="no" data-toggle="tab">My session</a></li>
+                </ul>
+
+                <div class="tab-content">
+
+
+
+
+
+                    <input size="200"  type="hidden" id="folder_id" maxlength="50" name="fileId" value="@id">
+
+                    <div id="name" class="tab-pane fade in active">
+                        <h1 class="page-header">Real-time Streaming</h1>
+
+                        <div id ="chart">
+                        </div>
+
+                        <div id="chartContainer" style="height: 300px; width:100%;">
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div><!--/.panel-->
+        </div><!--/.col-->
+
+
+
+
+    </div>	<!--/.main-->
+
+
+
+</div>
+
+<!--<div id="loading" style="display:none; position: fixed;height:100%; width:100%; background: rgba( 255, 255, 255, .8 ) url('/assets/images/ajax-loader.gif') 50% 50%    no-repeat;">
+</div> -->
+
+</body>
+
+</html>

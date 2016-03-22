@@ -1,9 +1,8 @@
 
 $(document).ready(function(){
 
- alert('wait a minutesss');
-$( "#subNum" ).trigger( "click" );
 
+// slaha aldeeee
 var studyParameters = {}
 
 var explOptions = [];
@@ -26,6 +25,51 @@ websocket.onopen = function(evt) { onOpen(evt) };
 
 var messageNo = 1;
 var subjectOk =false;
+
+ var resBl = null;
+ var resEx = null;
+ var resRe = null;
+
+  function onbaslinechange(){
+   for(var i =0; i< resBl.length; i++)
+            {
+               var num = i+1;
+
+               var id = "#bl" + num
+
+              if($(id).is(':checked'))
+              {
+                 //alert("here  "  + resBl[i]);
+                 studyParameters["baseLineFolder"] = resBl[i]
+              }
+            }
+ }
+  function onExpChange(){
+    for(var i =1; i< resEx.length; i++)
+             {
+                var num = i;
+                var id = "#expl" + num
+               if($(id).is(':checked'))
+               {
+                  //alert("expl  "  + resEx[i]);
+                  studyParameters["explanColNo"] = i
+               }
+             }
+  }
+
+    function onRespChange(){
+      for(var i =1; i< resRe.length; i++)
+               {
+                  var num = i;
+                  var id = "#resp" + num
+                 if($(id).is(':checked'))
+                 {
+                   // alert("resp  "  + resRe[i]);
+                    studyParameters["respColNo"] = i
+                 }
+               }
+    }
+
  function onMessage(evt)
 {
 
@@ -51,100 +95,126 @@ var subjectOk =false;
 
           var res = str.split(",");
           var text = "Enter the number of the session that you would like to use as a baseline session:\n"
+
+          resBl = res
+          $( "#mdl1Sub" ).empty();
+
+          //onbaslinechange();
           for(var i =0; i< res.length; i++)
           {
              var num = i+1;
              text = text + num + ". " +  res[i] + "\n"
+             var id = "bl" + num
+              $( "#mdl1Sub" ).append( "<input id=\"" + id + "\" type=\"radio\" name=\"baseline\" value=\"female\" checked=\"true\" >" + res[i]  + "<br>" );
+              studyParameters["baseLineFolder"] = res[i]
           }
-          var ok = false;
-          var favDrink = prompt(text);
 
-          while (!ok) {
-              while ( isNaN(favDrink)){
-                   favDrink = prompt(text);
-              }
-              if (favDrink > 0 && favDrink <= res.length ){
-                    ok = true;
-                }
-                else
-                {
-                  favDrink = prompt(text);
-                }
-            }
-            studyParameters["baseLineFolder"] = res[parseInt(favDrink)-1]
+
+
+          $( "#mdl1" ).trigger( "click" );
+
+            $('input[type=radio][name=baseline]').change(function() {
+                     onbaslinechange();
+             });
+
+
 
           forAllNext(firstNextButton)
           $("#loading").hide()
+           onbaslinechange();
       }
 
     // recieve the possible explantory values
       if(messageNo ==3)
       {
-          var str = evt.data
-          str = str.replace("[", "");
-          str = str.replace("]", "");
+          //alert(evt.data);
+          // if user enter signal that is not exist
+         if(evt.data == "WRONG"){
+             //$(".previous").trigger("click");
+            $("#loading").hide()
+             alert("We could not find that signal in one or more folders! Please select another one")
+             messageNo--;
 
-          var res = str.split(",");
-          var text = "Enter the number of the varaible that you would like to use as key explanatory variable:\n"
-          for(var i =0; i< res.length; i++)
-          {
-             var num = i;
-             text = text + num + ". " +  res[i] + "\n"
           }
-           var ok = false;
-           var favDrink = prompt(text);
+          else {
 
-            while (!ok) {
-                while ( isNaN(favDrink)){
-                     favDrink = prompt(text);
-                }
-                if (favDrink > 0 && favDrink <= res.length ){
-                      ok = true;
-                  }
-                  else
-                  {
-                    favDrink = prompt(text);
-                  }
-              }
+             var str = evt.data
+                    str = str.replace("[", "");
+                    str = str.replace("]", "");
 
-          studyParameters["explanColNo"] = parseInt(favDrink)
-          forAllNext(secondNextButton);
-          $("#loading").hide()
+                    var res = str.split(",");
+                    var text = "Enter the number of the varaible that you would like to use as key explanatory variable:\n"
+
+                      resEx = res
+                    $( "#mdl1Expl" ).empty();
+                    for(var i =1; i< res.length; i++)
+                    {
+                       var num = i;
+                       text = text + num + ". " +  res[i] + "\n"
+                        var id = "expl" + num
+                       $( "#mdl1Expl" ).prepend( "<input id=\"" + id + "\" type=\"radio\" name=\"explanatory\" value=\"female\" checked=\"true\">" + res[i]  + "<br>" );
+                        studyParameters["explanColNo"] = i
+                    }
+
+                    $( "#mdl2" ).trigger( "click" );
+
+                     $('input[type=radio][name=explanatory]').change(function() {
+                              onExpChange();
+                       });
+
+
+
+                    forAllNext(secondNextButton);
+                    $("#loading").hide()
+
+          }
+
+
       }
-
-
        if(messageNo ==4)
         {
-            var str = evt.data
-            str = str.replace("[", "");
-            str = str.replace("]", "");
 
-            var res = str.split(",");
-            var text = "Enter the number of the varaible that you would like to use as key Response variable:\n"
-            for(var i =0; i< res.length; i++)
-            {
-               var num = i;
-               text = text + num + ". " +  res[i] + "\n"
+             if(evt.data == "WRONG"){
+                        //$(".previous").trigger("click");
+                       $("#loading").hide()
+                        alert("We could not find that signal in one or more folders! Please select another one")
+                        messageNo--;
+
             }
-            var ok = false;
-               var favDrink = prompt(text);
+            else
+            {
+               var str = evt.data
+                        str = str.replace("[", "");
+                        str = str.replace("]", "");
 
-                while (!ok) {
-                    while ( isNaN(favDrink)){
-                         favDrink = prompt(text);
-                    }
-                    if (favDrink > 0 && favDrink <= res.length ){
-                          ok = true;
-                      }
-                      else
-                      {
-                        favDrink = prompt(text);
-                      }
-                  }
-            studyParameters["respColNo"] = parseInt(favDrink)
-            forAllNext(thirdNextButton);
-            //alert(JSON.stringify(studyParameters))
-             $("#loading").hide()
+                        var res = str.split(",");
+                        var text = "Enter the number of the varaible that you would like to use as key Response variable:\n"
+
+                        resRe = res
+                        $( "#mdl1Resp" ).empty();
+                        for(var i =1; i< res.length; i++)
+                        {
+                           var num = i;
+                           text = text + num + ". " +  res[i] + "\n"
+                              var id = "resp" + num
+                            $( "#mdl1Resp" ).prepend( "<input id=\"" + id + "\" type=\"radio\" name=\"Response\" value=\"female\" checked=\"true\">" + res[i]  + "<br>" );
+                            studyParameters["respColNo"] = i
+                        }
+
+                        $( "#mdl3" ).trigger( "click" );
+
+                         $('input[type=radio][name=Response]').change(function() {
+                                       onRespChange();
+                             });
+
+
+
+                        forAllNext(thirdNextButton);
+                        //alert(JSON.stringify(studyParameters))
+                         $("#loading").hide()
+
+            }
+
         }
 
    messageNo++;
@@ -158,6 +228,9 @@ var subjectOk =false;
   {
     websocket.send(message);
   }
+
+
+
 
 
     function init()
@@ -205,6 +278,13 @@ $( '.dropdown-menu .small2' ).on( 'click', function( event ) {
 
    console.log( respOptions );
    return false;
+});
+
+
+$("#mdl1Finish").on( 'click', function( event ) {
+   alert("what is going on guyes")
+
+   $("#myModal1").hide();
 });
 
 
@@ -258,6 +338,7 @@ $(".next1").click(function(){
 
      studyParameters["studyName"] = document.getElementById("study_name").value
      studyParameters["studyLocation"] = document.getElementById("folder_id").value
+     studyParameters["sourceType"] = document.getElementById("sourcetype").value
 
       if($("#publicCh").is(":checked"))
           studyParameters["public"] = 1
@@ -296,6 +377,7 @@ $(".next2").click(function(){
 
     studyParameters["StaticBefore"] = $( "#staticB" ).val();
     studyParameters["StaticAfter"] = $( "#staticA" ).val();
+
 
 
 
@@ -427,5 +509,8 @@ $("#createStudy").click(function(){
 
   // $("#loading").show()
    });
+
+
+
 
 });

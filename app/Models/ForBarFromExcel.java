@@ -22,7 +22,7 @@ public class ForBarFromExcel extends JsonFromExcel {
     ArrayList<Double> timeList = new ArrayList<Double>();
     public TreeMap<Double, Double> timeAndData = new TreeMap<Double,Double>();
     private JSONArray arrTemp= new JSONArray();
-    private ArrayList<Double> avergaSignal = new ArrayList<>(20);
+    private ArrayList<Double> avergaSignal = new ArrayList<>(40);
     private double lastTimeVal =0;
     private int ctrForArray =0;
     private int frameCtr=1;
@@ -40,7 +40,7 @@ public class ForBarFromExcel extends JsonFromExcel {
     }
     public void intializeArray()
     {
-        for(int i=0; i<20; i++)
+        for(int i=0; i<40; i++)
             avergaSignal.add(-1.0);
     }
 

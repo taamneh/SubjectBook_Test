@@ -78,10 +78,10 @@ public class SignalType {
         return extension.equalsIgnoreCase(VIDEO_EXTNESION);
     }
     public static boolean isInfo(String extension) {
-        return extension.equalsIgnoreCase(INFO_EXTNESION);
+        return (extension.equalsIgnoreCase(INFO_EXTNESION) || extension.equalsIgnoreCase("b"));
     }
     public static boolean isActivity(String extension) {
-        return extension.equalsIgnoreCase(ACTIVITY_EXTNESION);
+        return (extension.equalsIgnoreCase(ACTIVITY_EXTNESION) || extension.equalsIgnoreCase("stimuli"));
     }
     public static boolean isPsychometric(String extension) {
         return extension.equalsIgnoreCase(PSYCHOMETRIC_EXTNESION);

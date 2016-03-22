@@ -1,8 +1,8 @@
 [0m[[0mdebug[0m] [0mCopy resource mappings: [0m
-[0m[[0mdebug[0m] [0m	(C:\first_play\conf\application.conf,C:\first_play\target\scala-2.11\classes\application.conf)[0m
-[0m[[0mdebug[0m] [0m	(C:\first_play\conf\evolutions,C:\first_play\target\scala-2.11\classes\evolutions)[0m
-[0m[[0mdebug[0m] [0m	(C:\first_play\conf\routes,C:\first_play\target\scala-2.11\classes\routes)[0m
-[0m[[0mdebug[0m] [0m	(C:\first_play\conf\server.conf.txt,C:\first_play\target\scala-2.11\classes\server.conf.txt)[0m
-[0m[[0mdebug[0m] [0m	(C:\first_play\conf\evolutions\default,C:\first_play\target\scala-2.11\classes\evolutions\default)[0m
-[0m[[0mdebug[0m] [0m	(C:\first_play\conf\evolutions\default\1.sql,C:\first_play\target\scala-2.11\classes\evolutions\default\1.sql)[0m
-[0m[[0mdebug[0m] [0m	(C:\first_play\conf\evolutions\default\2.sql,C:\first_play\target\scala-2.11\classes\evolutions\default\2.sql)[0m
+[0m[[0mdebug[0m] [0m	(C:\first_play\conf\application.conf,C:\first_play\target\scala-2.10\classes\application.conf)[0m
+[0m[[0mdebug[0m] [0m	(C:\first_play\conf\evolutions,C:\first_play\target\scala-2.10\classes\evolutions)[0m
+[0m[[0mdebug[0m] [0m	(C:\first_play\conf\routes,C:\first_play\target\scala-2.10\classes\routes)[0m
+[0m[[0mdebug[0m] [0m	(C:\first_play\conf\server.conf.txt,C:\first_play\target\scala-2.10\classes\server.conf.txt)[0m
+[0m[[0mdebug[0m] [0m	(C:\first_play\conf\evolutions\default,C:\first_play\target\scala-2.10\classes\evolutions\default)[0m
+[0m[[0mdebug[0m] [0m	(C:\first_play\conf\evolutions\default\1.sql,C:\first_play\target\scala-2.10\classes\evolutions\default\1.sql)[0m
+[0m[[0mdebug[0m] [0m	(C:\first_play\conf\evolutions\default\2.sql,C:\first_play\target\scala-2.10\classes\evolutions\default\2.sql)[0m

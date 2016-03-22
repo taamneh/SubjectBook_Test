@@ -21,8 +21,8 @@ public class SharedData {
 
     public static class  MinMax
     {
-         public int min;
-         public int max;
+        public int min;
+        public int max;
 
         public MinMax(int x, int y)
         {

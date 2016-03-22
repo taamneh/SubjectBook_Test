@@ -31,7 +31,7 @@ object DataBaseOperations extends Controller{
           SQL("insert into credential values({userid},{access_token},{refresh_token});")
             .on('userid -> userID, 'access_token -> accessToken, 'refresh_token -> refreshToken).executeInsert()
 
-        if(userID != "cplsubjectbook@gmail.com")
+        //if(userID != "cplsubjectbook@gmail.com")
           InsertDefaultDatType(userID);
       }
       else
@@ -49,47 +49,97 @@ object DataBaseOperations extends Controller{
 
     DB.withConnection { implicit c =>
 
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Perinasal EDA', 'perspiration', 1, 'Perinasal EDA', 8,9, 2, {user})")
+       /* SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Perinasal EDA', 'perspiration', 1, 'Perinasal EDA', 8,9, 2, {user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Palm EDA', 'q_eda', 1, 'Palm EDA', 8,9, 2, {user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Heart rate variability', 'hrv', 1, 'HRV', 8,9, 2, {user})")
+          .on( 'user -> userID).executeInsert()
+
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Motion', 'q_motion', 1, 'Energy', 8,9, 2, {user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Respiratory rate', 'breathing', 1, '', 8,9, 2, {user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Electrocardiography', 'Z_ECG', 1, '', 8,9, 2, {user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Belt breathing', 'z_breathing', 1, '', 8, 9, 2, {user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Temperature', 'q_temperature', 1, '', 8,9, 2,{user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Nasal Persperiation', 'nperspiration', 1, '', 8,9, 2, {user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ( 'bar', 'bar', 4, '', 8,9, 2, {user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ( 'eye', 'eye', 1, '', 8,9, 2,{user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ( 'Video', 'avi', 2, '', 8,9, 2, {user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Info', 'info', 3, '', 8,9, 2,  {user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Activity', 'activity', 6, '', 8,9, 2, {user})")
+          .on( 'user -> userID).executeInsert()
+        SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values (  'Physchometric', 'pm', 5, '', 8,9, 2,{user})")
+          .on( 'user -> userID).executeInsert()
+
+          */
+
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Perinasal Perspiration', 'pp', 1, 'perinasal', 8,9, 2, {user})")
         .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Palm EDA', 'q_eda', 1, 'Palm EDA', 8,9, 2, {user})")
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Nasal Perspiration', 'np', 1, 'nasal', 8,9, 2, {user})")
         .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Heart rate variability', 'hrv', 1, 'HRV', 8,9, 2, {user})")
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Palm EDA', 'peda', 1, 'eda', 8,9, 2, {user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Finger EDA', 'feda', 1, 'eda', 8,9, 2, {user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Plantar EDA', 'pleda', 1, 'eda', 8,9, 2, {user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Heart Rate Variability', 'HRV', 1, '', 8,9, 2, {user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Heart Rate - Chest', 'hrc', 1, '', 8, 9, 2, {user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Heart Rate - Wrist', 'hrw', 1, '', 8,9, 2,{user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Breathing Rate - Chest', 'brc', 1, '', 8,9, 2, {user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ( 'Breathing Rate - Thermistor', 'brt', 1, '', 8,9, 2, {user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ( 'Breathing Rate - Thermal', 'brtl', 1, '', 8,9, 2,{user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ( 'Facial Expression', 'FACS', 1, '', 8,9, 2, {user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Motion - Core', 'mc', 1, '', 8,9, 2,  {user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Motion - Hand', 'mh', 1, '', 8,9, 2, {user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values (  'Motion - Feet', 'mf', 1, '', 8,9, 2,{user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values (  'Eye Track', 'et', 1, '', 8,9, 2,{user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values (  'Face Video', 'fv', 2, '', 8,9, 2,{user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values (  'Face Video', 'avi', 2, '', 8,9, 2,{user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values (  'Stimuli', 'stm', 6, '', 8,9, 2,{user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values (  'Biographic', 'b', 3, '', 8,9, 2,{user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values (  'Trend Pychometrics', 'tp', 5, '', 8,9, 2,{user})")
+        .on( 'user -> userID).executeInsert()
+      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values (  'State Pychometrics', 'sp', 5, '', 8,9, 2,{user})")
         .on( 'user -> userID).executeInsert()
 
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Motion', 'q_motion', 1, 'Energy', 8,9, 2, {user})")
-        .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Respiratory rate', 'breathing', 1, '', 8,9, 2, {user})")
-        .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Electrocardiography', 'Z_ECG', 1, '', 8,9, 2, {user})")
-        .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Belt breathing', 'z_breathing', 1, '', 8, 9, 2, {user})")
-        .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Temperature', 'q_temperature', 1, '', 8,9, 2,{user})")
-        .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Nasal Persperiation', 'nperspiration', 1, '', 8,9, 2, {user})")
-        .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ( 'bar', 'bar', 4, '', 8,9, 2, {user})")
-        .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ( 'eye', 'eye', 1, '', 8,9, 2,{user})")
-        .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ( 'Video', 'avi', 2, '', 8,9, 2, {user})")
-        .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Info', 'info', 3, '', 8,9, 2,  {user})")
-        .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values ('Activity', 'activity', 6, '', 8,9, 2, {user})")
-        .on( 'user -> userID).executeInsert()
-      SQL("insert into signals(signal_desc ,signal_extension ,data_type,ytitle,frame_rate, first_row, first_col, owner) values (  'Physchometric', 'pm', 5, '', 8,9, 2,{user})")
-        .on( 'user -> userID).executeInsert()
 
 
-       /* val id: Option[Long] =
-          SQL("insert into credential values({userid},{access_token},{refresh_token});")
-            .on('userid -> userID, 'access_token -> accessToken, 'refresh_token -> refreshToken).executeInsert()*/
+      /* val id: Option[Long] =
+         SQL("insert into credential values({userid},{access_token},{refresh_token});")
+           .on('userid -> userID, 'access_token -> accessToken, 'refresh_token -> refreshToken).executeInsert()*/
       }
 
 
   }
   def getStoredCredentials(userID: String): AccessRefreshString= {
+
+    println("NAMEEEEEEE " + userID);
     var access = "";
     var refresh= "";
     DB.withConnection { implicit c =>
@@ -131,7 +181,7 @@ object DataBaseOperations extends Controller{
     Logger.debug("Study: " + StudyNo + " has been deleted" );
   }
 
-  def GenerateStudyNoGD(StudyName: String, username: String, study_type : Int, public: Int): Int = {
+  def GenerateStudyNoGD(StudyName: String, username: String, study_type : Int, public: Int, descLoc : String): Int = {
 
     DB.withConnection { implicit c =>
       val rowOption = SQL("select coalesce(max(study_id),0) as c from study;").apply().head
@@ -142,8 +192,8 @@ object DataBaseOperations extends Controller{
       //ctr = uuid.toLong;
       Logger.info("Generate study Id for Study: " + StudyName );
       val id: Option[Long] =
-        SQL("insert into study values({study_id},{study_name},NOW(), {study_type}, {user}, NULL, NULL, NULL);")
-          .on('study_id -> ctr , 'study_name -> StudyName, 'study_type -> study_type, 'user -> username).executeInsert()
+        SQL("insert into study values({study_id},{study_name},NOW(), {study_type}, {user}, NULL, NULL, NULL, {desc});")
+          .on('study_id -> ctr , 'study_name -> StudyName, 'study_type -> study_type, 'user -> username, 'desc -> descLoc).executeInsert()
 
       if(public ==1) {
         val id2: Option[Long] =
@@ -152,6 +202,19 @@ object DataBaseOperations extends Controller{
       }
       ctr.toInt;
 
+    }
+  }
+
+  def getDescriptorLocation (stdNo: Int): String =
+  {
+    DB.withConnection { implicit c =>
+      val rowOption = SQL("select study_descriptor_url  from study where study_id={std};").on('std -> stdNo).apply().head
+
+      var ctr = rowOption[Option[String]]("study_descriptor_url");
+     ctr match {
+       case Some(value) => value
+       case None => null
+     }
     }
   }
 
@@ -164,6 +227,7 @@ object DataBaseOperations extends Controller{
     }
     Logger.debug("Study: " + StudyNo + "has been Updated with Portrait string" );
   }
+
 
   def InsertStudyRadar(StudyNo: Int, queryString: String)= {
 
@@ -185,13 +249,13 @@ object DataBaseOperations extends Controller{
 
 
       val id: Option[Long] =
-        SQL("insert into subject (subject_id, study_id, f_name , l_name , DOB ,  STAI, PAS , NAS, bio_code, psycho,physio) values({subject_id},{study_id},null, null, NOW() ,10,10,10,{a}, {b}, {c});")
+        SQL("insert into subject (subject_id, study_id, f_name , l_name , DOB ,  hide, PAS , NAS, bio_code, psycho,physio) values({subject_id},{study_id},null, null, NOW() ,9,10,10,{a}, {b}, {c});")
           .on( 'subject_id -> subject, 'study_id -> studyId, 'a->bio_code ,'b ->psycho ,'c ->physio ).executeInsert()
     }
   }
 
 
-  def InsertSessionGD(subject: String, studyId: Int, session_no : Int, session_name: String, signal_code: Int, url: String, isGeneral: Int): Unit= {
+  def InsertSessionGD(subject: String, studyId: Int, session_no : Int, session_name: String, signal_code: Int, url: String, isGeneral: Int, isBL : Boolean, order: Int): Unit= {
 
     DB.withConnection { implicit c =>
       val rowOption1  =
@@ -205,9 +269,19 @@ object DataBaseOperations extends Controller{
       val rowOption = SQL("select coalesce(max(signal_seq),0) as c from session where subject_seq={seq};").on('seq -> seq).apply().head;
       var ctr = rowOption[Long]("c");
       ctr = ctr + 1;
-      val id: Option[Long] =
-        SQL("insert into session values({signal_seq}, {seq},{sess_no},1 ,{sess_name}, {url},'',{general}, {signal_code});")
-          .on( 'signal_seq -> {ctr}, 'seq -> seq, 'sess_name -> session_name, 'sess_no -> session_no,'url -> url, 'general -> isGeneral ,'signal_code -> signal_code).executeInsert()
+
+      if(isBL){
+        val id: Option[Long] =
+          SQL("insert into session values({signal_seq}, {seq},{sess_no},1 ,{sess_name}, {url},'',{general},1, {signal_code}, {odr});")
+            .on( 'signal_seq -> {ctr}, 'seq -> seq, 'sess_name -> session_name, 'sess_no -> session_no,'url -> url, 'general -> isGeneral ,'signal_code -> signal_code, 'odr -> order).executeInsert()
+      }
+      else{
+        val id: Option[Long] =
+          SQL("insert into session values({signal_seq}, {seq},{sess_no},1 ,{sess_name}, {url},'',{general},0, {signal_code}, {odr});")
+            .on( 'signal_seq -> {ctr}, 'seq -> seq, 'sess_name -> session_name, 'sess_no -> session_no,'url -> url, 'general -> isGeneral ,'signal_code -> signal_code, 'odr -> order).executeInsert()
+      }
+
+
     }
   }
 
@@ -215,7 +289,7 @@ object DataBaseOperations extends Controller{
 
     DB.withConnection { implicit c =>
       val rowOption1 =
-        SQL("select  signal_code, signal_extension  from signals where owner ={user};").on('user -> username)
+        SQL("select  signal_code, LCASE(signal_extension) as signal_extension  from signals where owner ={user};").on('user -> username)
         //SQL("select  signal_code, signal_extension  from signals where owner ={user} \nunion \nselect  signal_code, signal_extension  from signals where  (owner = 'cplsubjectbook@gmail.com'  And signal_extension  not in (select signal_extension from signals where owner ={user} ));").on('user -> username)
 
       val temp = rowOption1().map( row => (row[String]("signal_extension"), row[Int]("signal_code"))).toMap
@@ -245,10 +319,10 @@ object DataBaseOperations extends Controller{
 
     DB.withConnection { implicit c =>
       val rowOption1 =
-        SQL("select  p_name, min_value, max_value  from psychometric where owner ={user} \nunion \nselect  p_name, min_value, max_value  from psychometric where  (owner = 'cplsubjectbook@gmail.com'  And p_name  not in (select p_name from psychometric where owner ={user} ));").on('user -> username)
+        SQL("select  UPPER(p_name) As pName, min_value, max_value  from psychometric where owner ={user} \nunion \nselect  p_name, min_value, max_value  from psychometric where  (owner = 'cplsubjectbook@gmail.com'  And p_name  not in (select p_name from psychometric where owner ={user} ));").on('user -> username)
 
 
-      val temp = rowOption1().map( row => (row[String]("p_name"), (row[Int]("min_value"), row[Int]("max_value")))).toMap
+      val temp = rowOption1().map( row => (row[String]("pName"), (row[Int]("min_value"), row[Int]("max_value")))).toMap
       temp
       //val seq = rowOption1[Long]("subject_seq");
     }

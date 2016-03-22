@@ -2,7 +2,7 @@ package controllers
 
 //import Models.{DB, Person, ReadExcelScala}
 
-import java.io.{InputStream, File, OutputStream}
+import java.io.{FileInputStream, InputStream, File, OutputStream}
 import java.util.Date
 import akka.actor.{Props, ActorSystem}
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
@@ -68,11 +68,51 @@ object Application extends Controller {
   }
 
 
+  def RealTime = Action {
+    implicit request =>
+      var username: String = "";
+      var temp = List.empty[(String, Int, Int)]
+      request.session.get("connected").map { user =>
+        username = user;
+      }.getOrElse {
+        Unauthorized("Oops, you are not connected")
+      }
+
+      Ok(views.html.RealTime(username));
+  }
+
+
+  def showSignalRealTime(fileId: String) = Action {
+    implicit request =>
+      var username: String = "";
+      request.session.get("connected").map { user =>
+        username = user;
+      }.getOrElse {
+        Unauthorized("Oops, you are not connected")
+      }
+      GoogleDrive.UpdatingRealTime(username, fileId)
+      Ok(views.html.RealTimeChart(username, fileId));
+  }
+
+
+  def showSignalRealTime2(fileId: String) = Action {
+    implicit request =>
+      var username: String = "";
+      request.session.get("connected").map { user =>
+        username = user;
+      }.getOrElse {
+        Unauthorized("Oops, you are not connected")
+      }
+
+      Ok(GoogleDrive.UpdatingRealTime(username, fileId).toJSONString);
+  }
+
   case class NewDataType(dataDec: Option[String], dataExtension :String, dataType : Int, yTitle: Option[String], frameRate:Option[Int] , first_row: Option[Int], first_col: Option[Int])
-  case class ExistingDataType(code: Int, dataDec: Option[String], dataExtension :String, dataType : Int, yTitle: Option[String], frameRate:Option[Int] , first_row: Option[Int], first_col: Option[Int])
+  case class ExistingDataType(code: Int, dataDec: Option[String], dataExtension :String, dataType : Int, yTitle: Option[String], frameRate:Option[Int] , first_row: Option[Int], first_col: Option[Int], min_yvalue:  Option[Float], max_yvalue:  Option[Float], log : Int)
   case class NewPsychometric(pName: String, min : Int, max: Int)
   case class NewTopSummary(code: String, studyId: Int)
   case class ExistingPsychometric(code: Int, pName: String, min :Int, max : Int )
+  case class EditHideSubjectMdl(studyId: Int, subjectID: String, hide :Int )
 
 
   val addPsychometric = Form(
@@ -99,6 +139,14 @@ object Application extends Controller {
     )(ExistingPsychometric.apply)(ExistingPsychometric.unapply)
   )
 
+  val editHideSubjectMdl = Form(
+    mapping(
+      "studyId" -> number,
+      "subjectID" -> nonEmptyText,
+      "hide" -> number
+    )(EditHideSubjectMdl.apply)(EditHideSubjectMdl.unapply)
+  )
+
 
   val addDataType = Form(
     mapping(
@@ -112,6 +160,7 @@ object Application extends Controller {
     )(NewDataType.apply)(NewDataType.unapply)
   )
 
+  import play.api.data.format.Formats._
   val editDataType = Form(
     mapping(
       "code" -> number,
@@ -121,7 +170,10 @@ object Application extends Controller {
       "yTitle" -> optional(text),
       "frameRate" -> optional(number),
       "first_row" -> optional(number) ,
-      "first_col" -> optional(number)
+      "first_col" -> optional(number),
+      "min_yvalue" -> optional(of[Float]),
+      "max_yvalue" -> optional(of[Float]),
+      "log" -> number
     )(ExistingDataType.apply)(ExistingDataType.unapply)
   )
 
@@ -198,8 +250,6 @@ object Application extends Controller {
         },
         contact => {
 
-
-
           val rate = contact.frameRate match {
             case Some(x) => x
             case _ => 1
@@ -212,7 +262,6 @@ object Application extends Controller {
 
           }
 
-
           val col = contact.first_col match {
             case Some(x) => x
             case _ => 1
@@ -220,12 +269,10 @@ object Application extends Controller {
           }
 
 
-
-
           DB.withConnection { implicit c =>
                      val id: Int =
-              SQL("update signals set signal_desc = {desc}, signal_extension ={ext}, data_type= {type}, ytitle ={title}, frame_rate={frame}, first_row ={fr}, first_col= {fc} WHERE signal_code = {code}")
-                .on('desc -> contact.dataDec , 'ext -> contact.dataExtension, 'type -> contact.dataType, 'title -> contact.yTitle, 'frame -> rate, 'code -> contact.code, 'fr -> row, 'fc -> col).executeUpdate()
+              SQL("update signals set signal_desc = {desc}, signal_extension ={ext}, data_type= {type}, ytitle ={title}, frame_rate={frame}, first_row ={fr}, first_col= {fc}, min_yvalue={mn} , max_yvalue={mx}, isLogarithmic = {log}  WHERE signal_code = {code}")
+                .on('desc -> contact.dataDec , 'ext -> contact.dataExtension, 'type -> contact.dataType, 'title -> contact.yTitle, 'frame -> rate, 'code -> contact.code, 'fr -> row, 'fc -> col, 'mn->contact.min_yvalue ,  'mx -> contact.max_yvalue, 'log -> contact.log).executeUpdate()
 
             //Ok(views.html.ShowStudies(username, med)).withSession("connected" -> username)
             //Ok(("Congratualtion! you just added a new data type "))
@@ -248,10 +295,10 @@ object Application extends Controller {
       }
       DB.withConnection { implicit c =>
         val studies  =
-          SQL("select  signal_code, signal_desc, signal_extension, data_type, ytitle, frame_rate, first_row, first_col  from signals where ( owner ={user} );").on('user -> username)
+          SQL("select  signal_code, signal_desc, signal_extension, data_type, ytitle, frame_rate, first_row, first_col, min_yvalue, max_yvalue, isLogarithmic  from signals where ( owner ={user} );").on('user -> username)
         //SQL("select  distinct(study_name), study_owner, study_id as c from study where study_owner ={un} OR study_id in (select study_id from privilege );").on('un -> username)
         val med = studies().map(row =>
-          (row[Int]("signal_code"),row[Option[String]]("signal_desc"), row[String]("signal_extension") , row[Int]("data_type") , row[Option[String]]("ytitle"), row[Int]("frame_rate"),  row[Int]("first_row"),  row[Int]("first_col"))
+          (row[Int]("signal_code"),row[Option[String]]("signal_desc"), row[String]("signal_extension") , row[Int]("data_type") , row[Option[String]]("ytitle"), row[Int]("frame_rate"),  row[Int]("first_row"),  row[Int]("first_col"), row[Option[java.math.BigDecimal]]("min_yvalue"),  row[Option[java.math.BigDecimal]]("max_yvalue"), row[Int]("isLogarithmic"))
         ).toList
 
 
@@ -266,6 +313,25 @@ object Application extends Controller {
       }
   }
 
+
+  def showAllSubjectToHide(studyNo : Int) = Action {
+    implicit request =>
+      var username: String = "";
+      request.session.get("connected").map { user =>
+        username = user;
+      }.getOrElse {
+        Unauthorized("Oops, you are not connected")
+      }
+      DB.withConnection { implicit c =>
+        val studies  =
+          SQL("select  subject_id , hide from subject  where study_id={std} order by subject_id;").on('std -> studyNo)
+        //SQL("select  distinct(study_name), study_owner, study_id as c from study where study_owner ={un} OR study_id in (select study_id from privilege );").on('un -> username)
+        val med = studies().map(row =>
+          (row[String]("subject_id"), row[Int]("hide"))
+        ).toList
+        Ok(views.html.HideSubjects(username,studyNo,med)).withSession("connected" -> username)
+      }
+  }
 
 
 
@@ -284,15 +350,6 @@ object Application extends Controller {
         val med = studies().map(row =>
           (row[Int]("p_code"), row[String]("p_name"),row[Int]("min_value"), row[Int]("max_value"))
         ).toList
-
-
-        /*val med3 = signals2().map(row =>
-          (row[Int]("signal_seq") , row[Int]("data_type"), row[String]("ytitle"))
-        ).toList*/
-
-
-
-
         Ok(views.html.ShowAllPsychometric(username,med)).withSession("connected" -> username)
       }
   }
@@ -300,12 +357,6 @@ object Application extends Controller {
 
   def EditPsychometric  = Action {
     implicit request =>
-
-      /*.get("action").headOption match {
-      case Some("edit") => Ok("Cliked edit")
-      case Some("remove") => Ok("Cliked remove")
-      case _ => BadRequest("This action is not allowed")
-    }*/
 
       var username: String = "";
       request.session.get("connected").map { user =>
@@ -320,19 +371,10 @@ object Application extends Controller {
             "connected" -> username);
         },
         contact => {
-
-
-
-        println(contact.pName)
-
           DB.withConnection { implicit c =>
             val id: Int =
               SQL("update psychometric set p_name = {name}, min_value ={min}, max_value= {max} WHERE p_code = {code}")
                 .on('name -> contact.pName , 'min -> contact.min, 'max -> contact.max, 'code -> contact.code).executeUpdate()
-
-            //Ok(views.html.ShowStudies(username, med)).withSession("connected" -> username)
-            //Ok(("Congratualtion! you just added a new data type "))
-
             Redirect(routes.Application.showAllPsychometric()).withSession(
               "connected" -> username);
           }
@@ -340,6 +382,34 @@ object Application extends Controller {
       )
   }
 
+
+  def EditHideSubject  = Action {
+    implicit request =>
+
+      var username: String = "";
+      request.session.get("connected").map { user =>
+        username = user;
+      }.getOrElse {
+        Unauthorized("Oops, you are not connected")
+      }
+      editHideSubjectMdl.bindFromRequest.fold(
+        formWithErrors => {
+          BadRequest("The Study Has not been creted Correctly please check that data you entered!")
+          /*Redirect(routes.Application.showAllSubjectToHide(1)).withSession(
+            "connected" -> username);*/
+          Ok("Basdddd")
+        },
+        contact => {
+          DB.withConnection { implicit c =>
+            val id: Int =
+              SQL("update subject set hide = {h} WHERE study_id = {sId} AND subject_id= {subId}")
+                .on('h -> contact.hide , 'sId -> contact.studyId, 'subId -> contact.subjectID).executeUpdate()
+            Redirect(routes.Application.showAllSubjectToHide(1)).withSession(
+              "connected" -> username);
+          }
+        }
+      )
+  }
 
 
 
@@ -369,6 +439,8 @@ object Application extends Controller {
 
       Ok(views.html.AddTopSummary(username,studyNo));
   }
+
+
 
 
 
@@ -572,7 +644,7 @@ object Application extends Controller {
       if(summary != "")
         Ok(views.html.ShowTopSummary(username, summary, studyNo))
       else
-        Ok(views.html.ShowSubject(username, subectList, studyNo,study_name, parameterList));
+        Ok(views.html.UnderConstruction(username,  studyNo));
   }
 
 
@@ -616,10 +688,12 @@ object Application extends Controller {
       request.session.get("connected").map { user =>
         username = user;
       }.getOrElse {
+
         Unauthorized("Oops, you are not connected")
       }
       Logger.info("Show Subject Number: " + SubjectId + " For Study: " +studyNo);
-      var signalsPerSession: Map[String, List[(String, Int, Int, String)]] = Map();
+      var signalsPerSession: Map[String, List[(String, Int, Int, Option[String], Option[java.math.BigDecimal], Option[java.math.BigDecimal], Int)]] = Map();
+      var signalsPerSessionOldName: Map[String, (String, List[(String, Int, Int, Option[String], Option[java.math.BigDecimal], Option[java.math.BigDecimal], Int)])] = Map();
       var videosPerSession:  Map[String, List[ (String, String)]]= Map()
 
 
@@ -630,32 +704,105 @@ object Application extends Controller {
       var sourceType: Int = 1;
       var studyName = "";
       var subName = "";
+      var hide = 9;
       DB.withConnection { implicit c =>
        subName =   SubjectId
       if(SubjectId == "")
         {
-          val findSubjName =  SQL("select subject_id  from subject  where study_id={study_id} order by subject_id;").on('study_id-> studyNo).apply().head
+          val findSubjName =  SQL("select subject_id, hide  from subject  where study_id={study_id} order by subject_id;").on('study_id-> studyNo).apply().head
           subName =   findSubjName[String]("subject_id");
+          //hide = findSubjName[Int]("hide");
         }
 
+          val findSubjName =  SQL("select hide from subject  where study_id={study_id} AND subject_id = {sId} order by subject_id;").on('study_id-> studyNo, 'sId -> subName).apply().head
+           hide = findSubjName[Int]("hide");
+
+
+        val desc = DataBaseOperations.getDescriptorLocation(studyNo)
+
+
         val signalsTemp =
-          SQL("select session_name, signal_seq, data_type, ytitle from  session, signals where  signal_signal_code = signal_code AND is_general=0  AND subject_seq = (select subject_seq from subject where subject_id ={sub_id}  AND study_id ={study_no}) order by session_name, signal_signal_code;")
+          SQL("select session_name, signal_seq, data_type, ytitle, min_yvalue , max_yvalue, isLogarithmic  from  session, signals where  signal_signal_code = signal_code AND is_general=0  AND subject_seq = (select subject_seq from subject where subject_id ={sub_id}  AND study_id ={study_no}) order by order_to_show desc, session_name, signal_signal_code;")
             .on('study_no -> studyNo, 'sub_id -> subName)
-        val x = signalsTemp().map(row => (row[String]("session_name"), row[Int]("signal_seq"), row[Int]("data_type"), row[String]("ytitle"))).toList
+
+
+        val x = signalsTemp().map(row => (row[String]("session_name"),  row[Int]("signal_seq"), row[Int]("data_type"), row[Option[String]]("ytitle"), row[Option[java.math.BigDecimal]]("min_yvalue") , row[Option[java.math.BigDecimal]]("max_yvalue"), row[Int]("isLogarithmic"))).toList
         signalsPerSession = x.groupBy(x => x._1);
 
         signalsPerSession = TreeMap(signalsPerSession.toSeq:_*).toMap  // to sort the map\
 
+        var mpVedio :TreeMap[String, String]= TreeMap.empty;
+        if(desc != null) {
+
+          val mp : Option[TreeMap[String,(String,Boolean,Int, Boolean)] ] = CreatePortraitAbstraction.getStudyDescriptor(username, DataBaseOperations.getDescriptorLocation(studyNo))
+          //val mpVedio :TreeMap[String, String] = TreeMap.empty;
+
+          var counter =0;
+          mp match {
+            case Some(something) =>
+
+              signalsPerSessionOldName = signalsPerSession.map(v =>
+                if(something.contains(v._1.replaceFirst("(\\d*\\s*)", ""))){
+
+                   something.get(v._1.replaceFirst("(\\d*\\s*)", "")) match {
+
+                    case Some(sN) =>
+                      val pattern = "(\\d*)".r
+                      val b = pattern.findFirstIn(v._1) match {
+                        case Some(s) => s
+                        case None => ""
+                      }
+                      mpVedio += v._1 -> (b+sN._1).toString
+                      b+sN._1 -> (v._1, v._2)
+                    case None =>
+                      mpVedio += v._1 -> v._1
+                      v._1 -> (v._1, v._2)
+                  }
+                }
+              else{
+                  mpVedio += v._1 -> v._1
+                  v._1 -> (v._1, v._2)
+
+                }
+
+          )
+            case None =>
+          }
+
+
+        }
+
+        //signalsPerSession = TreeMap(signalsPerSession.toSeq:_*).toMap  // to sort the map\
+
+        signalsPerSessionOldName = TreeMap(signalsPerSessionOldName.toSeq:_*).toMap  // to sort the map\
 
         //println(t);
 
 
         val videosTemp = SQL("select session_name,signal_loc from session, signals  where signal_signal_code = signal_code AND data_type = 2 AND subject_seq = (select subject_seq from subject where subject_id ={sub_id}  AND study_id ={study_no});").
           on('video -> SignalType.getVideoCode, 'study_no -> studyNo, 'sub_id -> subName)
+
         val vListTemp = videosTemp().map(row =>  (row[String]("session_name"), row[String]("signal_loc")) ).toList
         videosPerSession = vListTemp.groupBy(x=> x._1);
 
+        /*if(mpVedio.isEmpty){
+          val vListTemp = videosTemp().map(row =>  (row[String]("session_name"), row[String]("signal_loc")) ).toList
+          videosPerSession = vListTemp.groupBy(x=> x._1);
+        }
+        else {
+          val vListTemp = videosTemp().map(row =>  (mpVedio(row[String]("session_name")), row[String]("signal_loc")) ).toList
+          videosPerSession = vListTemp.groupBy(x=> x._1);
+        }*/
 
+
+        // if the subject is chosen to be hidden then do not send the video links
+        if(hide == 8){
+
+          for((k,v) <- videosPerSession){
+            videosPerSession += k -> List((k , "0BzuoB3uc0tTVS3VsaXFWNURpejg"))
+          }
+        }
+          //videosPerSession = Map();
 
         // we send the study type just to decide wich player should we use
         val studyType  =
@@ -669,12 +816,12 @@ object Application extends Controller {
             .on('study_no -> studyNo)
         subjectsList = subjects().map(row =>  row[String]("subject_id")).toList
 
-        val general = SQL("select signal_seq, signal_code , data_type from session, signals where signal_signal_code = signal_code AND is_general=1  AND subject_seq = (select subject_seq from subject where subject_id ={sub_id}  AND study_id ={study_no});").on('sub_id -> subName, 'study_no -> studyNo);
+        val general = SQL("select signal_seq, signal_code , data_type from session, signals where signal_signal_code = signal_code AND is_general=1  AND subject_seq = (select subject_seq from subject where subject_id ={sub_id}  AND study_id ={study_no}) order by signal_code desc;").on('sub_id -> subName, 'study_no -> studyNo);
         generalList = general().map(row => (row[Int]("signal_seq") ,row[Int]("signal_code"), row[Int]("data_type"))).toList
 
       }
 
-      Ok(views.html.ShowSignals(subName, signalsPerSession ,studyNo, username, videosPerSession,sourceType, subjectsList, generalList, studyName))
+      Ok(views.html.ShowSignals(subName, signalsPerSessionOldName ,studyNo, username, videosPerSession,sourceType, subjectsList, generalList, studyName))
   }
 
   /**
@@ -877,10 +1024,12 @@ object Application extends Controller {
     implicit request =>
       var file_location = "";
       var frameRate =  1;
+      var signalCode = 1;
       var first_row = 1;
       var first_col =1;
       var study_owner = "";
       var activityFile : String = null;
+      var baslineFile :String = null;
       var sourceType = 0;
       var username: String = "";
       request.session.get("connected").map { user =>
@@ -895,12 +1044,12 @@ object Application extends Controller {
         val seq = rowOption1[Long]("subject_seq");
 
         val rowOption2  =
-          SQL("select signal_loc, frame_rate, first_row, first_col  from session, signals  where signal_signal_code = signal_code AND subject_seq ={seq}  AND run_no =1 And signal_seq= {signal_seq};").on('seq -> seq,  'signal_seq -> signal_sequence).apply().head
+          SQL("select signal_code, signal_loc, frame_rate, first_row, first_col  from session, signals  where signal_signal_code = signal_code AND subject_seq ={seq}  AND run_no =1 And signal_seq= {signal_seq};").on('seq -> seq,  'signal_seq -> signal_sequence).apply().head
          file_location = rowOption2[String]("signal_loc");
            frameRate = rowOption2[Int]("frame_rate");
             first_row = rowOption2[Int]("first_row");
             first_col = rowOption2[Int]("first_col");
-
+            signalCode = rowOption2[Int]("signal_code");
 
         val rowOption3  =
           SQL("select study_type, study_owner from study where study_id={study_id};").on('study_id-> studyId).apply().head
@@ -909,35 +1058,41 @@ object Application extends Controller {
 
 
 
-
-        // to test if this signal has accompanied activity file....
-       /* val activity  =
-          SQL("select coalesce(count(signal_loc),0) as c from session where subject_seq={seq} AND run_no =1 And signal_signal_code={activity};").on('seq -> seq,  'activity -> SignalType.getActivityCode).apply().head
-        var ctr = activity[Long]("c");
-
-
-
-        if(ctr == 1) {
-          val activity2 =
-            SQL("select signal_loc from session where subject_seq={seq} AND session_name ={sess_name} AND run_no =1 And signal_signal_code={activity};").on('seq -> seq, 'sess_name-> task, 'activity -> SignalType.getActivityCode).apply().head
-          activityFile = activity2[String]("signal_loc");
-        }*/
-
-
+        println("we are here salah  ......@@@@@@@@@@@@@")
         val activity2 =
           //SQL("select signal_loc from session where subject_seq={seq} AND session_name ={sess_name} AND run_no =1 And signal_signal_code={activity};").on('seq -> seq, 'sess_name-> task, 'activity -> SignalType.getActivityCode).apply().headOption
           SQL("select signal_loc from session where subject_seq={seq} AND session_name ={sess_name} AND run_no =1 And signal_signal_code in (select signal_code from signals where owner = {owner} AND data_type = 6);").on('seq -> seq, 'sess_name-> task, 'owner -> study_owner).apply().headOption
 
+
+        println("we are here salah  ......&&&&&&&" + activity2)
         activity2 match {
           case firstDay if firstDay.size >0 =>
             activityFile = firstDay.head[String]("signal_loc");
           case None=>
+            println("**********************************************************************************************")
         }
 
 
+        println("we are here salah  ......")
+       val blSignal  = SQL("select signal_loc from session where subject_seq={seq} AND  run_no =1 And signal_signal_code ={sc} AND is_baseline =1 ;").on('seq -> seq, 'sc -> signalCode).apply().headOption
+
+        println("we are here salah  ......" + blSignal)
+        blSignal match {
+          case firstDay if firstDay.size >0 =>
+            baslineFile = firstDay.head[String]("signal_loc");
+          case None=>
+        }
+
+        //This is only for failure drive in toyota project
+        if(task.toLowerCase.contains("failure") || task.toLowerCase.contains("fdl"))
+          baslineFile = null;
+
       }
+
+
+
       //var js = GoogleDrive.DownloadSignal(username, file_location, sourceType, signal_type);
-      var js = GoogleDrive.DownloadSignal(study_owner, file_location, sourceType, signal_type,frameRate, first_row, first_col, activityFile );
+      var js = GoogleDrive.DownloadSignal(study_owner, file_location, sourceType, signal_type,frameRate, first_row, first_col, activityFile, baslineFile, DataBaseOperations.getDescriptorLocation(studyId));
       if(js == null)
         Ok("");
       else
@@ -1326,6 +1481,7 @@ object Application extends Controller {
 
 
 
+
   val registerForm = Form(
     mapping(
       "fullName" -> nonEmptyText,
@@ -1618,7 +1774,7 @@ object Application extends Controller {
 
   def videoExample = Action {
     Ok.sendFile(
-      content = Play.application.getFile("/public/T002-008.avi3.avi"),
+      content = Play.application.getFile("/public/mov_bbb.mp4"),
       inline = true
     )
   }
@@ -1653,21 +1809,26 @@ object Application extends Controller {
       }
 
 
-      //val v = videos.where(_.id === id).single
-      //val file = new java.io.File("C:\\Users\\staamneh\\Desktop\\CPL-Lab\\System Desgin\\first_play\\target\\web\\public\\main\\images\\v.avi")
-      //val file = new java.io.File("C:\\Users\\staamneh\\Desktop\\CPL-Lab\\System Desgin\\first_play\\target\\web\\public\\main\\images\\v.avi")
-      import ExecutionContext.Implicits.global
-      //val fileContent: Enumerator[Array[Byte]] = Enumerator.fromFile(file)
-
-      //Logger.info("Here is the link " + GoogleDrive.GetVideoUrl(username, "0B2TDTGk9sqZLZGlGVEI2anYzNEU", sourceType, 8));
 
 
-      var input: InputStream =QueryStudy.GetVideoInputStream(username, "0B2TDTGk9sqZLNDRMbnNPMktwUHc", sourceType, 8);
-      val fileContent: Enumerator[Array[Byte]] = Enumerator.fromStream(QueryStudy.GetVideoInputStream(username, "0B2TDTGk9sqZLNDRMbnNPMktwUHc", sourceType, 8));
+     // var input: InputStream =QueryStudy.GetVideoInputStream(username, "0BzuoB3uc0tTVQWZDWERyMzlkZ1U", sourceType, 8);
+     // val fileContent: Enumerator[Array[Byte]] = Enumerator.fromStream(QueryStudy.GetVideoInputStream(username, "0BzuoB3uc0tTVQWZDWERyMzlkZ1U", sourceType, 8));
+
+      val file = new java.io.File("C:\\first_play\\public\\tata.mp4")
+      val targetStream = new FileInputStream(file);
+
+      val fileContent: Enumerator[Array[Byte]] = Enumerator.fromStream(targetStream);
+
+
+
+
+
+
       Result(
         header = ResponseHeader(200, Map(
-          CONTENT_LENGTH -> QueryStudy.GetVideoSize(username, "0B2TDTGk9sqZLNDRMbnNPMktwUHc", sourceType, 8),
-          CONTENT_RANGE -> s"bytes */${QueryStudy.GetVideoSize(username, "0B2TDTGk9sqZLNDRMbnNPMktwUHc", sourceType, 8)}",
+          //CONTENT_LENGTH -> QueryStudy.GetVideoSize(username, "0BzuoB3uc0tTVQWZDWERyMzlkZ1U", sourceType, 8),
+          CONTENT_LENGTH -> file.length().toString,
+          CONTENT_RANGE -> s"bytes */${file.length()}",
           ACCEPT_RANGES -> "bytes",
           CONTENT_TYPE -> "video/mp4",
           PRAGMA -> "public",
@@ -1680,9 +1841,11 @@ object Application extends Controller {
 
   }
 
+
+
   def test () = Action {
     implicit request =>
-      Ok("Taamneh");
+      Ok(views.html.testVideoFromDrive());
   }
 
 

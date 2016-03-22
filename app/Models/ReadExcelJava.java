@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.monitorjbl.xlsx.StreamingReader;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -23,6 +24,7 @@ import play.Logger;
 import org.json.simple.*;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
+import play.libs.Scala;
 
 /**
  * Created by staamneh on 10/29/2014.
@@ -48,15 +50,16 @@ public class ReadExcelJava {
      * @throws IOException
      */
 
-    public static ArrayList<Activity> readActivity(InputStream input)  throws IOException {
+    public static ArrayList<Activity> readActivity(InputStream input)  throws IOException, org.apache.poi.openxml4j.exceptions.InvalidFormatException {
         int i = 0, rowNum=0, j=0;
         boolean exit =false, startWroking = false;
         Map<Double, String> code = new TreeMap<>();
         ArrayList<Activity> activities = new ArrayList<Activity>();
         try {
 
-            XSSFWorkbook workbook = new XSSFWorkbook(input);
-            XSSFSheet sheet = workbook.getSheetAt(0);
+           // XSSFWorkbook workbook = new XSSFWorkbook(input);
+            Workbook workbook = WorkbookFactory.create(input);
+            Sheet sheet = workbook.getSheetAt(0);
             Row row = null;
             Iterator cellIterator = null;
             Cell cell = null;
@@ -591,8 +594,8 @@ public class ReadExcelJava {
     }
     public static TreeMap<Double, Double> getAllSignalFromExcelAbstraction (String fileName, int respColNo)  throws Exception {
 
-        ArrayList<Double> allNumber = new ArrayList<Double>();
-        int counter = 0;
+
+
 
         if(fileName == null)
         {
@@ -615,7 +618,7 @@ public class ReadExcelJava {
             // actual.put(entry.getKey(), barRaw.getArrayOfDouble());
             //allNumber = barRaw.getArrayOfDouble();
         } catch (org.apache.poi.openxml4j.exceptions.InvalidFormatException e) {
-            //return null;
+            System.out.println("Wrong Format..........!!!!!!!!!!!!!!!!!!");
         } catch (IOException e) {
             System.out.println("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRIIIIIIIIIIIIIII");
             e.printStackTrace();
@@ -669,7 +672,46 @@ public class ReadExcelJava {
         return jsonForChart.getArrayOfDouble();
     }
 
-    public static JSONObject fromExcelInputTemp(int signalType, ArrayList<Activity> activities, String fileName, int first_row, int first_col)  throws Exception {
+    public  static TreeMap<String, Double> findTotalNASAWithHeader(int signalType, String fileName,  TreeMap<String, String> mp )  throws  Exception {
+        long startTime =System.nanoTime();
+        int i = 0, frameRate = getFrameRate(signalType);
+        org.json.simple.JSONObject all = null;
+        File file = new File(fileName);
+        BarChartFromExcel jsonForChart = new BarChartFromExcel(fileName, signalType, mp);
+
+        try {
+
+            NewExcelFormatForBarData newF = new NewExcelFormatForBarData(jsonForChart);
+            OldExcelFormat oldF = new OldExcelFormat(jsonForChart);
+            try {
+
+                newF.processAllSheets();
+            } catch(InvalidOperationException ioe)
+            {
+                oldF.readSheet();
+            }
+            jsonForChart.finalize();
+        }
+        catch (org.apache.poi.openxml4j.exceptions.InvalidFormatException e)
+        {
+            return null;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+
+
+            // delete the file
+            if (! file.delete()) {
+                Logger.info("File has NOT been deleted");
+            }
+            Logger.info("Singal Type: "+signalType +"  Time spent in method fromExcelInput is :" + ( System.nanoTime()- startTime));
+        }
+        return jsonForChart.getCloNamesWithVal();
+    }
+
+    public static JSONObject fromExcelInputTemp(int signalType,TreeMap<Double, Double> basline,  ArrayList<Activity> activities, String fileName, int first_row, int first_col)  throws Exception {
         long startTime =System.nanoTime();
         org.json.simple.JSONObject all = null;
         File file = new File(fileName);
@@ -678,24 +720,47 @@ public class ReadExcelJava {
         OPCPackage pkg = null;
 
         try {
-
             //PlainChartFromExcel jsonForChart = new PlainChartFromExcel(fileName);
-            AnnotatedChartFromExcel ann = new AnnotatedChartFromExcel(fileName, activities, signalType);
-            NewExcelFormat newF = new NewExcelFormat(ann, first_row,first_col);
-            //NewExcelFormat newF = new NewExcelFormat(ann);
-            OldExcelFormat oldF = new OldExcelFormat(ann);
-            try {
+            //AnnotatedChartFromExcel ann = new AnnotatedChartFromExcel(fileName, activities, signalType);
 
-                newF.processAllSheets();
+            if(basline !=null) {
 
-            } catch(InvalidOperationException ioe)
-            {
-                oldF.readSheet();
+                AnnotatedChartFromExcelWithBaseLine ann = new AnnotatedChartFromExcelWithBaseLine(fileName, basline, activities, signalType);
+
+                NewExcelFormat newF = new NewExcelFormat(ann, first_row, first_col);
+                //NewExcelFormat newF = new NewExcelFormat(ann);
+                OldExcelFormat oldF = new OldExcelFormat(ann);
+                try {
+
+                    newF.processAllSheets();
+
+                } catch (InvalidOperationException ioe) {
+                    oldF.readSheet();
+                }
+
+                ann.finalSteps();
+
+                return ann.getJosonForChart();
             }
+            else
+            {
+                AnnotatedChartFromExcel ann = new AnnotatedChartFromExcel(fileName, activities, signalType);
 
-            ann.finalSteps();
+                NewExcelFormat newF = new NewExcelFormat(ann, first_row, first_col);
+                //NewExcelFormat newF = new NewExcelFormat(ann);
+                OldExcelFormat oldF = new OldExcelFormat(ann);
+                try {
 
-            return ann.getJosonForChart();
+                    newF.processAllSheets();
+
+                } catch (InvalidOperationException ioe) {
+                    oldF.readSheet();
+                }
+
+                ann.finalSteps();
+
+                return ann.getJosonForChart();
+            }
 
 
         }
@@ -820,11 +885,11 @@ public class ReadExcelJava {
      * @return
      * @throws Exception
      */
-    public  JSONObject fromExcelInputToCharTemp(int signalType, String fileName) throws  Exception {
+    public  JSONObject fromExcelInputToCharTemp(int signalType, String fileName, TreeMap<String, String> mp) throws  Exception {
         long startTime =System.nanoTime();
         org.json.simple.JSONObject all = null;
         File file = new File(fileName);
-        BarChartFromExcel jsonForChart = new BarChartFromExcel(fileName, signalType);
+        BarChartFromExcel jsonForChart = new BarChartFromExcel(fileName, signalType, mp);
 
         try {
 
@@ -861,6 +926,47 @@ public class ReadExcelJava {
 
     }
 
+
+    public   ArrayList<SessionDescription>   getStudyDescription(int signalType, String fileName) throws  Exception {
+        long startTime =System.nanoTime();
+        org.json.simple.JSONObject all = null;
+        File file = new File(fileName);
+        StudyDescriptionFromExcel jsonForChart = new StudyDescriptionFromExcel(fileName, signalType);
+
+        try {
+
+            NewExcelFormatForBarData newF = new NewExcelFormatForBarData(jsonForChart);
+            OldExcelFormat oldF = new OldExcelFormat(jsonForChart);
+            try {
+
+                newF.processAllSheets();
+            } catch(InvalidOperationException ioe)
+            {
+                oldF.readSheet();
+            }
+            jsonForChart.finalize();
+            //jsonForChart.getArrayOfDouble();
+        }
+        catch (org.apache.poi.openxml4j.exceptions.InvalidFormatException e)
+        {
+            return null;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+
+
+            // delete the file
+            if (! file.delete()) {
+                Logger.info("File has NOT been deleted");
+            }
+            Logger.info("Singal Type: "+signalType +"  Time spent in method fromExcelInput is :" + ( System.nanoTime()- startTime));
+        }
+        return jsonForChart.getDescriptor();
+
+
+    }
 
     // when the signal has activity data
 

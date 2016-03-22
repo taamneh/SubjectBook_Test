@@ -1,8 +1,11 @@
 package controllers
 
+import java.util
+
 import Models.StudyTopology
 import akka.actor.{ActorRef, Props, ActorSystem}
 import akka.routing.RoundRobinPool
+import controllers.CreatingStudyMessages.{ScanStudy, ScanStudyAbstract}
 import controllers.{ FindNewMultiModal}
 import play.api.GlobalSettings
 
@@ -15,9 +18,10 @@ object Global extends GlobalSettings {
   val system = ActorSystem("salah")
   val leader = system.actorOf(Props[CreatingStudy])
 
-  val routerForPortrait: ActorRef = system.actorOf(RoundRobinPool(6).props(Props[ScanSubjectPortrait]), "routerForPortrait")
+  val routerForPortrait: ActorRef = system.actorOf(RoundRobinPool(3).props(Props[ScanSubjectPortrait]), "routerForPortrait")
 
-  val routerForPortraitAbstraction: ActorRef = system.actorOf(RoundRobinPool(6).props(Props[ScanSubjectPortraitAbstraction]), "routerForPortrait2")
+  val routerForPortraitAbstraction: ActorRef = system.actorOf(RoundRobinPool(3).props(Props[ScanSubjectPortraitAbstraction]), "routerForPortrait2")
+
 
 
 

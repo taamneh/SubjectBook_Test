@@ -170,7 +170,7 @@ public class AddNewStudy  {
             report = report + "You have fewer subjects than the number you have selected\n";
         int study_no = 0;
         if(subjects.size() > 0 ) {
-            study_no = DataBaseOperations.GenerateStudyNoGD(studyName, username, SharedData.GOOGLE_DRIVE,shareStudy);
+            study_no = DataBaseOperations.GenerateStudyNoGD(studyName, username, SharedData.GOOGLE_DRIVE,shareStudy, null);
         }
 
         for (String subject : subjects) {
@@ -257,7 +257,7 @@ public class AddNewStudy  {
 
                     else continue; // skip if the singal is not supported
 
-                    DataBaseOperations.InsertSessionGD(file0.getTitle(), study_no, session_no, sessionName, signal_type, file2.getId(), 0);
+                    DataBaseOperations.InsertSessionGD(file0.getTitle(), study_no, session_no, sessionName, signal_type, file2.getId(), 0, false, 0);
                     //signal_type++;
                 }
                 session_no++;
@@ -299,18 +299,18 @@ public class AddNewStudy  {
                 String extension = fileInfo.getFileExtension();
                 if(SignalType.isInfo(extension))
                 {
-                    DataBaseOperations.InsertSessionGD(file0.getTitle(), study_no, session_no, "INFO", SignalType.getInfoCode() , fileInfo.getId(), 1);
+                    DataBaseOperations.InsertSessionGD(file0.getTitle(), study_no, session_no, "INFO", SignalType.getInfoCode() , fileInfo.getId(), 1, false , 0);
                 }
                 else if(SignalType.isPsychometric(extension))
                 {
-                    DataBaseOperations.InsertSessionGD(file0.getTitle(), study_no, session_no, "PM", SignalType.getPsychometricCode() , fileInfo.getId(), 1);
+                    DataBaseOperations.InsertSessionGD(file0.getTitle(), study_no, session_no, "PM", SignalType.getPsychometricCode() , fileInfo.getId(), 1, false, 0);
                 }
                 else if(SignalType.isPerfromance(extension))
                 {
-                    DataBaseOperations.InsertSessionGD(file0.getTitle(), study_no, session_no, "PRF", SignalType.getPerformanceCode() , fileInfo.getId(), 1);
+                    DataBaseOperations.InsertSessionGD(file0.getTitle(), study_no, session_no, "PRF", SignalType.getPerformanceCode() , fileInfo.getId(), 1, false, 0);
                 }
                 else if(SignalType.isBar(extension)) {
-                    DataBaseOperations.InsertSessionGD(file0.getTitle(), study_no, session_no, "BAR", SignalType.getBarChatCode() , fileInfo.getId(), 1);
+                    DataBaseOperations.InsertSessionGD(file0.getTitle(), study_no, session_no, "BAR", SignalType.getBarChatCode() , fileInfo.getId(), 1, false, 0);
                 }
 
             }
@@ -1760,7 +1760,7 @@ public class AddNewStudy  {
         if(study.exists()) {
             Logger.info("We Found it");
             // Insert new study in the DB
-            int study_no = DataBaseOperations.GenerateStudyNoGD(studyName, username, SharedData.LOCALSERVER, 0);
+            int study_no = DataBaseOperations.GenerateStudyNoGD(studyName, username, SharedData.LOCALSERVER, 0, null);
             // Get all the subjects in that study
             for (final java.io.File subject : study.listFiles()) {
                 String subjectName = subject.getName();
@@ -1819,7 +1819,7 @@ public class AddNewStudy  {
                                             Logger.error("Invlaid File Extension: " + fileExtension );
                                     }
                                     //insert signal for the new study
-                                    DataBaseOperations.InsertSessionGD(subjectName, study_no, session_no, sessionName, signal_type, signal.getAbsolutePath(),0);
+                                    DataBaseOperations.InsertSessionGD(subjectName, study_no, session_no, sessionName, signal_type, signal.getAbsolutePath(),0, false,0);
                                 }
                             }
                             else {
@@ -1829,10 +1829,10 @@ public class AddNewStudy  {
                                 System.out.println("Extension: " + fileExtension);
                                 switch (fileExtension.toLowerCase()) {
                                     case "info":
-                                        DataBaseOperations.InsertSessionGD(subjectName, study_no, session_no,"INFO", 9 , session.getAbsolutePath(),1);
+                                        DataBaseOperations.InsertSessionGD(subjectName, study_no, session_no,"INFO", 9 , session.getAbsolutePath(),1, false, 0);
                                         break;
                                     case "pm":
-                                        DataBaseOperations.InsertSessionGD(subjectName, study_no, session_no,"PM", 11 , session.getAbsolutePath(),1);
+                                        DataBaseOperations.InsertSessionGD(subjectName, study_no, session_no,"PM", 11 , session.getAbsolutePath(),1, false, 0);
                                         break;
                                     default:
                                         Logger.error("Invlaid File Extension: " + fileExtension );
@@ -1889,14 +1889,14 @@ public class AddNewStudy  {
                             //insert signal for the new study
                             if(signal_type == 9)
                             {
-                                DataBaseOperations.InsertSessionGD(subjectName, study_no, session_no, "INFO", signal_type, signal.getAbsolutePath(),1);
+                                DataBaseOperations.InsertSessionGD(subjectName, study_no, session_no, "INFO", signal_type, signal.getAbsolutePath(),1, false,0);
                             }
                             else if (signal_type ==11)
                             {
-                                DataBaseOperations.InsertSessionGD(subjectName, study_no, session_no, "PM", signal_type, signal.getAbsolutePath(),1 );
+                                DataBaseOperations.InsertSessionGD(subjectName, study_no, session_no, "PM", signal_type, signal.getAbsolutePath(),1, false, 0);
                             }
                             else
-                                DataBaseOperations.InsertSessionGD(subjectName, study_no, session_no, "None", signal_type, signal.getAbsolutePath(),1);
+                                DataBaseOperations.InsertSessionGD(subjectName, study_no, session_no, "None", signal_type, signal.getAbsolutePath(),1, false, 0);
                         }
                     }
                 }

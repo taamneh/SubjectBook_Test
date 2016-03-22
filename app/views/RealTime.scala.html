@@ -1,0 +1,168 @@
+@(userName: String)(implicit request: RequestHeader)
+@import helper._
+<!DOCTYPE html>
+<html>
+<head>
+
+    <style type="text/css">
+
+        .kareem {
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        font-family: montserrat;
+        color: #2C3E50;
+        font-size: 13px;
+        }
+
+
+
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=1170" name="viewport"><meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <script type="text/javascript" src="/assets/javascripts/jquery-1.9.0.min.js"></script>
+    <title>SubjectBoo</title>
+
+    <link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/stylesheets/datepicker3.css" rel="stylesheet">
+    <link href="/assets/stylesheets/styles.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/multi.css">
+
+
+    <!--[if lt IE 9]>
+    <script src="/assets/javascripts/html5shiv.js"></script>
+    <script src="/assets/javascripts/respond.min.js"></script>
+    <![endif]-->
+
+     <script type="text/javascript" src="/assets/javascripts/showPickerRealTime.js"></script>
+    <script src="/assets/javascripts/bootstrap.min.js"></script>
+    <script src="/assets/javascripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/assets/javascripts/ow-all.js"></script>
+   <!-- <script type='text/javascript' src='@routes.Assets.at("javascripts/HandlerRealTime.js")'></script> -->
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/datePicker.css">
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/oneweb-salah.css">
+
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><span>Subject</span>Book</a> <a class="navbar-brand" href="/allStudies"><span></span>My Studies</a>
+            <a class="navbar-brand" href="#"><span></span>Share</a>
+            <a class="navbar-brand" href="/frontPage"><span></span>Help</a>
+            <ul class="user-menu">
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> @userName <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                        <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+    <form role="search">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+        </div>
+    </form>
+    <ul class="nav menu">
+        <li><a href="/allStudies"><span class="glyphicon glyphicon-th"></span> My Studies </a></li>
+        <li><a href="/createStudy"><span class="glyphicon glyphicon-pencil"></span> New Study</a></li>
+        <li role="presentation" class="divider"></li>
+
+    </ul>
+</div><!--/.sidebar-->
+
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a  href="#"><span class="glyphicon glyphicon-home"></span></a></li>
+            <li class="active">Forms</li>
+        </ol>
+    </div><!--/.row-->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Real-time Streaming</h1>
+        </div>
+    </div><!--/.row-->
+    <!-- <div id= "newStudy"> -->
+
+
+    <div class ="showontop" >
+
+
+
+
+            <form action="/showSignalRealTime" method="get" target="_blank">
+
+                <h2 class="fs-title">Select a file</h2>
+                <h3 class="fs-subtitle"></h3>
+                <table id="zob" cellspacing="0" class="data_table" id="add_sessions_table">
+
+                    <tr>
+                        <td class="cell_1">* URL:</td>
+                        <td id = "kareem">
+                            <input  size="100"  type="text" id="folder_name" maxlength="200" name="url" prompttext="" required>
+                            <input size="200"  type="hidden" id="folder_id" maxlength="50" name="fileId" value="x">
+                        </td>
+                        <td id = "kareem2">
+                            <input  style="height:50px;width:60px" type="button" name="Add" id="browseGD"class="" value="...." />
+                        </td>
+                        <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+                    </tr>
+
+
+
+                </table>
+                <input id ="firstNext"  type="submit" name="next" class="next1 action-button" value="Submit" />
+
+
+
+
+
+            </form>
+
+
+            </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+
+
+    </div>
+
+
+
+</div><!--/.main-->
+
+<div id="loading" style="display:none; position: fixed;height:100%; width:100%; background: rgba( 255, 255, 255, .8 ) url('/assets/images/ajax-loader.gif') 50% 50%    no-repeat;">
+    <p> Please wait, study is being created </p>
+</div>
+
+<script>
+    var wsUri = "@routes.Application.socket.webSocketURL()";
+    var userName = "@userName"
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

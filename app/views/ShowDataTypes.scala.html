@@ -1,4 +1,4 @@
-@(userName: String, types: List[(Int, Option[String], String ,Int,Option[String], Int, Int, Int)])
+@(userName: String, types: List[(Int, Option[String], String ,Int,Option[String], Int, Int, Int, Option[java.math.BigDecimal], Option[java.math.BigDecimal], Int)])
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +37,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#"><span>Subject</span>Book</a> <a class="navbar-brand" href="/allStudies"><span></span>My Studies</a>
-            <a class="navbar-brand" href="#"><span></span>Share</a>
+            <!-- <a class="navbar-brand" href="#"><span></span>Share</a> -->
             <a class="navbar-brand" href="#"><span></span>Recommend us</a>
             <ul class="user-menu">
                 <li class="dropdown pull-right">
@@ -123,6 +123,9 @@
                             <th data-field="frate" data-sortable="true">Sampling Rate</th>
                             <th data-field="frate" data-sortable="true">Rows</th>
                             <th data-field="frate" data-sortable="true">Col</th>
+                            <th data-field="frate" data-sortable="true">Ymin</th>
+                            <th data-field="frate" data-sortable="true">Ymax</th>
+                            <th data-field="frate" data-sortable="true">Log. Scale</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -134,7 +137,7 @@
 
 
 
-                                <td>
+                                <td width="20%">
                                     <input type="text" class="form-control" name="dataDec" value="@dType._2">
 
                                 </td>
@@ -177,24 +180,55 @@
                                         <option id="select_5" value=5>Psychometric data</option>
                                         }
 
+                                        @if(dType._4== 6) {
+                                        <option id="select_6" value=6  selected="selected">Annotation</option>
+                                        }else {
+                                        <option id="select_6" value=6>Annotation</option>
+                                        }
+
 
 
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="yTitle" value="@dType._5" required>
+                                    <input type="text" class="form-control" name="yTitle" value="@dType._5" >
                                 </td>
-                                <td>
+                                <td width = "6%">
                                     <input type="text" class="form-control" name="frameRate" value="@dType._6">
                                 </td>
 
-                                <td>
+                                <td width = "6%">
                                     <input type="number" class="form-control" name="first_row" value="@dType._7">
                                 </td>
 
 
-                                <td>
+                                <td width = "6%">
                                     <input type="number" class="form-control" name="first_col" value="@dType._8">
+                                </td>
+
+                                <td width = "9%">
+                                    <input type="number" class="form-control" name="min_yvalue" step="0.00001"  max = "99999" value="@dType._9">
+                                </td>
+
+
+                                <td width = "9%">
+                                    <input type="number" class="form-control" name="max_yvalue" step="0.00001"  max ="99999" value="@dType._10">
+                                </td>
+
+                                <td width = "6%">
+                                    <select class="form-control" id="sel1" name="log" value="@dType._11">
+
+                                        @if(dType._11== 0) {
+                                        <option id="select1" value=0  selected="selected">No</option>
+                                        <option id="select1" value=1>Yes</option>
+                                        }else {
+                                        <option id="select1" value=0  >No</option>
+                                        <option id="select1" value=1  selected="selected">Yes</option>
+                                        }
+
+
+
+                                    </select>
                                 </td>
 
                                 <td>

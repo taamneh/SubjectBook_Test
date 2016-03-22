@@ -35,6 +35,9 @@ var session;
 var studyId;
 var occupied ;
 
+var gChart= null;
+var gData = null;
+
 $(document).ready(function(){
 // when user click on the tab (i.e., session)
 
@@ -43,6 +46,10 @@ $(document).ready(function(){
 
    function intermediate ()
      {
+
+
+
+
           var counter =0, iterator=0;
           // just to add horizontal axis to the last chart
           $( ".chart" ).each(function( index ) {
@@ -62,13 +69,16 @@ $(document).ready(function(){
                var signalType = $(this).attr('signalType');
                var signalSequence = $(this).attr('signalSequence');
                var yTitle = $(this).attr('yTitle');
+               var ymin = $(this).attr('ymin');
+               var ymax = $(this).attr('ymax');
+               var log = $(this).attr('log');
                var chartname = "chart"+session+signalSequence;
                var dynamicbtn = "dynamic"+session+signalSequence;
                if(iterator== counter -1){
-                 drawStuff_temp1(session, subject , chartname, studyId, signalSequence,signalType, dynamicbtn, info, true, yTitle);
+                 drawStuff_temp1(session, subject , chartname, studyId, signalSequence,signalType, dynamicbtn, info, true, yTitle, ymin, ymax, log);
                }
                else
-                 drawStuff_temp1(session, subject , chartname, studyId, signalSequence,signalType, dynamicbtn, info, false, yTitle);
+                 drawStuff_temp1(session, subject , chartname, studyId, signalSequence,signalType, dynamicbtn, info, false, yTitle, ymin, ymax, log);
                info = 0;
                iterator++;
                showVideo($(this).attr('session'),signalSequence);
@@ -82,6 +92,7 @@ $(document).ready(function(){
 
         subject= $(this).attr('subject');
         session = $(this).attr('session');
+        newSessionName = $(this).attr('newSessionName');
         studyId = $(this).attr('studyId');
         occupied = $(this).attr('occupied');
 
@@ -98,6 +109,25 @@ $(document).ready(function(){
             $(videoDiv).slideDown("slow");
        }
 
+
+        if (gData !== null)
+         {
+
+
+           var match = /\d*/
+           for( i =1; i< gData.getNumberOfColumns(); i++){
+
+             //alert(session.replace(match, "").toUpperCase()  +'   '+  gData.getColumnLabel(i).toUpperCase() )
+             if(gData.getColumnLabel(i).toUpperCase() == session.replace(match, "").toUpperCase())
+             {
+                gChart.setSelection([{row:null,column:i}]);
+                //alert('fonnd it');
+             }
+           }
+
+         }
+
+
     });
 
 
@@ -106,7 +136,6 @@ $(document).ready(function(){
     $('.panel-body.tabs .nav.nav-tabs a').first().trigger("click");
       //$('.btn.btn-default.show-video').first().trigger("click");
      showAllGeneral();  // this fucntion will show all the general infromation
-
 });
 
 function showAllGeneral(){
@@ -131,7 +160,7 @@ function showAllGeneral(){
                                           </div> \
                                     </div>");
                    $(this).show();
-                    drawStuff_temp1("BAR", subject , chartName , studyId, signalSequence,dataType, "", 1, true, yTitle);
+                    drawStuff_temp1("BAR", subject , chartName , studyId, signalSequence,dataType, "", 1, true, yTitle, -1, -1, 0);
                  }
                if(dataType == 3) {
                                    $(this).append( "<div class=\"panel panel-info\"> \
@@ -149,7 +178,7 @@ function showAllGeneral(){
                $(this).attr( "class", "col-lg-8" );
                                 $(this).append( "<div class=\"panel panel-info\"> \
                                          <div class=\"panel-heading\" > \
-                                              Phychometrics <a><span data-toggle=\"collapse\" href=\"#\" class=\"icon pull-right\"><em class=\"glyphicon glyphicon-chevron-down\"></em></span> </a> \
+                                              Psychometrics  <a><span data-toggle=\"collapse\" href=\"#\" class=\"icon pull-right\"><em class=\"glyphicon glyphicon-chevron-down\"></em></span> </a> \
                                          </div> \
                                         <div id=\"" + chartName + "\" class=\"panel-body\"> \
                                         </div> \
@@ -344,8 +373,7 @@ function getPsychometric(task, subject, chartDestination, studyId, signalSequenc
                 })
 }
 
-function showPerformance(task, subject, chartDestination, studyId, signalSequence)
-{
+function showPerformance(task, subject, chartDestination, studyId, signalSequence){
          var jsonDataPRF = '';
            $.ajax({
                          type: 'GET',
@@ -384,7 +412,9 @@ function showPerformance(task, subject, chartDestination, studyId, signalSequenc
 
 }
 
-function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequence,signal_type, dynamicbtn, info, showhAxis, vTitle) {
+
+
+function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequence,signal_type, dynamicbtn, info, showhAxis, vTitle, ymin, ymax, log) {
 
 
     var signal_title ;
@@ -395,6 +425,20 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
     var dash = "dashboard_div"+task+ signalSequence;
     var filter = "filter_div" + task + signalSequence;
     var editme = "#editchart"  + task + signalSequence;
+    var max_yvalue = "auto"
+    var min_xvalue = 0
+    var logType = null;
+
+       if(ymin != null ){
+             min_xvalue = ymin;
+          }
+      if(ymax != null){
+        max_yvalue = ymax;
+      }
+
+    if(log ==1)
+       logType = 'log'
+
 
     var jsonData;
      $.ajax({
@@ -408,7 +452,10 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                           success:function(result) {
                              jsonData = result;
                               var data = new google.visualization.DataTable(jsonData);
+
                              if(signal_type ==4){
+                             gData = data;
+
                                         var options = {
                                          title: 'NASA Task Load Index',
                                           hAxis: {
@@ -419,8 +466,12 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                           legend: { position: 'top'},
                                           bars: 'vertical'
                                         };
-                               var chart = new google.visualization.ColumnChart(document.getElementById(chartDestination));
-                              chart.draw(data,options );
+                              gChart = new google.visualization.ColumnChart(document.getElementById(chartDestination));
+                              gChart.draw(data,options );
+
+
+                              //chart.setSelection([{row:null, column:0}])
+                               //gChart.setSelection([{row:null,column:1}]);
                               }
                               else if(signal_type == 3){
                                   getBiography (" ", subject, chartDestination, studyId, signalSequence);
@@ -595,8 +646,31 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                            //tooltip: { trigger: 'none' },
                                            explorer: { actions: ['dragToZoom', 'rightClickToReset'], maxZoomIn: .01 },
                                            animation:{ startup:true},
-                                           vAxis: { title: ytitle,
-                                                   baseline: 0,
+                                           vAxis: {
+                                           scaleType: logType,
+                                           title: ytitle,
+                                           baseline: min_xvalue,
+                                            textPosition: showYAxis,
+                                            format: '###0.000',
+                                           gridlines: {
+                                                  color: 'transparent'
+                                              },
+                                           textStyle:{
+                                                   //color : 'green',
+                                                   bold: true,
+                                                   italic: false
+                                          },
+                                           titleTextStyle:{
+                                                          // color : 'green',
+                                                           bold: true,
+                                                           italic: false
+                                                           },
+                                           viewWindow :{
+                                                       min : min_xvalue,
+                                                       max : max_yvalue
+                                                      }}
+                                           /*vAxis: { title: ytitle,
+                                                    baseline: min_xvalue,
                                                      textPosition: showYAxis,
                                                      format: '###0.000',
                                                     gridlines: {
@@ -611,8 +685,12 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                                                    // color : 'green',
                                                                     bold: true,
                                                                     italic: false
-                                                                    }
-                                            }
+                                                                    },
+                                                   viewWindow :{
+                                                    min : min_xvalue,
+                                                    max : max_yvalue
+                                                   }
+                                            }*/
                                       };
 
                                  // to assigna colors for the annotaiton series....
@@ -628,35 +706,6 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
 
                                  var colorVar;
                                  var ctrColor =1;
-                                /* for(t=startAnnotFrom;  t< indexOfLast; t++)
-                                 {
-                                 // alert(t)
-                                  switch(ctrColor)
-                                   {
-                                  case 1:
-                                     colorVar = first;
-                                     break;
-                                  case 2:
-                                     if(! isSecondTaken)
-                                        colorVar = second;
-                                      else
-                                        colorVar = last;
-                                      break;
-                                   case 3:
-                                     colorVar = third;
-                                      break;
-                                   case 4:
-                                       colorVar = fourth;
-                                       break;
-                                    case 5:
-                                       colorVar = fifth;
-                                       break;
-                                   }
-                                     //alert(data.getColumnLabel(t))
-
-                                    ctrColor++;
-                                    myObj[t] = {type: "area", color: colorVar};
-                                 }*/
 
                                 var columns = [];
                                 var series = {};
