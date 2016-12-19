@@ -21,12 +21,14 @@ public class ForBarFromExcel extends JsonFromExcel {
     ArrayList<Double> templst = new ArrayList<Double>();
     ArrayList<Double> timeList = new ArrayList<Double>();
     public TreeMap<Double, Double> timeAndData = new TreeMap<Double,Double>();
+    public String headerName = "";
     private JSONArray arrTemp= new JSONArray();
     private ArrayList<Double> avergaSignal = new ArrayList<>(40);
     private double lastTimeVal =0;
     private int ctrForArray =0;
     private int frameCtr=1;
     private int readFromColum = 1;
+    private int counterForHeader = 0;
 
     public void addToHeader(String str,  boolean newRow)
     {
@@ -36,6 +38,11 @@ public class ForBarFromExcel extends JsonFromExcel {
         obj.put("label",str);
         obj.put("type", "number");
         header.add(obj);
+
+        if(counterForHeader==readFromColum) {
+            headerName= str;
+        }
+        counterForHeader++;
 
     }
     public void intializeArray()

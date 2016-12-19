@@ -1,94 +1,114 @@
-2016-03-22 13:13:29,559 - [INFO] - from play in pool-4-thread-5 
+2016-12-19 13:39:09,062 - [INFO] - from play in pool-4-thread-3 
 Listening for HTTP on /0:0:0:0:0:0:0:0:9000
 
-2016-03-22 13:13:33,323 - [INFO] - from play in play-internal-execution-context-1 
+2016-12-19 13:39:13,186 - [INFO] - from play in play-internal-execution-context-1 
 database [default] connected at jdbc:h2:mem:play
 
-2016-03-22 13:13:33,362 - [ERROR] - from play in play-internal-execution-context-1 
-Syntax error in SQL statement "                                              
+2016-12-19 13:39:13,303 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
 
+2016-12-19 13:39:18,423 - [INFO] - from application in play-akka.actor.default-dispatcher-2 
+Refresh token is not empty
 
-ALTER TABLE SESSION ADD CONSTRAINT SESSION_SIGNAL FOREIGN KEY SESSION_SIGNAL[*] (SIGNAL_SIGNAL_CODE)
-REFERENCES SIGNALS (SIGNAL_CODE) "; expected "("; SQL statement:
--- Reference:  session_signal (table: session)
+2016-12-19 13:39:18,424 - [INFO] - from application in play-akka.actor.default-dispatcher-2 
+Store the credentials for: sim2dc@gmail.com
 
+2016-12-19 13:39:18,680 - [INFO] - from application in play-akka.actor.default-dispatcher-2 
+LOGIN: {"email":"sim2dc@gmail.com","family_name":"Account","given_name":"Experment","id":"102421853787901825818","locale":"en","name":"Experment Account","picture":"https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg","verified_email":true}
 
-ALTER TABLE session ADD CONSTRAINT session_signal FOREIGN KEY session_signal (signal_signal_code)
-REFERENCES signals (signal_code) [42001-175] [ERROR:42001, SQLSTATE:42001]
+2016-12-19 13:39:24,340 - [INFO] - from play in play-internal-execution-context-3 
+Starting application default Akka system.
 
-2016-03-22 13:13:33,372 - [ERROR] - from application in New I/O worker #2 
+2016-12-19 13:54:42,229 - [INFO] - from application in application-akka.actor.default-dispatcher-3 
+Generate study Id for Study: NewNew
 
+2016-12-19 13:55:13,001 - [INFO] - from application in play-akka.actor.default-dispatcher-30 
+Show Study Number: 1
 
-! @6pfncfncb - Internal server error, for (GET) [/] ->
+2016-12-19 13:55:15,950 - [INFO] - from application in play-akka.actor.default-dispatcher-34 
+Show Study Number: 1
 
-play.api.db.evolutions.InconsistentDatabase: Database 'default' is in an inconsistent state![An evolution has not been applied properly. Please check the problem and resolve it manually before marking it as resolved.]
-	at play.api.db.evolutions.Evolutions$.checkEvolutionsState(Evolutions.scala:196) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at play.api.db.evolutions.Evolutions$.applyScript(Evolutions.scala:296) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1$$anonfun$apply$1.apply$mcV$sp(Evolutions.scala:495) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at play.api.db.evolutions.EvolutionsPlugin.withLock(Evolutions.scala:531) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1.apply(Evolutions.scala:485) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1.apply(Evolutions.scala:483) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at scala.collection.immutable.List.foreach(List.scala:318) ~[scala-library.jar:na]
-	at play.api.db.evolutions.EvolutionsPlugin.onStart(Evolutions.scala:483) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:91) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:91) ~[play_2.10-2.3.6.jar:2.3.6]
-	at scala.collection.immutable.List.foreach(List.scala:318) ~[scala-library.jar:na]
-	at play.api.Play$$anonfun$start$1.apply$mcV$sp(Play.scala:91) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.api.Play$$anonfun$start$1.apply(Play.scala:91) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.api.Play$$anonfun$start$1.apply(Play.scala:91) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.utils.Threads$.withContextClassLoader(Threads.scala:21) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.api.Play$.start(Play.scala:90) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:157) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:130) ~[play_2.10-2.3.6.jar:2.3.6]
-	at scala.Option.map(Option.scala:145) ~[scala-library.jar:na]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:130) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:128) ~[play_2.10-2.3.6.jar:2.3.6]
-	at scala.util.Success.flatMap(Try.scala:200) ~[scala-library.jar:na]
-	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:128) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:120) ~[play_2.10-2.3.6.jar:2.3.6]
-	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) ~[scala-library.jar:na]
-	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) ~[scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) ~[scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) ~[scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) ~[scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) ~[scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) ~[scala-library.jar:na]
+2016-12-19 13:55:19,342 - [INFO] - from application in play-akka.actor.default-dispatcher-30 
+Show Subject Number:  For Study: 1
 
-2016-03-22 13:13:33,372 - [ERROR] - from application in New I/O worker #1 
+2016-12-19 13:55:49,700 - [INFO] - from application in play-akka.actor.default-dispatcher-30 
+Show Subject Number: Subject07 For Study: 1
 
+2016-12-19 13:58:09,481 - [INFO] - from application in play-akka.actor.default-dispatcher-46 
+Show Subject Number: Subject03 For Study: 1
 
-! @6pfncfncb - Internal server error, for (GET) [/] ->
+2016-12-19 13:58:12,019 - [INFO] - from application in play-akka.actor.default-dispatcher-50 
+Show Subject Number: Subject01 For Study: 1
 
-play.api.db.evolutions.InconsistentDatabase: Database 'default' is in an inconsistent state![An evolution has not been applied properly. Please check the problem and resolve it manually before marking it as resolved.]
-	at play.api.db.evolutions.Evolutions$.checkEvolutionsState(Evolutions.scala:196) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at play.api.db.evolutions.Evolutions$.applyScript(Evolutions.scala:296) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1$$anonfun$apply$1.apply$mcV$sp(Evolutions.scala:495) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at play.api.db.evolutions.EvolutionsPlugin.withLock(Evolutions.scala:531) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1.apply(Evolutions.scala:485) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1.apply(Evolutions.scala:483) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at scala.collection.immutable.List.foreach(List.scala:318) ~[scala-library.jar:na]
-	at play.api.db.evolutions.EvolutionsPlugin.onStart(Evolutions.scala:483) ~[play-jdbc_2.10-2.3.6.jar:2.3.6]
-	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:91) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:91) ~[play_2.10-2.3.6.jar:2.3.6]
-	at scala.collection.immutable.List.foreach(List.scala:318) ~[scala-library.jar:na]
-	at play.api.Play$$anonfun$start$1.apply$mcV$sp(Play.scala:91) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.api.Play$$anonfun$start$1.apply(Play.scala:91) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.api.Play$$anonfun$start$1.apply(Play.scala:91) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.utils.Threads$.withContextClassLoader(Threads.scala:21) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.api.Play$.start(Play.scala:90) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:157) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:130) ~[play_2.10-2.3.6.jar:2.3.6]
-	at scala.Option.map(Option.scala:145) ~[scala-library.jar:na]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:130) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:128) ~[play_2.10-2.3.6.jar:2.3.6]
-	at scala.util.Success.flatMap(Try.scala:200) ~[scala-library.jar:na]
-	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:128) ~[play_2.10-2.3.6.jar:2.3.6]
-	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:120) ~[play_2.10-2.3.6.jar:2.3.6]
-	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) ~[scala-library.jar:na]
-	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) ~[scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) ~[scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) ~[scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) ~[scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) ~[scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) ~[scala-library.jar:na]
+2016-12-19 14:04:33,522 - [INFO] - from play in play-internal-execution-context-18 
+Shutdown application default Akka system.
+
+2016-12-19 14:04:33,606 - [INFO] - from play in play-internal-execution-context-18 
+database [default] connected at jdbc:h2:mem:play
+
+2016-12-19 14:04:33,613 - [INFO] - from play in play-internal-execution-context-18 
+Application started (Dev)
+
+2016-12-19 14:04:34,079 - [INFO] - from play in play-internal-execution-context-18 
+Starting application default Akka system.
+
+2016-12-19 14:10:29,951 - [INFO] - from application in play-akka.actor.default-dispatcher-64 
+Show Subject Number:  For Study: 1
+
+2016-12-19 14:10:32,814 - [ERROR] - from application in play-akka.actor.default-dispatcher-68 
+returnFilesInFolder403 Forbidden
+{
+  "code" : 403,
+  "errors" : [ {
+    "domain" : "usageLimits",
+    "message" : "User Rate Limit Exceeded",
+    "reason" : "userRateLimitExceeded"
+  } ],
+  "message" : "User Rate Limit Exceeded"
+}
+
+2016-12-19 14:10:32,816 - [ERROR] - from application in play-akka.actor.default-dispatcher-68 
+in returnFilesInFoldertest2 rate limit exceeded(salah) com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden
+{
+  "code" : 403,
+  "errors" : [ {
+    "domain" : "usageLimits",
+    "message" : "User Rate Limit Exceeded",
+    "reason" : "userRateLimitExceeded"
+  } ],
+  "message" : "User Rate Limit Exceeded"
+}
+
+2016-12-19 14:24:06,259 - [INFO] - from application in play-akka.actor.default-dispatcher-78 
+Show Study Number: 1
+
+2016-12-19 14:24:06,594 - [ERROR] - from application in play-akka.actor.default-dispatcher-86 
+returnFilesInFolder403 Forbidden
+{
+  "code" : 403,
+  "errors" : [ {
+    "domain" : "usageLimits",
+    "message" : "User Rate Limit Exceeded",
+    "reason" : "userRateLimitExceeded"
+  } ],
+  "message" : "User Rate Limit Exceeded"
+}
+
+2016-12-19 14:24:06,596 - [ERROR] - from application in play-akka.actor.default-dispatcher-86 
+in returnFilesInFoldertest2 rate limit exceeded(salah) com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden
+{
+  "code" : 403,
+  "errors" : [ {
+    "domain" : "usageLimits",
+    "message" : "User Rate Limit Exceeded",
+    "reason" : "userRateLimitExceeded"
+  } ],
+  "message" : "User Rate Limit Exceeded"
+}
+
+2016-12-19 14:24:07,649 - [INFO] - from application in play-akka.actor.default-dispatcher-78 
+Show Subject Number: Subject01 For Study: 1
+
+2016-12-19 14:32:15,510 - [INFO] - from application in play-akka.actor.default-dispatcher-100 
+Show Subject Number:  For Study: 1
 

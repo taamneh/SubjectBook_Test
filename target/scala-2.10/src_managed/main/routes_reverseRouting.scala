@@ -1,6 +1,6 @@
 // @SOURCE:C:/first_play/conf/routes
-// @HASH:83aab6c063d03debc3cdf27a0b51c076474e93f0
-// @DATE:Fri Mar 11 14:58:28 CST 2016
+// @HASH:5e8de2d46927a67fc2ee39292a93724c5c51e51a
+// @DATE:Tue Oct 04 19:27:49 CDT 2016
 
 import Routes.{prefix => _prefix, defaultPrefix => _defaultPrefix}
 import play.core._
@@ -14,28 +14,34 @@ import _root_.controllers.Assets.Asset
 import Router.queryString
 
 
-// @LINE:137
+// @LINE:150
+// @LINE:146
+// @LINE:144
+// @LINE:142
+// @LINE:140
 // @LINE:135
-// @LINE:132
-// @LINE:130
-// @LINE:128
+// @LINE:133
+// @LINE:131
+// @LINE:129
 // @LINE:126
 // @LINE:124
 // @LINE:122
 // @LINE:120
 // @LINE:118
-// @LINE:116
-// @LINE:114
-// @LINE:109
-// @LINE:107
-// @LINE:104
-// @LINE:102
-// @LINE:100
-// @LINE:98
-// @LINE:96
+// @LINE:115
+// @LINE:113
+// @LINE:111
+// @LINE:105
+// @LINE:103
+// @LINE:101
+// @LINE:99
+// @LINE:97
+// @LINE:95
 // @LINE:93
 // @LINE:91
 // @LINE:89
+// @LINE:87
+// @LINE:85
 // @LINE:83
 // @LINE:81
 // @LINE:79
@@ -77,11 +83,11 @@ import Router.queryString
 // @LINE:5
 package controllers {
 
-// @LINE:93
+// @LINE:115
 class ReverseAssets {
 
 
-// @LINE:93
+// @LINE:115
 def at(file:String): Call = {
    implicit val _rrc = new ReverseRouteContext(Map(("path", "/public")))
    Call("GET", _prefix + { _defaultPrefix } + "assets/" + implicitly[PathBindable[String]].unbind("file", file))
@@ -91,27 +97,33 @@ def at(file:String): Call = {
 }
                           
 
-// @LINE:137
+// @LINE:150
+// @LINE:146
+// @LINE:144
+// @LINE:142
+// @LINE:140
 // @LINE:135
-// @LINE:132
-// @LINE:130
-// @LINE:128
+// @LINE:133
+// @LINE:131
+// @LINE:129
 // @LINE:126
 // @LINE:124
 // @LINE:122
 // @LINE:120
 // @LINE:118
-// @LINE:116
-// @LINE:114
-// @LINE:109
-// @LINE:107
-// @LINE:104
-// @LINE:102
-// @LINE:100
-// @LINE:98
-// @LINE:96
+// @LINE:113
+// @LINE:111
+// @LINE:105
+// @LINE:103
+// @LINE:101
+// @LINE:99
+// @LINE:97
+// @LINE:95
+// @LINE:93
 // @LINE:91
 // @LINE:89
+// @LINE:87
+// @LINE:85
 // @LINE:83
 // @LINE:81
 // @LINE:79
@@ -154,7 +166,14 @@ def at(file:String): Call = {
 class ReverseApplication {
 
 
-// @LINE:79
+// @LINE:51
+def ShowInitiateStudy(): Call = {
+   import ReverseRouteContext.empty
+   Call("GET", _prefix + { _defaultPrefix } + "InitiateStudy")
+}
+                        
+
+// @LINE:91
 def showAddTopSummary(studyId:Int): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "showAddTopSummary" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("studyId", studyId)))))
@@ -168,7 +187,14 @@ def GetSignal(task:String, subject:String, studyId:Int, signal_type:Int, signal_
 }
                         
 
-// @LINE:104
+// @LINE:101
+def drp(studyNo:Int): Call = {
+   import ReverseRouteContext.empty
+   Call("GET", _prefix + { _defaultPrefix } + "drp" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("studyNo", studyNo)))))
+}
+                        
+
+// @LINE:126
 def videoExample(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "videoExample")
@@ -182,18 +208,25 @@ def getInfo(task:String, subject:String, studyId:Int, signal_seq:Int): Call = {
 }
                         
 
-// @LINE:65
+// @LINE:41
+def displaySubjectInProgress(studyNo:Int): Call = {
+   import ReverseRouteContext.empty
+   Call("GET", _prefix + { _defaultPrefix } + "displaySubjectsInProgress" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("studyNo", studyNo)))))
+}
+                        
+
+// @LINE:75
 def EditHideSubject(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "editHideSubject")
 }
                         
 
-// @LINE:116
-// @LINE:114
+// @LINE:142
+// @LINE:140
 def authentication(): Call = {
    () match {
-// @LINE:114
+// @LINE:140
 case ()  =>
   import ReverseRouteContext.empty
   Call("GET", _prefix + { _defaultPrefix } + "login")
@@ -202,14 +235,14 @@ case ()  =>
 }
                                                 
 
-// @LINE:77
+// @LINE:89
 def showAddPsychometric(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "showAddPsychometric")
 }
                         
 
-// @LINE:73
+// @LINE:85
 def howToCreateNewStudy(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "howToCreateNewStudy")
@@ -223,21 +256,28 @@ def displaySubject(studyNo:Int, SubjectId:String): Call = {
 }
                         
 
-// @LINE:128
-def InsertSession(): Call = {
+// @LINE:135
+def test(stydtNo:Int): Call = {
    import ReverseRouteContext.empty
-   Call("POST", _prefix + { _defaultPrefix } + "InsertSession")
+   Call("GET", _prefix + { _defaultPrefix } + "test" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("stydtNo", stydtNo)))))
 }
                         
 
-// @LINE:132
-def uploadFile(): Call = {
+// @LINE:49
+def InitiateNewStudy(): Call = {
    import ReverseRouteContext.empty
-   Call("POST", _prefix + { _defaultPrefix } + "upload")
+   Call("POST", _prefix + { _defaultPrefix } + "InitiateStudy")
 }
                         
 
-// @LINE:81
+// @LINE:77
+def AddMoreSubjects(): Call = {
+   import ReverseRouteContext.empty
+   Call("POST", _prefix + { _defaultPrefix } + "addMoreSubjects")
+}
+                        
+
+// @LINE:95
 def showAllDataTypes(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "showAllDataTypes")
@@ -251,28 +291,21 @@ def showStudy(studyNo:Int): Call = {
 }
                         
 
-// @LINE:102
+// @LINE:124
 def tabularExample(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "tabularExample")
 }
                         
 
-// @LINE:137
-def editStudy(studyId:Int): Call = {
-   import ReverseRouteContext.empty
-   Call("GET", _prefix + { _defaultPrefix } + "editStudy/" + implicitly[PathBindable[Int]].unbind("studyId", studyId))
-}
-                        
-
-// @LINE:83
+// @LINE:97
 def showAllSubjectToHide(studyId:Int): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "showAllSubjectsHide" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("studyId", studyId)))))
 }
                         
 
-// @LINE:61
+// @LINE:71
 def EditDataType(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "editExistingDataType")
@@ -286,14 +319,21 @@ def getPsycho(task:String, subject:String, studyId:Int, signal_seq:Int): Call = 
 }
                         
 
-// @LINE:91
+// @LINE:103
+def startNewSubject(loc:String, subjectLocation:String, subjectid:String): Call = {
+   import ReverseRouteContext.empty
+   Call("GET", _prefix + { _defaultPrefix } + "startNewSubject" + queryString(List(Some(implicitly[QueryStringBindable[String]].unbind("loc", loc)), Some(implicitly[QueryStringBindable[String]].unbind("subjectLocation", subjectLocation)), Some(implicitly[QueryStringBindable[String]].unbind("subjectid", subjectid)))))
+}
+                        
+
+// @LINE:113
 def showAllPsychometric(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "showAllPsychometric")
 }
                         
 
-// @LINE:69
+// @LINE:81
 // @LINE:9
 def Front(): Call = {
    () match {
@@ -306,28 +346,28 @@ case ()  =>
 }
                                                 
 
-// @LINE:43
+// @LINE:45
 def getRadar(studyNo:Int, SubjectId:String): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "getRadar" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("studyNo", studyNo)), Some(implicitly[QueryStringBindable[String]].unbind("SubjectId", SubjectId)))))
 }
                         
 
-// @LINE:107
+// @LINE:129
 def getVideo(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "videoB")
 }
                         
 
-// @LINE:47
+// @LINE:55
 def RealTime(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "realTime")
 }
                         
 
-// @LINE:100
+// @LINE:122
 def PychometricExample(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "PychometricExample")
@@ -348,52 +388,73 @@ def showSignalRealTime2(fileId:String): Call = {
 }
                         
 
-// @LINE:41
+// @LINE:43
 def showRadar(studyNo:Int, SubjectId:String): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "showRadar" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("studyNo", studyNo)), Some(implicitly[QueryStringBindable[String]].unbind("SubjectId", SubjectId)))))
 }
                         
 
-// @LINE:98
+// @LINE:120
 def InfoExample(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "InfoExample")
 }
                         
 
-// @LINE:49
+// @LINE:57
 def showSignalRealTime(fileId:String): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "showSignalRealTime" + queryString(List(Some(implicitly[QueryStringBindable[String]].unbind("fileId", fileId)))))
 }
                         
 
-// @LINE:89
+// @LINE:111
 def Getdummy(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "getDummy")
 }
                         
 
-// @LINE:55
+// @LINE:53
+def addNewSubject(studyNo:Int): Call = {
+   import ReverseRouteContext.empty
+   Call("GET", _prefix + { _defaultPrefix } + "addNewSubject" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("studyNo", studyNo)))))
+}
+                        
+
+// @LINE:63
 def ProcessNewDataType(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "processNewDataType")
 }
                         
 
-// @LINE:59
+// @LINE:105
+def updateVidoefromServer(studyNo:Int): Call = {
+   import ReverseRouteContext.empty
+   Call("GET", _prefix + { _defaultPrefix } + "updateVideos" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("studyNo", studyNo)))))
+}
+                        
+
+// @LINE:67
 def ProcessNewTopSummary(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "ProcessNewTopSummary")
 }
                         
 
-// @LINE:63
+// @LINE:73
 def EditPsychometric(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "editPsychometric")
+}
+                        
+
+// @LINE:69
+def ProcessNewDescriptor(): Call = {
+   import ReverseRouteContext.empty
+   Call("POST", _prefix + { _defaultPrefix } + "processNewDescriptor")
 }
                         
 
@@ -404,7 +465,7 @@ def zip(studyId:Int): Call = {
 }
                         
 
-// @LINE:51
+// @LINE:59
 def InsertNewStudy(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "createStudy")
@@ -418,17 +479,24 @@ def getPRF(task:String, subject:String, studyId:Int, signal_type:Int): Call = {
 }
                         
 
-// @LINE:135
+// @LINE:150
 def video(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "video")
 }
                         
 
-// @LINE:122
-def submitRegistration(): Call = {
+// @LINE:99
+def CreateStudyTest(): Call = {
    import ReverseRouteContext.empty
-   Call("POST", _prefix + { _defaultPrefix } + "signup")
+   Call("GET", _prefix + { _defaultPrefix } + "quickCreating")
+}
+                        
+
+// @LINE:93
+def showAddDescriptor(studyId:Int): Call = {
+   import ReverseRouteContext.empty
+   Call("GET", _prefix + { _defaultPrefix } + "showAddDescriptor" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("studyId", studyId)))))
 }
                         
 
@@ -439,21 +507,21 @@ def ReceiveOauthData(state:String, code:String): Call = {
 }
                         
 
-// @LINE:96
+// @LINE:118
 def signalDataExample(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "signalDataExample")
 }
                         
 
-// @LINE:118
+// @LINE:144
 def ShowDriveDialog(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "ShowDriveDialog")
 }
                         
 
-// @LINE:67
+// @LINE:79
 def logout(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "logout")
@@ -474,27 +542,6 @@ def socket(): Call = {
 }
                         
 
-// @LINE:109
-def test(): Call = {
-   import ReverseRouteContext.empty
-   Call("GET", _prefix + { _defaultPrefix } + "test")
-}
-                        
-
-// @LINE:130
-def editSubject(studyNo:Int, SubjectId:String): Call = {
-   import ReverseRouteContext.empty
-   Call("GET", _prefix + { _defaultPrefix } + "editSubject" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("studyNo", studyNo)), Some(implicitly[QueryStringBindable[String]].unbind("SubjectId", SubjectId)))))
-}
-                        
-
-// @LINE:120
-def Register(): Call = {
-   import ReverseRouteContext.empty
-   Call("GET", _prefix + { _defaultPrefix } + "signup")
-}
-                        
-
 // @LINE:15
 def getPortraitInfo(studyId:Int): Call = {
    import ReverseRouteContext.empty
@@ -502,17 +549,17 @@ def getPortraitInfo(studyId:Int): Call = {
 }
                         
 
-// @LINE:126
-def insertSubject(): Call = {
-   import ReverseRouteContext.empty
-   Call("POST", _prefix + { _defaultPrefix } + "InsertSubject")
-}
-                        
-
-// @LINE:124
+// @LINE:146
 def shareMyStudy(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "InsertStudy")
+}
+                        
+
+// @LINE:133
+def getVideo3(studyNo:Int, subjectId:String, sessionName:String, fileName:String): Call = {
+   import ReverseRouteContext.empty
+   Call("GET", _prefix + { _defaultPrefix } + "videoC" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("studyNo", studyNo)), Some(implicitly[QueryStringBindable[String]].unbind("subjectId", subjectId)), Some(implicitly[QueryStringBindable[String]].unbind("sessionName", sessionName)), Some(implicitly[QueryStringBindable[String]].unbind("fileName", fileName)))))
 }
                         
 
@@ -523,21 +570,28 @@ def showStudySkipTop(studyNo:Int): Call = {
 }
                         
 
-// @LINE:75
+// @LINE:87
 def showAddDataType(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "showAddDataType")
 }
                         
 
-// @LINE:71
+// @LINE:131
+def getVideo2(studyNo:Int, subjectId:String, sessionName:String): Call = {
+   import ReverseRouteContext.empty
+   Call("GET", _prefix + { _defaultPrefix } + "videoD" + queryString(List(Some(implicitly[QueryStringBindable[Int]].unbind("studyNo", studyNo)), Some(implicitly[QueryStringBindable[String]].unbind("subjectId", subjectId)), Some(implicitly[QueryStringBindable[String]].unbind("sessionName", sessionName)))))
+}
+                        
+
+// @LINE:83
 def setUpStudy(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "setUpStudy")
 }
                         
 
-// @LINE:45
+// @LINE:47
 def ShowCreateStudyForm(): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "createStudy")
@@ -558,14 +612,14 @@ def file(task:String, subject:String, studyId:Int, signal_type:Int, signal_seque
 }
                         
 
-// @LINE:53
+// @LINE:61
 def deleteStudy(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "deleteStudy")
 }
                         
 
-// @LINE:57
+// @LINE:65
 def ProcessNewPsychometric(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "processNewPsychometric")
@@ -578,28 +632,34 @@ def ProcessNewPsychometric(): Call = {
                   
 
 
-// @LINE:137
+// @LINE:150
+// @LINE:146
+// @LINE:144
+// @LINE:142
+// @LINE:140
 // @LINE:135
-// @LINE:132
-// @LINE:130
-// @LINE:128
+// @LINE:133
+// @LINE:131
+// @LINE:129
 // @LINE:126
 // @LINE:124
 // @LINE:122
 // @LINE:120
 // @LINE:118
-// @LINE:116
-// @LINE:114
-// @LINE:109
-// @LINE:107
-// @LINE:104
-// @LINE:102
-// @LINE:100
-// @LINE:98
-// @LINE:96
+// @LINE:115
+// @LINE:113
+// @LINE:111
+// @LINE:105
+// @LINE:103
+// @LINE:101
+// @LINE:99
+// @LINE:97
+// @LINE:95
 // @LINE:93
 // @LINE:91
 // @LINE:89
+// @LINE:87
+// @LINE:85
 // @LINE:83
 // @LINE:81
 // @LINE:79
@@ -642,11 +702,11 @@ def ProcessNewPsychometric(): Call = {
 package controllers.javascript {
 import ReverseRouteContext.empty
 
-// @LINE:93
+// @LINE:115
 class ReverseAssets {
 
 
-// @LINE:93
+// @LINE:115
 def at : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Assets.at",
    """
@@ -660,27 +720,33 @@ def at : JavascriptReverseRoute = JavascriptReverseRoute(
 }
               
 
-// @LINE:137
+// @LINE:150
+// @LINE:146
+// @LINE:144
+// @LINE:142
+// @LINE:140
 // @LINE:135
-// @LINE:132
-// @LINE:130
-// @LINE:128
+// @LINE:133
+// @LINE:131
+// @LINE:129
 // @LINE:126
 // @LINE:124
 // @LINE:122
 // @LINE:120
 // @LINE:118
-// @LINE:116
-// @LINE:114
-// @LINE:109
-// @LINE:107
-// @LINE:104
-// @LINE:102
-// @LINE:100
-// @LINE:98
-// @LINE:96
+// @LINE:113
+// @LINE:111
+// @LINE:105
+// @LINE:103
+// @LINE:101
+// @LINE:99
+// @LINE:97
+// @LINE:95
+// @LINE:93
 // @LINE:91
 // @LINE:89
+// @LINE:87
+// @LINE:85
 // @LINE:83
 // @LINE:81
 // @LINE:79
@@ -723,7 +789,18 @@ def at : JavascriptReverseRoute = JavascriptReverseRoute(
 class ReverseApplication {
 
 
-// @LINE:79
+// @LINE:51
+def ShowInitiateStudy : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.ShowInitiateStudy",
+   """
+      function() {
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "InitiateStudy"})
+      }
+   """
+)
+                        
+
+// @LINE:91
 def showAddTopSummary : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.showAddTopSummary",
    """
@@ -745,7 +822,18 @@ def GetSignal : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:104
+// @LINE:101
+def drp : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.drp",
+   """
+      function(studyNo) {
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "drp" + _qS([(""" + implicitly[QueryStringBindable[Int]].javascriptUnbind + """)("studyNo", studyNo)])})
+      }
+   """
+)
+                        
+
+// @LINE:126
 def videoExample : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.videoExample",
    """
@@ -767,7 +855,18 @@ def getInfo : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:65
+// @LINE:41
+def displaySubjectInProgress : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.displaySubjectInProgress",
+   """
+      function(studyNo) {
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "displaySubjectsInProgress" + _qS([(""" + implicitly[QueryStringBindable[Int]].javascriptUnbind + """)("studyNo", studyNo)])})
+      }
+   """
+)
+                        
+
+// @LINE:75
 def EditHideSubject : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.EditHideSubject",
    """
@@ -778,8 +877,8 @@ def EditHideSubject : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:116
-// @LINE:114
+// @LINE:142
+// @LINE:140
 def authentication : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.authentication",
    """
@@ -795,7 +894,7 @@ def authentication : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:77
+// @LINE:89
 def showAddPsychometric : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.showAddPsychometric",
    """
@@ -806,7 +905,7 @@ def showAddPsychometric : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:73
+// @LINE:85
 def howToCreateNewStudy : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.howToCreateNewStudy",
    """
@@ -828,29 +927,40 @@ def displaySubject : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:128
-def InsertSession : JavascriptReverseRoute = JavascriptReverseRoute(
-   "controllers.Application.InsertSession",
+// @LINE:135
+def test : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.test",
    """
-      function() {
-      return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "InsertSession"})
+      function(stydtNo) {
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "test" + _qS([(""" + implicitly[QueryStringBindable[Int]].javascriptUnbind + """)("stydtNo", stydtNo)])})
       }
    """
 )
                         
 
-// @LINE:132
-def uploadFile : JavascriptReverseRoute = JavascriptReverseRoute(
-   "controllers.Application.uploadFile",
+// @LINE:49
+def InitiateNewStudy : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.InitiateNewStudy",
    """
       function() {
-      return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "upload"})
+      return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "InitiateStudy"})
       }
    """
 )
                         
 
-// @LINE:81
+// @LINE:77
+def AddMoreSubjects : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.AddMoreSubjects",
+   """
+      function() {
+      return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "addMoreSubjects"})
+      }
+   """
+)
+                        
+
+// @LINE:95
 def showAllDataTypes : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.showAllDataTypes",
    """
@@ -872,7 +982,7 @@ def showStudy : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:102
+// @LINE:124
 def tabularExample : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.tabularExample",
    """
@@ -883,18 +993,7 @@ def tabularExample : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:137
-def editStudy : JavascriptReverseRoute = JavascriptReverseRoute(
-   "controllers.Application.editStudy",
-   """
-      function(studyId) {
-      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "editStudy/" + (""" + implicitly[PathBindable[Int]].javascriptUnbind + """)("studyId", studyId)})
-      }
-   """
-)
-                        
-
-// @LINE:83
+// @LINE:97
 def showAllSubjectToHide : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.showAllSubjectToHide",
    """
@@ -905,7 +1004,7 @@ def showAllSubjectToHide : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:61
+// @LINE:71
 def EditDataType : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.EditDataType",
    """
@@ -927,7 +1026,18 @@ def getPsycho : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:91
+// @LINE:103
+def startNewSubject : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.startNewSubject",
+   """
+      function(loc,subjectLocation,subjectid) {
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "startNewSubject" + _qS([(""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("loc", loc), (""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("subjectLocation", subjectLocation), (""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("subjectid", subjectid)])})
+      }
+   """
+)
+                        
+
+// @LINE:113
 def showAllPsychometric : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.showAllPsychometric",
    """
@@ -938,7 +1048,7 @@ def showAllPsychometric : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:69
+// @LINE:81
 // @LINE:9
 def Front : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.Front",
@@ -955,7 +1065,7 @@ def Front : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:43
+// @LINE:45
 def getRadar : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.getRadar",
    """
@@ -966,7 +1076,7 @@ def getRadar : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:107
+// @LINE:129
 def getVideo : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.getVideo",
    """
@@ -977,7 +1087,7 @@ def getVideo : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:47
+// @LINE:55
 def RealTime : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.RealTime",
    """
@@ -988,7 +1098,7 @@ def RealTime : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:100
+// @LINE:122
 def PychometricExample : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.PychometricExample",
    """
@@ -1021,7 +1131,7 @@ def showSignalRealTime2 : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:41
+// @LINE:43
 def showRadar : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.showRadar",
    """
@@ -1032,7 +1142,7 @@ def showRadar : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:98
+// @LINE:120
 def InfoExample : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.InfoExample",
    """
@@ -1043,7 +1153,7 @@ def InfoExample : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:49
+// @LINE:57
 def showSignalRealTime : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.showSignalRealTime",
    """
@@ -1054,7 +1164,7 @@ def showSignalRealTime : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:89
+// @LINE:111
 def Getdummy : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.Getdummy",
    """
@@ -1065,7 +1175,18 @@ def Getdummy : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:55
+// @LINE:53
+def addNewSubject : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.addNewSubject",
+   """
+      function(studyNo) {
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "addNewSubject" + _qS([(""" + implicitly[QueryStringBindable[Int]].javascriptUnbind + """)("studyNo", studyNo)])})
+      }
+   """
+)
+                        
+
+// @LINE:63
 def ProcessNewDataType : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.ProcessNewDataType",
    """
@@ -1076,7 +1197,18 @@ def ProcessNewDataType : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:59
+// @LINE:105
+def updateVidoefromServer : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.updateVidoefromServer",
+   """
+      function(studyNo) {
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "updateVideos" + _qS([(""" + implicitly[QueryStringBindable[Int]].javascriptUnbind + """)("studyNo", studyNo)])})
+      }
+   """
+)
+                        
+
+// @LINE:67
 def ProcessNewTopSummary : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.ProcessNewTopSummary",
    """
@@ -1087,12 +1219,23 @@ def ProcessNewTopSummary : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:63
+// @LINE:73
 def EditPsychometric : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.EditPsychometric",
    """
       function() {
       return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "editPsychometric"})
+      }
+   """
+)
+                        
+
+// @LINE:69
+def ProcessNewDescriptor : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.ProcessNewDescriptor",
+   """
+      function() {
+      return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "processNewDescriptor"})
       }
    """
 )
@@ -1109,7 +1252,7 @@ def zip : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:51
+// @LINE:59
 def InsertNewStudy : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.InsertNewStudy",
    """
@@ -1131,7 +1274,7 @@ def getPRF : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:135
+// @LINE:150
 def video : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.video",
    """
@@ -1142,12 +1285,23 @@ def video : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:122
-def submitRegistration : JavascriptReverseRoute = JavascriptReverseRoute(
-   "controllers.Application.submitRegistration",
+// @LINE:99
+def CreateStudyTest : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.CreateStudyTest",
    """
       function() {
-      return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "signup"})
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "quickCreating"})
+      }
+   """
+)
+                        
+
+// @LINE:93
+def showAddDescriptor : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.showAddDescriptor",
+   """
+      function(studyId) {
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "showAddDescriptor" + _qS([(""" + implicitly[QueryStringBindable[Int]].javascriptUnbind + """)("studyId", studyId)])})
       }
    """
 )
@@ -1164,7 +1318,7 @@ def ReceiveOauthData : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:96
+// @LINE:118
 def signalDataExample : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.signalDataExample",
    """
@@ -1175,7 +1329,7 @@ def signalDataExample : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:118
+// @LINE:144
 def ShowDriveDialog : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.ShowDriveDialog",
    """
@@ -1186,7 +1340,7 @@ def ShowDriveDialog : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:67
+// @LINE:79
 def logout : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.logout",
    """
@@ -1219,39 +1373,6 @@ def socket : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:109
-def test : JavascriptReverseRoute = JavascriptReverseRoute(
-   "controllers.Application.test",
-   """
-      function() {
-      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "test"})
-      }
-   """
-)
-                        
-
-// @LINE:130
-def editSubject : JavascriptReverseRoute = JavascriptReverseRoute(
-   "controllers.Application.editSubject",
-   """
-      function(studyNo,SubjectId) {
-      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "editSubject" + _qS([(""" + implicitly[QueryStringBindable[Int]].javascriptUnbind + """)("studyNo", studyNo), (""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("SubjectId", SubjectId)])})
-      }
-   """
-)
-                        
-
-// @LINE:120
-def Register : JavascriptReverseRoute = JavascriptReverseRoute(
-   "controllers.Application.Register",
-   """
-      function() {
-      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "signup"})
-      }
-   """
-)
-                        
-
 // @LINE:15
 def getPortraitInfo : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.getPortraitInfo",
@@ -1263,23 +1384,23 @@ def getPortraitInfo : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:126
-def insertSubject : JavascriptReverseRoute = JavascriptReverseRoute(
-   "controllers.Application.insertSubject",
-   """
-      function() {
-      return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "InsertSubject"})
-      }
-   """
-)
-                        
-
-// @LINE:124
+// @LINE:146
 def shareMyStudy : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.shareMyStudy",
    """
       function() {
       return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "InsertStudy"})
+      }
+   """
+)
+                        
+
+// @LINE:133
+def getVideo3 : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.getVideo3",
+   """
+      function(studyNo,subjectId,sessionName,fileName) {
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "videoC" + _qS([(""" + implicitly[QueryStringBindable[Int]].javascriptUnbind + """)("studyNo", studyNo), (""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("subjectId", subjectId), (""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("sessionName", sessionName), (""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("fileName", fileName)])})
       }
    """
 )
@@ -1296,7 +1417,7 @@ def showStudySkipTop : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:75
+// @LINE:87
 def showAddDataType : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.showAddDataType",
    """
@@ -1307,7 +1428,18 @@ def showAddDataType : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:71
+// @LINE:131
+def getVideo2 : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.getVideo2",
+   """
+      function(studyNo,subjectId,sessionName) {
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "videoD" + _qS([(""" + implicitly[QueryStringBindable[Int]].javascriptUnbind + """)("studyNo", studyNo), (""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("subjectId", subjectId), (""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("sessionName", sessionName)])})
+      }
+   """
+)
+                        
+
+// @LINE:83
 def setUpStudy : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.setUpStudy",
    """
@@ -1318,7 +1450,7 @@ def setUpStudy : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:45
+// @LINE:47
 def ShowCreateStudyForm : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.ShowCreateStudyForm",
    """
@@ -1351,7 +1483,7 @@ def file : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:53
+// @LINE:61
 def deleteStudy : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.deleteStudy",
    """
@@ -1362,7 +1494,7 @@ def deleteStudy : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:57
+// @LINE:65
 def ProcessNewPsychometric : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.ProcessNewPsychometric",
    """
@@ -1379,28 +1511,34 @@ def ProcessNewPsychometric : JavascriptReverseRoute = JavascriptReverseRoute(
         
 
 
-// @LINE:137
+// @LINE:150
+// @LINE:146
+// @LINE:144
+// @LINE:142
+// @LINE:140
 // @LINE:135
-// @LINE:132
-// @LINE:130
-// @LINE:128
+// @LINE:133
+// @LINE:131
+// @LINE:129
 // @LINE:126
 // @LINE:124
 // @LINE:122
 // @LINE:120
 // @LINE:118
-// @LINE:116
-// @LINE:114
-// @LINE:109
-// @LINE:107
-// @LINE:104
-// @LINE:102
-// @LINE:100
-// @LINE:98
-// @LINE:96
+// @LINE:115
+// @LINE:113
+// @LINE:111
+// @LINE:105
+// @LINE:103
+// @LINE:101
+// @LINE:99
+// @LINE:97
+// @LINE:95
 // @LINE:93
 // @LINE:91
 // @LINE:89
+// @LINE:87
+// @LINE:85
 // @LINE:83
 // @LINE:81
 // @LINE:79
@@ -1443,11 +1581,11 @@ def ProcessNewPsychometric : JavascriptReverseRoute = JavascriptReverseRoute(
 package controllers.ref {
 
 
-// @LINE:93
+// @LINE:115
 class ReverseAssets {
 
 
-// @LINE:93
+// @LINE:115
 def at(path:String, file:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Assets.at(path, file), HandlerDef(this.getClass.getClassLoader, "", "controllers.Assets", "at", Seq(classOf[String], classOf[String]), "GET", """""", _prefix + """assets/$file<.+>""")
 )
@@ -1456,27 +1594,33 @@ def at(path:String, file:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.
 }
                           
 
-// @LINE:137
+// @LINE:150
+// @LINE:146
+// @LINE:144
+// @LINE:142
+// @LINE:140
 // @LINE:135
-// @LINE:132
-// @LINE:130
-// @LINE:128
+// @LINE:133
+// @LINE:131
+// @LINE:129
 // @LINE:126
 // @LINE:124
 // @LINE:122
 // @LINE:120
 // @LINE:118
-// @LINE:116
-// @LINE:114
-// @LINE:109
-// @LINE:107
-// @LINE:104
-// @LINE:102
-// @LINE:100
-// @LINE:98
-// @LINE:96
+// @LINE:113
+// @LINE:111
+// @LINE:105
+// @LINE:103
+// @LINE:101
+// @LINE:99
+// @LINE:97
+// @LINE:95
+// @LINE:93
 // @LINE:91
 // @LINE:89
+// @LINE:87
+// @LINE:85
 // @LINE:83
 // @LINE:81
 // @LINE:79
@@ -1519,7 +1663,13 @@ def at(path:String, file:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.
 class ReverseApplication {
 
 
-// @LINE:79
+// @LINE:51
+def ShowInitiateStudy(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.ShowInitiateStudy(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "ShowInitiateStudy", Seq(), "GET", """""", _prefix + """InitiateStudy""")
+)
+                      
+
+// @LINE:91
 def showAddTopSummary(studyId:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.showAddTopSummary(studyId), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "showAddTopSummary", Seq(classOf[Int]), "GET", """""", _prefix + """showAddTopSummary""")
 )
@@ -1531,7 +1681,13 @@ def GetSignal(task:String, subject:String, studyId:Int, signal_type:Int, signal_
 )
                       
 
-// @LINE:104
+// @LINE:101
+def drp(studyNo:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.drp(studyNo), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "drp", Seq(classOf[Int]), "GET", """""", _prefix + """drp""")
+)
+                      
+
+// @LINE:126
 def videoExample(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.videoExample(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "videoExample", Seq(), "GET", """""", _prefix + """videoExample""")
 )
@@ -1543,25 +1699,31 @@ def getInfo(task:String, subject:String, studyId:Int, signal_seq:Int): play.api.
 )
                       
 
-// @LINE:65
+// @LINE:41
+def displaySubjectInProgress(studyNo:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.displaySubjectInProgress(studyNo), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "displaySubjectInProgress", Seq(classOf[Int]), "GET", """""", _prefix + """displaySubjectsInProgress""")
+)
+                      
+
+// @LINE:75
 def EditHideSubject(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.EditHideSubject(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "EditHideSubject", Seq(), "POST", """""", _prefix + """editHideSubject""")
 )
                       
 
-// @LINE:114
+// @LINE:140
 def authentication(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.authentication(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "authentication", Seq(), "GET", """""", _prefix + """login""")
 )
                       
 
-// @LINE:77
+// @LINE:89
 def showAddPsychometric(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.showAddPsychometric(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "showAddPsychometric", Seq(), "GET", """""", _prefix + """showAddPsychometric""")
 )
                       
 
-// @LINE:73
+// @LINE:85
 def howToCreateNewStudy(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.howToCreateNewStudy(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "howToCreateNewStudy", Seq(), "GET", """""", _prefix + """howToCreateNewStudy""")
 )
@@ -1573,19 +1735,25 @@ def displaySubject(studyNo:Int, SubjectId:String): play.api.mvc.HandlerRef[_] = 
 )
                       
 
-// @LINE:128
-def InsertSession(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
-   controllers.Application.InsertSession(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "InsertSession", Seq(), "POST", """""", _prefix + """InsertSession""")
+// @LINE:135
+def test(stydtNo:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.test(stydtNo), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "test", Seq(classOf[Int]), "GET", """""", _prefix + """test""")
 )
                       
 
-// @LINE:132
-def uploadFile(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
-   controllers.Application.uploadFile(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "uploadFile", Seq(), "POST", """""", _prefix + """upload""")
+// @LINE:49
+def InitiateNewStudy(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.InitiateNewStudy(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "InitiateNewStudy", Seq(), "POST", """""", _prefix + """InitiateStudy""")
 )
                       
 
-// @LINE:81
+// @LINE:77
+def AddMoreSubjects(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.AddMoreSubjects(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "AddMoreSubjects", Seq(), "POST", """""", _prefix + """addMoreSubjects""")
+)
+                      
+
+// @LINE:95
 def showAllDataTypes(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.showAllDataTypes(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "showAllDataTypes", Seq(), "GET", """""", _prefix + """showAllDataTypes""")
 )
@@ -1597,25 +1765,19 @@ def showStudy(studyNo:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.Handle
 )
                       
 
-// @LINE:102
+// @LINE:124
 def tabularExample(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.tabularExample(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "tabularExample", Seq(), "GET", """""", _prefix + """tabularExample""")
 )
                       
 
-// @LINE:137
-def editStudy(studyId:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
-   controllers.Application.editStudy(studyId), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "editStudy", Seq(classOf[Int]), "GET", """""", _prefix + """editStudy/$studyId<[^/]+>""")
-)
-                      
-
-// @LINE:83
+// @LINE:97
 def showAllSubjectToHide(studyId:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.showAllSubjectToHide(studyId), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "showAllSubjectToHide", Seq(classOf[Int]), "GET", """""", _prefix + """showAllSubjectsHide""")
 )
                       
 
-// @LINE:61
+// @LINE:71
 def EditDataType(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.EditDataType(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "EditDataType", Seq(), "POST", """""", _prefix + """editExistingDataType""")
 )
@@ -1627,7 +1789,13 @@ def getPsycho(task:String, subject:String, studyId:Int, signal_seq:Int): play.ap
 )
                       
 
-// @LINE:91
+// @LINE:103
+def startNewSubject(loc:String, subjectLocation:String, subjectid:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.startNewSubject(loc, subjectLocation, subjectid), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "startNewSubject", Seq(classOf[String], classOf[String], classOf[String]), "GET", """""", _prefix + """startNewSubject""")
+)
+                      
+
+// @LINE:113
 def showAllPsychometric(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.showAllPsychometric(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "showAllPsychometric", Seq(), "GET", """""", _prefix + """showAllPsychometric""")
 )
@@ -1639,25 +1807,25 @@ def Front(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
 )
                       
 
-// @LINE:43
+// @LINE:45
 def getRadar(studyNo:Int, SubjectId:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.getRadar(studyNo, SubjectId), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "getRadar", Seq(classOf[Int], classOf[String]), "GET", """""", _prefix + """getRadar""")
 )
                       
 
-// @LINE:107
+// @LINE:129
 def getVideo(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.getVideo(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "getVideo", Seq(), "GET", """ Map static resources from the /public folder to the /assets URL path""", _prefix + """videoB""")
 )
                       
 
-// @LINE:47
+// @LINE:55
 def RealTime(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.RealTime(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "RealTime", Seq(), "GET", """""", _prefix + """realTime""")
 )
                       
 
-// @LINE:100
+// @LINE:122
 def PychometricExample(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.PychometricExample(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "PychometricExample", Seq(), "GET", """""", _prefix + """PychometricExample""")
 )
@@ -1675,45 +1843,63 @@ def showSignalRealTime2(fileId:String): play.api.mvc.HandlerRef[_] = new play.ap
 )
                       
 
-// @LINE:41
+// @LINE:43
 def showRadar(studyNo:Int, SubjectId:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.showRadar(studyNo, SubjectId), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "showRadar", Seq(classOf[Int], classOf[String]), "GET", """""", _prefix + """showRadar""")
 )
                       
 
-// @LINE:98
+// @LINE:120
 def InfoExample(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.InfoExample(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "InfoExample", Seq(), "GET", """""", _prefix + """InfoExample""")
 )
                       
 
-// @LINE:49
+// @LINE:57
 def showSignalRealTime(fileId:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.showSignalRealTime(fileId), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "showSignalRealTime", Seq(classOf[String]), "GET", """""", _prefix + """showSignalRealTime""")
 )
                       
 
-// @LINE:89
+// @LINE:111
 def Getdummy(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.Getdummy(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "Getdummy", Seq(), "GET", """""", _prefix + """getDummy""")
 )
                       
 
-// @LINE:55
+// @LINE:53
+def addNewSubject(studyNo:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.addNewSubject(studyNo), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "addNewSubject", Seq(classOf[Int]), "GET", """""", _prefix + """addNewSubject""")
+)
+                      
+
+// @LINE:63
 def ProcessNewDataType(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.ProcessNewDataType(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "ProcessNewDataType", Seq(), "POST", """""", _prefix + """processNewDataType""")
 )
                       
 
-// @LINE:59
+// @LINE:105
+def updateVidoefromServer(studyNo:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.updateVidoefromServer(studyNo), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "updateVidoefromServer", Seq(classOf[Int]), "GET", """""", _prefix + """updateVideos""")
+)
+                      
+
+// @LINE:67
 def ProcessNewTopSummary(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.ProcessNewTopSummary(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "ProcessNewTopSummary", Seq(), "POST", """""", _prefix + """ProcessNewTopSummary""")
 )
                       
 
-// @LINE:63
+// @LINE:73
 def EditPsychometric(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.EditPsychometric(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "EditPsychometric", Seq(), "POST", """""", _prefix + """editPsychometric""")
+)
+                      
+
+// @LINE:69
+def ProcessNewDescriptor(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.ProcessNewDescriptor(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "ProcessNewDescriptor", Seq(), "POST", """""", _prefix + """processNewDescriptor""")
 )
                       
 
@@ -1723,7 +1909,7 @@ def zip(studyId:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
 )
                       
 
-// @LINE:51
+// @LINE:59
 def InsertNewStudy(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.InsertNewStudy(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "InsertNewStudy", Seq(), "POST", """""", _prefix + """createStudy""")
 )
@@ -1735,15 +1921,21 @@ def getPRF(task:String, subject:String, studyId:Int, signal_type:Int): play.api.
 )
                       
 
-// @LINE:135
+// @LINE:150
 def video(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.video(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "video", Seq(), "GET", """to be deleted""", _prefix + """video""")
 )
                       
 
-// @LINE:122
-def submitRegistration(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
-   controllers.Application.submitRegistration(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "submitRegistration", Seq(), "POST", """""", _prefix + """signup""")
+// @LINE:99
+def CreateStudyTest(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.CreateStudyTest(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "CreateStudyTest", Seq(), "GET", """""", _prefix + """quickCreating""")
+)
+                      
+
+// @LINE:93
+def showAddDescriptor(studyId:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.showAddDescriptor(studyId), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "showAddDescriptor", Seq(classOf[Int]), "GET", """""", _prefix + """showAddDescriptor""")
 )
                       
 
@@ -1753,19 +1945,19 @@ def ReceiveOauthData(state:String, code:String): play.api.mvc.HandlerRef[_] = ne
 )
                       
 
-// @LINE:96
+// @LINE:118
 def signalDataExample(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.signalDataExample(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "signalDataExample", Seq(), "GET", """""", _prefix + """signalDataExample""")
 )
                       
 
-// @LINE:118
+// @LINE:144
 def ShowDriveDialog(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.ShowDriveDialog(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "ShowDriveDialog", Seq(), "GET", """""", _prefix + """ShowDriveDialog""")
 )
                       
 
-// @LINE:67
+// @LINE:79
 def logout(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.logout(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "logout", Seq(), "POST", """""", _prefix + """logout""")
 )
@@ -1786,39 +1978,21 @@ Web Socket management""", _prefix + """ws""")
 )
                       
 
-// @LINE:109
-def test(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
-   controllers.Application.test(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "test", Seq(), "GET", """""", _prefix + """test""")
-)
-                      
-
-// @LINE:130
-def editSubject(studyNo:Int, SubjectId:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
-   controllers.Application.editSubject(studyNo, SubjectId), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "editSubject", Seq(classOf[Int], classOf[String]), "GET", """""", _prefix + """editSubject""")
-)
-                      
-
-// @LINE:120
-def Register(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
-   controllers.Application.Register(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "Register", Seq(), "GET", """""", _prefix + """signup""")
-)
-                      
-
 // @LINE:15
 def getPortraitInfo(studyId:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.getPortraitInfo(studyId), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "getPortraitInfo", Seq(classOf[Int]), "GET", """""", _prefix + """portrait""")
 )
                       
 
-// @LINE:126
-def insertSubject(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
-   controllers.Application.insertSubject(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "insertSubject", Seq(), "POST", """""", _prefix + """InsertSubject""")
+// @LINE:146
+def shareMyStudy(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.shareMyStudy(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "shareMyStudy", Seq(), "POST", """""", _prefix + """InsertStudy""")
 )
                       
 
-// @LINE:124
-def shareMyStudy(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
-   controllers.Application.shareMyStudy(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "shareMyStudy", Seq(), "POST", """""", _prefix + """InsertStudy""")
+// @LINE:133
+def getVideo3(studyNo:Int, subjectId:String, sessionName:String, fileName:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.getVideo3(studyNo, subjectId, sessionName, fileName), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "getVideo3", Seq(classOf[Int], classOf[String], classOf[String], classOf[String]), "GET", """""", _prefix + """videoC""")
 )
                       
 
@@ -1828,19 +2002,25 @@ def showStudySkipTop(studyNo:Int): play.api.mvc.HandlerRef[_] = new play.api.mvc
 )
                       
 
-// @LINE:75
+// @LINE:87
 def showAddDataType(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.showAddDataType(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "showAddDataType", Seq(), "GET", """""", _prefix + """showAddDataType""")
 )
                       
 
-// @LINE:71
+// @LINE:131
+def getVideo2(studyNo:Int, subjectId:String, sessionName:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.getVideo2(studyNo, subjectId, sessionName), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "getVideo2", Seq(classOf[Int], classOf[String], classOf[String]), "GET", """""", _prefix + """videoD""")
+)
+                      
+
+// @LINE:83
 def setUpStudy(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.setUpStudy(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "setUpStudy", Seq(), "GET", """""", _prefix + """setUpStudy""")
 )
                       
 
-// @LINE:45
+// @LINE:47
 def ShowCreateStudyForm(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.ShowCreateStudyForm(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "ShowCreateStudyForm", Seq(), "GET", """""", _prefix + """createStudy""")
 )
@@ -1858,13 +2038,13 @@ def file(task:String, subject:String, studyId:Int, signal_type:Int, signal_seque
 )
                       
 
-// @LINE:53
+// @LINE:61
 def deleteStudy(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.deleteStudy(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "deleteStudy", Seq(), "POST", """""", _prefix + """deleteStudy""")
 )
                       
 
-// @LINE:57
+// @LINE:65
 def ProcessNewPsychometric(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.ProcessNewPsychometric(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "ProcessNewPsychometric", Seq(), "POST", """""", _prefix + """processNewPsychometric""")
 )

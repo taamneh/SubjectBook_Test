@@ -5,6 +5,7 @@
  */
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import org.apache.poi.ss.formula.functions.Now;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import Models.*;
@@ -68,27 +69,21 @@ import java.net.*;
 
 public class GoogleDrive {
 
-    //private static final String CLIENTSECRETS_LOCATION = "C:\\Users\\Salah\\Desktop\\Cpl\\SubjectBook\\first_play\\app\\client_secrets.json";
-    //private static final String CLIENTSECRETS_LOCATION = "C:\\Users\\staamneh\\Desktop\\CPL-Lab\\System Desgin\\first_play\\app\\client_secrets.json";
-    private static final String CLIENTSECRETS_LOCATION = "C:\\first_play\\app\\client_secrets.json";
+
+    private static final String CLIENTSECRETS_LOCATION = ProductionSide.CLIENTSECRETS_LOCATION();
 
 
     //private static final String REDIRECT_URI = "http://subjectbook.times.uh.edu/display";
-    private static final String REDIRECT_URI = "http://testsubjectbook.ddns.net/display";
-    private static final List<String> SCOPES = Arrays.asList(
-            //"https://www.googleapis.com/auth/drive.file",
-            "https://spreadsheets.google.com/feeds",
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/userinfo.email",
-            "https://www.googleapis.com/auth/userinfo.profile");
+    private static final String REDIRECT_URI =  ProductionSide.REDIRECT_URI();
+    private static final List<String> SCOPES =  ProductionSide.SCOPES();
 
     private static GoogleAuthorizationCodeFlow flow = null;
     private final static int numberOfretry = 7;
     public static long lastRequestTime = System.nanoTime();
 
 
-    private final static String CLIENT_ID = "214102067690-01cnaes4gde0ufm03k1a4lpr8t7405eb.apps.googleusercontent.com";
-    private final static String CLIENT_SECRET = "HU34i6LHCV736uDzXUVW8gXs";
+    private final static String CLIENT_ID = ProductionSide.CLIENT_ID();
+    private final static String CLIENT_SECRET = ProductionSide.CLIENT_SECRET();
 
 
     public static String authorizationUrl;
@@ -362,7 +357,7 @@ public class GoogleDrive {
 
 
 
-    static InputStream downloadFileByFileId(Drive service, String fileId) {
+    static InputStream downloadFileByFileId(Drive service, String fileId)  {
 
         Random randomGenerator = new Random();
         boolean x = false;
@@ -375,6 +370,7 @@ public class GoogleDrive {
                 File file = null;
                 // exponential backoff
                 file = service.files().get(fileId).execute();
+                System.out.println("Title::::: " + file.getFileExtension());
                 HttpResponse resp =
                         service.getRequestFactory().buildGetRequest(new GenericUrl(file.getDownloadUrl()))
                                 .execute();
@@ -396,7 +392,16 @@ public class GoogleDrive {
                     }
 
                 }
-            } catch (IOException e) {
+            }
+            catch (MalformedURLException e){
+                System.out.println("MalformedURLException in downloadFileByFileId");
+            }
+            catch (IllegalArgumentException e){
+                System.out.println("IllegalArgumentException in downloadFileByFileId");
+                return null;
+
+            }
+            catch (IOException e) {
                 // An error occurred.
                 Logger.debug("The owner of this has deleted it from his Drive Or something else" + e);
                 x = true;
@@ -473,8 +478,10 @@ public class GoogleDrive {
         } while (request.getPageToken() != null &&
                 request.getPageToken().length() > 0);
 
-        for(File file: result)
-            mp.put( file.getId(), file);
+        for(File file: result) {
+            if(!file.getLabels().getTrashed())
+                mp.put(file.getId(), file);
+        }
         // System.out.println("id: "+ file.getId() + " title: " + file.getTitle());
 
         return mp;
@@ -668,95 +675,281 @@ public class GoogleDrive {
         SpreadsheetService service2 =  new SpreadsheetService("MySpreadsheetIntegration-v1");
 
     }
-    public  static JSONObject UpdatingRealTime( String user, String id)  throws AuthenticationException, MalformedURLException, IOException, ServiceException, URISyntaxException {
 
-        SpreadsheetService service2 = new SpreadsheetService("MySpreadsheetIntegration-v1");
-        //GoogleCredential credential = getCredentials("", "");
-        GoogleCredential googleCredential = getStoredCredentials(user);
-        service2.setOAuth2Credentials(googleCredential);
+    public  static JSONObject nasa( String user, String id) {
+
+            try {
+                SpreadsheetService service =
+                        new SpreadsheetService("MySpreadsheetIntegration-v1");
+
+                // TODO: Authorize the service object for a specific user (see other sections)
 
 
-        // TODO: Authorize the service object for a specific user (see other sections)
+                GoogleCredential googleCredential = getStoredCredentials(user);
+                service.setOAuth2Credentials(googleCredential);
 
-        // Define the URL to request.  This should never change.
-        URL SPREADSHEET_FEED_URL = new URL(
-                "https://spreadsheets.google.com/feeds/spreadsheets/private/full");
+                // Define the URL to request.  This should never change.
+                URL SPREADSHEET_FEED_URL = new URL(
+                        "https://spreadsheets.google.com/feeds/spreadsheets/private/full");
 
-        // Make a request to the API and get all spreadsheets.
-        SpreadsheetFeed feed = service2.getFeed(SPREADSHEET_FEED_URL, SpreadsheetFeed.class);
-        List<SpreadsheetEntry> spreadsheets = feed.getEntries();
+                // Make a request to the API and get all spreadsheets.
+                SpreadsheetFeed feed = service.getFeed(SPREADSHEET_FEED_URL,
+                        SpreadsheetFeed.class);
+                List<SpreadsheetEntry> spreadsheets = feed.getEntries();
 
-        int loc = 0;
-        SpreadsheetEntry mySheet = spreadsheets.get(0);
-        // Iterate through all of the spreadsheets returned
-        for (SpreadsheetEntry spreadsheet : spreadsheets) {
-            // Print the title of this spreadsheet to the screen
-            System.out.println(spreadsheet.getTitle().getPlainText());
-            System.out.println(spreadsheet.getId().substring(spreadsheet.getId().lastIndexOf("/")+1));
+                int loc = 0;
+                SpreadsheetEntry mySheet = spreadsheets.get(0);
+                // Iterate through all of the spreadsheets returned
+                for (SpreadsheetEntry spreadsheet : spreadsheets) {
+                    // Print the title of this spreadsheet to the screen
+                    System.out.println(spreadsheet.getTitle().getPlainText());
+                    System.out.println(spreadsheet.getId().substring(spreadsheet.getId().lastIndexOf("/") + 1));
 
-            if(spreadsheet.getId().substring(spreadsheet.getId().lastIndexOf("/")+1).equals(id)){
-                mySheet = spreadsheet;
-                System.out.println( "yes we have and it is : "  + spreadsheet.getId()  );
+                    if (spreadsheet.getId().substring(spreadsheet.getId().lastIndexOf("/") + 1).equals(id)) {
+                        mySheet = spreadsheet;
+                        System.out.println("yes we have and it is : " + spreadsheet.getId());
+                        break;
+                    }
+
+                }
+                // TODO: Choose a spreadsheet more intelligently based on your
+                // app's needs.
+                SpreadsheetEntry spreadsheet = mySheet;
+                System.out.println(spreadsheet.getTitle().getPlainText());
+
+                // Get the first worksheet of the first spreadsheet.
+                // TODO: Choose a worksheet more intelligently based on your
+                // app's needs.
+                WorksheetFeed worksheetFeed = service.getFeed(
+                        spreadsheet.getWorksheetFeedUrl(), WorksheetFeed.class);
+                List<WorksheetEntry> worksheets = worksheetFeed.getEntries();
+                WorksheetEntry worksheet = worksheets.get(0);
+
+                // Fetch the cell feed of the worksheet.
+                URL cellFeedUrl = worksheet.getCellFeedUrl();
+                CellFeed cellFeed = service.getFeed(cellFeedUrl, CellFeed.class);
+
+
+                JSONObject all = new JSONObject();
+                JSONArray header = new JSONArray();
+
+
+                JSONArray content = new JSONArray();
+
+                JSONArray arrTemp= new JSONArray();
+
+
+                String lstRow = "";
+                // Iterate through each cell, printing its value.
+                for (CellEntry cell : cellFeed.getEntries()) {
+
+
+                    System.out.println(lstRow);
+
+                    if((cell.getId().substring(cell.getId().lastIndexOf('/') + 1).toLowerCase().contains("r9"))){  // all these are header
+                        if(cell.getTitle().getPlainText().toLowerCase().contains("a9")){  // this one has string type
+
+                            JSONObject obj = new JSONObject();
+                            obj.put("id","");
+                            obj.put("label",cell.getCell().getInputValue());
+                            obj.put("type", "string");
+                            header.add(obj);
+                        }
+                        else
+                        {
+
+                            JSONObject obj = new JSONObject();
+                            obj.put("id","");
+                            obj.put("label",cell.getCell().getInputValue());
+                            obj.put("type", "number");
+                            header.add(obj);
+
+                        }
+
+                    }
+                    else
+                    {
+                        if(lstRow.equals("") ){ // if this is the first line
+
+                            System.out.println("Empty");
+
+                            JSONObject firstVal = new JSONObject();
+                            firstVal.put("v",cell.getCell().getInputValue());
+                            arrTemp.add(firstVal);
+                        }
+                        else {
+                            System.out.println(cell.getTitle().getPlainText().substring(1));
+                            if(cell.getTitle().getPlainText().substring(1).equals(lstRow)) // the same line
+                            {
+                                JSONObject firstVal = new JSONObject();
+                                firstVal.put("v",cell.getCell().getInputValue());
+                                arrTemp.add(firstVal);
+                            }
+                            else{ // different line
+                                JSONObject obj = new JSONObject();
+                                obj.put("c", arrTemp);
+                                content.add(obj);
+                                arrTemp = new JSONArray();
+                                JSONObject firstVal = new JSONObject();
+                                firstVal.put("v", cell.getCell().getInputValue()); // this will be the time
+                                arrTemp.add(firstVal);
+                            }
+                        }
+
+                        lstRow = cell.getTitle().getPlainText().substring(1);
+                    }
+              /*      // Print the cell's address in A1 notation
+                    System.out.print(cell.getTitle().getPlainText() + "\t");
+                    // Print the cell's address in R1C1 notation
+                    System.out.print(cell.getId().substring(cell.getId().lastIndexOf('/') + 1) + "\t");
+                    // Print the cell's formula or text value
+                    System.out.print(cell.getCell().getInputValue() + "\t");
+                    // Print the cell's calculated value if the cell's value is numeric
+                    // Prints empty string if cell's value is not numeric
+                    System.out.print(cell.getCell().getNumericValue() + "\t");
+                    // Print the cell's displayed value (useful if the cell has a formula)
+                    System.out.println(cell.getCell().getValue() + "\t");
+            */
+                   // return null;
+                }
+
+                JSONObject obj = new JSONObject();
+                obj.put("c", arrTemp);
+                content.add(obj);
+
+
+                all.put("cols", header);
+                all.put("rows", content);
+
+                return all;
             }
+
+            catch(ServiceException e){
+                System.out.println(" ServiceException in UpdateRealTime");
+                return null;
+
+            }
+            catch(IOException e){
+                System.out.println(" IO Exception in UpdateRealTime");
+                return null;
+
+            }
+
+        //return null;
+    }
+
+
+        public  static JSONObject UpdatingRealTime( String user, String id)  {
+
+
+        try {
+
+
+            SpreadsheetService service2 = new SpreadsheetService("MySpreadsheetIntegration-v1");
+            //GoogleCredential credential = getCredentials("", "");
+            GoogleCredential googleCredential = getStoredCredentials(user);
+            service2.setOAuth2Credentials(googleCredential);
+
+
+            // TODO: Authorize the service object for a specific user (see other sections)
+
+            // Define the URL to request.  This should never change.
+            URL SPREADSHEET_FEED_URL = new URL(
+                    "https://spreadsheets.google.com/feeds/spreadsheets/private/full");
+
+            // Make a request to the API and get all spreadsheets.
+            SpreadsheetFeed feed = service2.getFeed(SPREADSHEET_FEED_URL, SpreadsheetFeed.class);
+            List<SpreadsheetEntry> spreadsheets = feed.getEntries();
+
+            int loc = 0;
+            SpreadsheetEntry mySheet = spreadsheets.get(0);
+            // Iterate through all of the spreadsheets returned
+            for (SpreadsheetEntry spreadsheet : spreadsheets) {
+                // Print the title of this spreadsheet to the screen
+                System.out.println(spreadsheet.getTitle().getPlainText());
+                System.out.println(spreadsheet.getId().substring(spreadsheet.getId().lastIndexOf("/") + 1));
+
+                if (spreadsheet.getId().substring(spreadsheet.getId().lastIndexOf("/") + 1).equals(id)) {
+                    mySheet = spreadsheet;
+                    System.out.println("yes we have and it is : " + spreadsheet.getId());
+                    break;
+                }
+
+            }
+
+
+            JSONObject all = new JSONObject();
+            JSONArray header = new JSONArray();
+
+            JSONObject obj = new JSONObject();
+            obj.put("id", "");
+            obj.put("label", "Time");
+            obj.put("type", "number");
+            header.add(obj);
+            obj = new JSONObject();
+            obj.put("id", "");
+            obj.put("label", "Signal");
+            obj.put("type", "number");
+            header.add(obj);
+
+            JSONArray content = new JSONArray();
+
+
+            // System.out.println(mySheet.getTitle().getPlainText());
+            WorksheetFeed worksheetFeed = service2.getFeed(
+                    mySheet.getWorksheetFeedUrl(), WorksheetFeed.class);
+            List<WorksheetEntry> worksheets = worksheetFeed.getEntries();
+            WorksheetEntry worksheet = worksheets.get(0);
+
+            //URL listFeedUrl = worksheet.getListFeedUrl();
+            URL listFeedUrl = new URI(worksheet.getListFeedUrl().toString() + "?orderby=column:time").toURL();
+
+
+            System.out.println(listFeedUrl);
+
+
+            ListFeed listFeed = service2.getFeed(listFeedUrl, ListFeed.class);
+
+            for (ListEntry row : listFeed.getEntries()) {
+                obj = new JSONObject();
+                // Print the first column's cell value
+                //System.out.print(row.getTitle().getPlainText() + "\t");
+                // Iterate over the remaining columns, and print each cell value
+
+                JSONArray arrTemp = new JSONArray();
+                for (String tag : row.getCustomElements().getTags()) {
+                    JSONObject firstVal = new JSONObject();
+                    firstVal.put("v", row.getCustomElements().getValue(tag));
+                    // System.out.print(row.getCustomElements().getValue(tag) + "\t");
+                    arrTemp.add(firstVal);
+                }
+                obj.put("c", arrTemp);
+                content.add(obj);
+                // System.out.println();
+            }
+
+            all.put("cols", header);
+            all.put("rows", content);
+
+            //System.out.println(all);
+            return all;
+        }
+        catch(URISyntaxException e){
+            System.out.println(" URISyntaxException in UpdateRealTime");
+            return null;
+
+        }
+        catch(ServiceException e){
+            System.out.println(" ServiceException in UpdateRealTime");
+            return null;
+
+        }
+        catch(IOException e){
+         System.out.println(" IO Exception in UpdateRealTime");
+            return null;
 
         }
 
-
-        JSONObject all = new JSONObject();
-        JSONArray header = new JSONArray();
-
-        JSONObject obj = new JSONObject();
-        obj.put("id","");
-        obj.put("label","Time");
-        obj.put("type", "number");
-        header.add(obj);
-        obj = new JSONObject();
-        obj.put("id","");
-        obj.put("label","Signal");
-        obj.put("type", "number");
-        header.add(obj);
-
-        JSONArray content = new JSONArray();
-
-
-       // System.out.println(mySheet.getTitle().getPlainText());
-        WorksheetFeed worksheetFeed = service2.getFeed(
-                mySheet.getWorksheetFeedUrl(), WorksheetFeed.class);
-        List<WorksheetEntry> worksheets = worksheetFeed.getEntries();
-        WorksheetEntry worksheet = worksheets.get(0);
-
-        //URL listFeedUrl = worksheet.getListFeedUrl();
-        URL listFeedUrl = new URI(worksheet.getListFeedUrl().toString() + "?orderby=column:time").toURL();
-
-
-        System.out.println(listFeedUrl);
-
-
-        ListFeed listFeed = service2.getFeed(listFeedUrl, ListFeed.class);
-
-        for (ListEntry row : listFeed.getEntries()) {
-             obj = new JSONObject();
-            // Print the first column's cell value
-            //System.out.print(row.getTitle().getPlainText() + "\t");
-            // Iterate over the remaining columns, and print each cell value
-
-            JSONArray arrTemp= new JSONArray();
-            for (String tag : row.getCustomElements().getTags()) {
-                JSONObject firstVal = new JSONObject();
-                firstVal.put("v", row.getCustomElements().getValue(tag));
-               // System.out.print(row.getCustomElements().getValue(tag) + "\t");
-                arrTemp.add(firstVal);
-            }
-            obj.put("c", arrTemp);
-            content.add(obj);
-           // System.out.println();
-        }
-
-        all.put("cols" , header);
-        all.put("rows" , content);
-
-        //System.out.println(all);
-        return all;
     }
 
     /**
@@ -1054,7 +1247,7 @@ public class GoogleDrive {
         } catch (NoUserIdException e) {
             e.printStackTrace();
         }
-
+        //TODO sometime google for some weired reason return back forbbien request make sure to handle this situation
         return  userInfo.getEmail();
     }
 
@@ -1062,7 +1255,7 @@ public class GoogleDrive {
     public static String generateFileNameFromInputStream (InputStream input){
         Path destination = null;
         UUID id = UUID.randomUUID();
-        String fileName = "C:\\temp\\" + id +  ".xlsx";
+        String fileName = ProductionSide.tempDownloading() + id +  ".xlsx";
 
 
         try {
@@ -1084,11 +1277,75 @@ public class GoogleDrive {
 
 
 
+    public static List<Change> retrieveAllChanges(Drive service,
+                                                   Long startChangeId) throws IOException {
+        List<Change> result = new ArrayList<Change>();
+        Drive.Changes.List request = service.changes().list();
+        //request.setStartChangeId();
 
+
+        if (startChangeId != null) {
+            request.setStartChangeId(startChangeId);
+        }
+        do {
+            System.out.println("SSSSSSSSSSSSS");
+            try {
+                ChangeList changes = request.execute();
+
+                result.addAll(changes.getItems());
+                System.out.println(result);
+                request.setPageToken(changes.getNextPageToken());
+            } catch (IOException e) {
+                System.out.println("An error occurred: " + e);
+                request.setPageToken(null);
+            }
+        } while (request.getPageToken() != null &&
+                request.getPageToken().length() > 0);
+
+        System.out.println("I am outttttttttt");
+        for (Change change : result) {
+
+            //System.out.println("Change found for file: " + change.getId() +  "    " + change.getFileId() +  "-----"  + change.getKind()  +  "---" + change.getSelfLink());
+
+            if(!change.getKind().contains("change"))
+            // Process change
+            //change.getId();
+            System.out.println("Change found for file: " + change.getId() +  "    " + change.getFileId() +  "-----"  + change.getKind()  +  "---" + change.getSelfLink());
+        }
+
+        return result;
+    }
+
+
+    public static void downloadVideo( String username,String url, String whereToSave)
+    {
+
+        GoogleCredential googleCredential = getStoredCredentials(username);
+        Drive service = buildService(googleCredential);
+        InputStream input =  downloadFileByFileId(service, url);
+
+
+        Path destination = null;
+
+        try {
+            destination = Paths.get(whereToSave);
+            Files.copy(input, destination);
+            input.close();
+            //return fileName;
+        }
+        catch (java.lang.IllegalArgumentException e)
+        {
+            Logger.error("In generateFileNameFromInputStream " + e);
+        }
+        catch (Exception e)
+        {
+            Logger.error("In generateFileNameFromInputStream " + e);
+        }
+    }
 
 
     //SourceType 1: from server, 2: from Google drive
-    public static org.json.simple.JSONObject DownloadSignal(String username, String url, int sourceType, int signalType, int frameRate,int first_row, int first_col, String activityFile, String baseLineFile, String descLoc)  throws  Exception
+    public static org.json.simple.JSONObject DownloadSignal(String username, String url, int sourceType, int signalType, int frameRate,int first_row, int first_col, String activityFile, String baseLineFile, String baselineSessionName, TreeMap<String, String> desc, int islog, double miny)  throws  Exception
     {
 
         ReadExcelJava tt = new ReadExcelJava();
@@ -1116,6 +1373,7 @@ public class GoogleDrive {
         }
         else {
 
+
             Logger.debug("Download the signal from Google Drive, Signal Type is: " + signalType);
             GoogleCredential googleCredential = getStoredCredentials(username);
             Drive service = buildService(googleCredential);
@@ -1132,23 +1390,36 @@ public class GoogleDrive {
                 // if the request file is required to be visulaized in column chart
                 if (signalType == 4) { //TODO: use constant name
                     //x = ReadExcelJava.fromExcelInputToChar(signalType, fileName);
-                    if(descLoc != null)
-                        x = tt.fromExcelInputToCharTemp(signalType, fileName, CreatePortraitAbstraction.getStudyDescriptorJava(service, descLoc));
-                    else
-                        x = tt.fromExcelInputToCharTemp(signalType, fileName, null);
+                    x = tt.fromExcelInputToCharTemp(signalType, fileName, desc);
 
                 } else {
                     if (activityFile != null) {
                         Logger.info("Try to read from excel file with activity");
+
+
                         // x = ReadExcelJava.fromExcelInput(signalType, ReadExcelJava.readActivity(downloadFileByFileId(service, activityFile)), fileName);
                         if(baseLineFile != null) {
                             InputStream input2 = downloadFileByFileId(service, baseLineFile);
                             String fileName2 = generateFileNameFromInputStream(input2);
+
+
+                            TreeMap<Double, Double> signal = null;
+                            if(fileName2 != null){  // of tje baseline signal is avaialbe. in the case of realtime system the signal might not be avialble
+                                System.out.println("what the fuck is going on here guys ");
+                                signal = ReadExcelJava.getAllSignalFromExcelAbstraction(fileName2, 1);
+                            }
+
                             //TODO replace 1 with something else that is specific for each signal(i.e, paransal should have 2)
-                            x = ReadExcelJava.fromExcelInputTemp(frameRate, ReadExcelJava.getAllSignalFromExcelAbstraction(fileName2, 1), ReadExcelJava.readActivity(downloadFileByFileId(service, activityFile)), fileName, first_row, first_col);
+
+                            x = ReadExcelJava.fromExcelInputTemp(frameRate,signal , baselineSessionName, ReadExcelJava.readActivity(downloadFileByFileId(service, activityFile)), fileName, first_row, first_col, islog, miny);
+                            if(fileName2 != null)
+                                input2.close();
                         }
-                        else
-                            x = ReadExcelJava.fromExcelInputTemp(frameRate,null, ReadExcelJava.readActivity(downloadFileByFileId(service, activityFile)), fileName, first_row, first_col);
+                        else{
+                            System.out.println( "%%%%%%%%%%% "  + ReadExcelJava.readActivity(downloadFileByFileId(service, activityFile)).size());
+                            x = ReadExcelJava.fromExcelInputTemp(frameRate,null, baselineSessionName, ReadExcelJava.readActivity(downloadFileByFileId(service, activityFile)), fileName, first_row, first_col, islog, miny);
+                        }
+
                     } else {
                         Logger.info("Try to read from excel file without activity");
                         //x = ReadExcelJava.fromExcelInput(signalType, fileName);
@@ -1157,6 +1428,9 @@ public class GoogleDrive {
 
                     input.close();
                 }
+            }
+            else if(signalType == 4){
+                x = nasa(username, url);
             }
 
             return  x;

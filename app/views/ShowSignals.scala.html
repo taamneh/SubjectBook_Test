@@ -1,8 +1,71 @@
-@(SubjectId: String, sub_sess:Map[String, (String, List[(String, Int, Int, Option[String], Option[java.math.BigDecimal], Option[java.math.BigDecimal], Int)])], studyNo:Int, userName: String, videos:  Map[String, List[(String, String)]], study_type: Int, sub_sess_menu: List[String], generalList: List[(Int, Int, Int)], studyName: String)
+@(SubjectId: String, sub_sess:Map[String, (String, List[(String, Int, Int, Option[String], Option[java.math.BigDecimal], Option[java.math.BigDecimal], Int)])], studyNo:Int, userName: String, videos:  Map[String, List[(String, String, String)]], study_type: Int, sub_sess_menu: List[(String, Long, String)], generalList: List[(Int, Int, Int)], studyName: String, audio:  Map[String, List[(String, String, String)]], inProgressSubjects: List[String], isThere : Int)
 <!DOCTYPE html>
 <html>
 <head>
     <style type="text/css">
+
+
+
+    /* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 10px;
+    background-color: DodgerBlue ;
+    color: white;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
 
         .markerStyle
         {
@@ -20,6 +83,21 @@
         }
 
 
+
+
+       .blink {
+    animation-duration: 1s;
+    animation-name: blink;
+    animation-iteration-count: infinite;
+    animation-timing-function: steps(2, start);
+}
+@@keyframes blink {
+    80% {
+        visibility: hidden;
+    }
+}
+
+
     </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,8 +105,8 @@
     <link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
     <link href="/assets/stylesheets/styles.css" rel="stylesheet">
 
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <!-- <script src="http://code.jquery.com/jquery-1.10.2.js"></script> -->
+    <!--<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script> -->
 
     <!--[if lt IE 9]>
     <script src="/assets/javascripts/html5shiv.js"></script>
@@ -140,15 +218,40 @@
         <li><a href="/showAllPsychometric"><span class="glyphicon glyphicon-cog"></span> Manage your Psychometric data</a></li>
         <li class="parent ">
             <a href="#">
+                <span class="glyphicon glyphicon-list"></span> In Progress Subjects <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="glyphicon glyphicon-s glyphicon-plus"></em></span>
+            </a>
+            <ul class="children collapse1">
+                @for(sub <- inProgressSubjects){
+                <li>
+                    <a class="" href="/displaySubject?studyNo=@studyNo&SubjectId=@sub">
+                       <div  class="blink"> <span class="glyphicon glyphicon-user" style="color:red"></span> <b style="color:red" class="blink"> @sub  </b> </div>
+                    </a>
+                </li>
+                }
+            </ul>
+            <a href="#">
                 <span class="glyphicon glyphicon-list"></span> Subjects <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="glyphicon glyphicon-s glyphicon-plus"></em></span>
             </a>
-            <ul class="children collapse" id="sub-item-1">
-                @for(subject <- sub_sess_menu){
 
+            <ul class="children collapse" id="sub-item-1">
+                @for((subject, count, grp) <- sub_sess_menu){
                 <li>
 
                     <a class="" href="/displaySubject?studyNo=@studyNo&SubjectId=@subject">
-                        <span class="glyphicon glyphicon-user"></span> @subject
+                        @if(count > 0) {
+                                    @if(grp == "SIT") {
+                                        <span class="glyphicon glyphicon-user" style="color:red"></span> <b style="color:red"> @subject  [@grp] </b>
+                                    } else { @if(grp == "Control") {
+                                         <span class="glyphicon glyphicon-user" style="color:green" ></span> <b style="color:green"> @subject [@grp]  </b>
+                                          }  else {
+                                                <span class="glyphicon glyphicon-user" ></span> <b> @subject   </b>
+                                                }
+
+                                    }
+                        } else {
+                        <span class="glyphicon glyphicon-user" style="color:grey"></span> <b style="color:grey"> @subject </b>
+                        }
+
                     </a>
                 </li>
 
@@ -191,7 +294,7 @@
 
         @for(temp <- generalList){
 
-        <div class="col-md-4" id="generalData@temp._1@temp._2"  subject="@SubjectId" session="sss" signalSequence="@temp._1" signalCode="@temp._2" dataType="@temp._3" style="display: none;">
+        <div class="col-md-4" id="generalData@temp._1@temp._2"  subject="@SubjectId" session="sss" signalSequence="@temp._1" signalCode="@temp._2" dataType="@temp._3" studyId=@studyNo style="display: none;">
 
         </div>
 
@@ -200,6 +303,64 @@
 
 
     </div><!--/.row-->
+
+
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">×</span>
+                <h2>Help</h2>
+            </div>
+            <div class="modal-body">
+                <!--<p>Some text in the Modal Body</p>
+                <p>Some other text...</p> -->
+                <img src='@routes.Assets.at("images/help.gif")'  alt="Mountain View" style="width:100%;height:100%;">
+            </div>
+            <!--<div class="modal-footer">
+              <h3>Modal Footer</h3>
+            </div> -->
+        </div>
+
+    </div>
+    <script>
+// Get the modal
+var modal = document.getElementById('myModal');
+
+var ctr = 0;
+
+// Get the button that opens the modal
+//var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+/*btn.onclick = function() {
+    modal.style.display = "block";
+}*/
+
+
+function myFunction() {
+if (@isThere == 0 && ctr ==0)
+    modal.style.display = "block";
+    ctr =1;
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
+
     <div class="">
         <div class="panel panel-default">
             <div class="panel-body tabs">
@@ -209,15 +370,15 @@
                     @if(i == 1) {
                     <li class="active"><a  href="#@session._1" id="link@session._1" class="onesignal" subject="@SubjectId" session="@session._1" newSessionName="@name" studyId=@studyNo  occupied ="no" data-toggle="tab">@name.replaceFirst("(\\d*\\s*)", "")</a></li>
                     } else {
-                    <li><a  href="#@session._1" id="link@session._1" class="onesignal" subject="@SubjectId" session="@session._1" studyId=@studyNo  occupied ="no" data-toggle="tab">@name.replaceFirst("(\\d*\\s*)", "")</a></li>
+                    <li><a  href="#@session._1" id="link@session._1" class="onesignal" subject="@SubjectId" session="@session._1" newSessionName="@name" studyId=@studyNo  occupied ="no" data-toggle="tab">@name.replaceFirst("(\\d*\\s*)", "")</a></li>
                     }
                     @{i = i + 1;}
                     }
                 </ul>
 
-                <div class="tab-content">
+                <div class="tab-content"  onmouseover = "myFunction()">
 
-                    @import java.math.BigInteger; var j =1;
+                    @import java.math.BigInteger; var j =1; var t =1; var r=1;
                     @for((name,sessions) <- sub_sess){
                             @if(j == 1) {
                              <div id="@sessions._1" class="tab-pane fade in active">
@@ -225,11 +386,13 @@
                             <div id="@sessions._1" class="tab-pane fade">
                             }
                             @{j = j + 1;}
+                                @{r = 1}
+                                @{t = 1}
                                 @for(signal <- sessions._2){
                                     <!-- to avoid the non signal files -->
                                         @if(signal._3 == 1 || signal._3 == 3 || signal._3 == 4|| signal._3 == 5) {
                                         <div  id="dashboard_div@sessions._1@signal._2">
-                                            <div id="chart@sessions._1@signal._2" class="chart" subject="@SubjectId" session="@sessions._1" signalSequence="@signal._2" signalType="@signal._3" yTitle = "@signal._4" ymin ="@signal._5" ymax ="@signal._6"  log = "@signal._7" style="height: 250px;">
+                                            <div id="chart@sessions._1@signal._2" class="chart" subject="@SubjectId" session="@sessions._1" newSessionName="@name" signalSequence="@signal._2" signalType="@signal._3" yTitle = "@signal._4" ymin ="@signal._5" ymax ="@signal._6"  log = "@signal._7" style="height: 250px;">
                                             </div>
                                         </div>
                                         <!--<br> -->
@@ -238,19 +401,38 @@
                                             @if(signal._3 == 1){
                                                 &nbsp;<div id="videoboard@sessions._1@signal._2" class= "video-board" name="videoboard@sessions._1@signal._2" style="position:relative; left: 40px; width: 80%; height: 400px; overflow-x:scroll;  white-space: nowrap;" hidden>
                                                 <div class="button-station"> <a id = "showvideo@sessions._1@signal._2" class = "btn btn-default show-video" >Hide Videos</a>  </div>
-                                                @{import java.math.BigInteger; var i=1}
+                                                <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
                                                     @for((sess,videoList) <- videos){
+
                                                         @if(sess == signal._1) {
                                                             @for(video <- videoList){
                                                                 @if(study_type == 1) {
-                                                                <object id="@video">
-                                                                    <param name='movie' value='https://video.google.com/get_player?docid=0B2TDTGk9sqZLQjlxcVRxYUNqOFE&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1'></param>
-                                                                    <param name='allowFullScreen' value='true'></param>
-                                                                    <param name='allowScriptAccess' value='always'></param>
-                                                                    <embed id='video@video._2@signal._2' src='https://video.google.com/get_player?docid=@video._2&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1&amp;color=white&amp;autoplay=0&amp;enablejsapi=1&amp;playerapiid=video@video._2@signal._2' type='application/x-shockwave-flash' allowfullscreen='true' allowScriptAccess='always' width=50% height='300'></embed>
-                                                                </object>
+                                                                    @if(r <= 1) {
+
+                                                                        <meta  http-equiv="X-UA-Compatible" content="IE=Edge"/>
+                                                                        <video controls="controls"  id="videofile@video._2@signal._2" width="400" height="300" class = "sal" vName ="@video._3" sess="@sessions._1" sub= "@SubjectId" >
+                                                                            <source src="" type='video/mp4'/>
+                                                                            <!--<source src="/videoC?studyNo=@studyNo&subjectId=@SubjectId&sessionName=@sessions._1&fileName=@video._3" type='video/mp4'/>-->
+                                                                             <!-- <source src="https://drive.google.com/uc?export=download&id=@video._2" type='video/mp4'/>
+                                                                             <!-- <source src="https://googledrive.com/host/@video._2" type='video/mp4'/> -->
+                                                                             <!-- <source src="/videoB" type='video/mp4'/>-->
+                                                                        </video>
+
+
+
+
+                                                                                }
+                                                                        <!--<object  id="@video" class = "vdTag">
+                                                                            <param name='movie' value='https://video.google.com/get_player?docid=0B2TDTGk9sqZLQjlxcVRxYUNqOFE&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1'></param>
+                                                                            <param name='allowFullScreen' value='true'></param>
+                                                                            <param name='allowScriptAccess' value='always'></param>
+                                                                            <embed id='video@video._2@signal._2' src='https://video.google.com/get_player?docid=@video._2&amp;enablejsapi=1&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1&amp;playerapiid=video@video._2@signal._2' type='application/x-shockwave-flash' allowfullscreen='true' allowScriptAccess='always' width=50% height='300'></embed>
+                                                                        </object> -->
+
+
                                                                 } else {
 
+                                                                <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
                                                                 <video id="@video" width="640" height="264" controls>
                                                                     <source src="/videoB" controls type='video/mp4' >
                                                                     <source src="file:///@video._2"
@@ -259,10 +441,31 @@
                                                                 </video>
 
                                                                 } <!-- else -->
-                                                            @{i = i + 1}
+
                                                             } <!-- video List -->
+                                                            @{r = r + 1}
                                                         } <!-- if sess== session._1 -->
                                                     }<!-- main for for videos -->
+
+
+                                                    @for((sess,videoList) <- audio){
+                                                        @if(sess == signal._1) {
+                                                                @for(video <- videoList){
+                                                                        @if(study_type == 1) {
+                                                                                @if(t == 1) {
+                                                                                    <!-- <audio controls="controls" id="@video._2"  src="https://googledrive.com/host/@video._2" type=audio/x-wav" width="400" height="300" class = "sal" vName ="@video._3" sess="@sessions._1" sub= "@SubjectId"> </audio> -->
+                                                                                    <audio controls id="@video._2" width="400" height="300" class = "sal"  vName ="@video._3" sess="@sessions._1" sub= "@SubjectId">
+                                                                                        <source src="" type="audio/mpeg">
+                                                                                        <p id = "@t" >Your browser does not support the <code>audio</code> element </p>
+                                                                                    </audio>
+                                                                                }
+                                                                            }
+                                                                         @{t = t + 1}
+                                                                } <!-- video List -->
+
+                                                        } <!-- if sess== session._1 -->
+                                                    }<!-- main for for videos -->
+
                                                 <br>
                                                 <a id = "stopvideo@sessions._1@signal._2"  class="btn btn-default">Stop Videos</a>   &nbsp; &nbsp;
                                                 </div>

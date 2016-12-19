@@ -47,16 +47,19 @@ public class NewExcelFormatForBarData {
 
     public void processAllSheets() throws Exception {
 
+
         OPCPackage pkg = OPCPackage.open(dataFromExcel.getFileName());
         XSSFReader r = new XSSFReader( pkg );
         SharedStringsTable sst = r.getSharedStringsTable();
 
         XMLReader parser = fetchSheetParser(sst);
 
+
+
         Iterator<InputStream> sheets = r.getSheetsData();
         Boolean isFirst = true;
         while(sheets.hasNext() && isFirst) {
-            //System.out.println("Processing new sheet:\n");
+
             InputStream sheet = sheets.next();
             InputSource sheetSource = new InputSource(sheet);
             parser.parse(sheetSource);

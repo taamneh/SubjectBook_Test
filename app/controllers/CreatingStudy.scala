@@ -35,6 +35,7 @@ object CreatingStudyMessages {
 
   case class SubjectFolderAbstract(subject: String, service: Drive, study_no: Int, topology: Abstraction, filesExtensions: Map[String, Int])
 
+
   case class SubjectFolderAbstractSummary(subject: String, service: Drive, study_no: Int, topology: Abstraction, filesExtensions: Map[String, Int])
 
   case object IsFinished;
@@ -73,7 +74,7 @@ class CreatingStudy extends Actor{
   var createPortraitOrderes :Map[Int,SaveCreatePortrait] = Map.empty
   var createPortraitOrderesAbstract :Map[Int,SaveCreatePortraitAbstract] = Map.empty
   var createSummaryOrderedAbstract : Map[Int,(List[String], Abstraction)] = Map.empty
-  val router: ActorRef = context.actorOf(RoundRobinPool(6).props(Props[ScanSubject]), "router2")
+  val router: ActorRef = context.actorOf(RoundRobinPool(4).props(Props[ScanSubject]), "router2")
   def receive = {
 
     case ScanStudyAbstract(topology) =>

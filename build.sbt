@@ -13,6 +13,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 javaOptions ++= Seq("-Xms1024M", "-Xmx2048M")
 
+
 scalaVersion := "2.10.4"
 
 libraryDependencies ++= Seq(
@@ -41,8 +42,8 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api"       % "1.7.7" exclude("javax.jms", "jms") exclude("com.sun.jdmk", "jmxtools") exclude("com.sun.jmx", "jmxri"),
   "org.slf4j" % "jcl-over-slf4j"  % "1.7.7" exclude("javax.jms", "jms") exclude("com.sun.jdmk", "jmxtools") exclude("com.sun.jmx", "jmxri"),
   "net.sourceforge.jexcelapi" % "jxl" % "2.6.3" exclude("javax.jms", "jms") exclude("com.sun.jdmk", "jmxtools") exclude("com.sun.jmx", "jmxri"),
-  "com.googlecode.json-simple" % "json-simple" % "1.1.1",
+  "com.googlecode.json-simple" % "json-simple" % "1.1.1" exclude("org.slf4j", "slf4j-simple"),
   "com.google.gdata" % "core" % "1.47.1"
 )
 
-//libraryDependencies ~= { _.map(_.exclude("ch.qos.logback", "logback-classic")) }
+libraryDependencies ~= { _.map(_.exclude("com.googlecode.json-simple", "slf4j-simple-1.6.6")) }

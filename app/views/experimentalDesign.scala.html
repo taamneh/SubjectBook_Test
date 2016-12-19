@@ -1,0 +1,410 @@
+@(userName: String, studyNo: Int)
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+
+        .markerStyle
+        {
+        position: absolute;
+        left: 40px;
+        top: 50px;
+        transition: left .5s ease-in, top .5s ease-in;
+        width:0.0em;
+        height:14.5em;
+        #border-left: thick solid #99ccff;
+        border-left: thick solid pink;
+        white-space:nowrap;
+        padding:0.5em;
+        z-index: 10;
+        }
+
+
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SubjectBook</title>
+    <link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/stylesheets/styles.css" rel="stylesheet">
+
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="/assets/javascripts/html5shiv.js"></script>
+    <script src="/assets/javascripts/respond.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/jquery-ui-1.9.2.css">
+
+
+    <script src="/assets/javascripts/bootstrap.min.js"></script>
+    <script src="/assets/javascripts/chart.min.js"></script>
+    <script src="/assets/javascripts/chart-data.js"></script>
+    <script src="/assets/javascripts/easypiechart.js"></script>
+    <script src="/assets/javascripts/easypiechart-data.js"></script>
+    <script src="/assets/javascripts/bootstrap-datepicker.js"></script>
+    <script>
+
+		!function ($) {
+		    $(document).on("click","ul.nav li.parent > a > span.icon", function(){
+		        $(this).find('em:first').toggleClass("glyphicon-minus");
+		    });
+
+
+		    $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+        // this is to unfold the subject list
+        $(document).ready(function(){
+        $('ul.nav li.parent > a > span.icon').trigger("click");
+        });
+
+</script>
+
+
+
+
+
+
+
+
+
+    <!-- Ignite UI Required Combined CSS Files -->
+    <link href="/assets/stylesheets/infragistics.theme.css" rel="stylesheet">
+    <!-- <link href="http://cdn-na.infragistics.com/igniteui/2015.1/latest/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" /> -->
+    <!--  <link href="http://cdn-na.infragistics.com/igniteui/2015.1/latest/css/structure/infragistics.css" rel="stylesheet" />-->
+
+    <!-- Used to style the API Viewer and Explorer UI -->
+    <!--  <link href="http://www.igniteui.com/css/apiviewer.css" rel="stylesheet" type="text/css" /> -->
+
+    <!--<script src="http://modernizr.com/downloads/modernizr-latest.js"></script> -->
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+
+    <!-- Ignite UI Required Combined JavaScript Files -->
+    <script src="http://cdn-na.infragistics.com/igniteui/2015.1/latest/js/infragistics.core.js"></script>
+    <script src="http://cdn-na.infragistics.com/igniteui/2015.1/latest/js/infragistics.dv.js"></script>
+
+
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><span>Subject</span>Book</a> <a class="navbar-brand" href="/allStudies"><span></span>My Studies</a>
+            <!-- <a class="navbar-brand" href="#"><span></span>Share</a> -->
+            <a class="navbar-brand" href="/frontPage"><span></span>Help</a>
+            <ul class="user-menu">
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> @userName <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                        <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+    <form role="search">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+        </div>
+    </form>
+    <ul class="nav menu">
+        <!-- <li><a href="index.html"><span class="glyphicon glyphicon-dashboard"></span> Dashboard</a></li>
+        <li><a href="widgets.html"><span class="glyphicon glyphicon-th"></span> Widgets</a></li>
+        <li class="active"><a href="charts.html"><span class="glyphicon glyphicon-stats"></span> Charts</a></li> -->
+        <li><a href="/allStudies"><span class="glyphicon glyphicon-th"></span> My Studies </a></li>
+        <li><a href="/createStudy"><span class="glyphicon glyphicon-pencil"></span> New Study</a></li>
+        <!-- <li><a href="#"><span class="glyphicon glyphicon glyphicon-share"></span> Share study</a></li> -->
+        <!-- <li><a href="panels.html"><span class="glyphicon glyphicon-info-sign"></span> Alerts &amp; Panels</a></li> -->
+        <li role="presentation" class="divider"></li>
+        <!-- <li><a href="login.html"><span class="glyphicon glyphicon-user"></span> Login Page</a></li> -->
+    </ul>
+    <!-- <div class="attribution">Template by <a href="http://www.medialoot.com/item/lumino-admin-bootstrap-template/">Medialoot</a></div> -->
+</div><!--/.sidebar-->
+
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a href="#"><span class="glyphicon glyphicon-home"></span></a></li>
+            <li class="active">Forms</li>
+        </ol>
+    </div><!--/.row-->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <!--<h1 class="page-header">Forms</h1> -->
+        </div>
+    </div><!--/.row-->
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Create Study Summery </div>
+                <div class="panel-body">
+                    <!-- <form role="form">  -->
+                    @helper.form(action = routes.Application.ProcessNewTopSummary, 'enctype -> "multipart/form-data", 'id -> "target") {
+
+
+                    <input type="hidden" name="code" id= "code" value="">
+                    <input type="hidden" name="studyId"  value=@studyNo>
+                    <div class="form-group">
+                        <label>How many unique sessions your study have? </label>
+                        <input type="number" class="form-control"  name="pName", id = "noVar">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>How many treatems arms this study have? </label>
+                        <input type="number" class="form-control" name="min" value ="1" id = "noPoints">
+                    </div>
+
+                    <div id = "dyn">
+
+                        <table data-toggle="table"  data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-sort-name="name" data-sort-order="desc">
+                            <thead>
+                            <tr id ="head">
+
+                            </tr>
+                            </thead>
+                            <tbody  id="tableBody">
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+
+
+
+
+                    <button type="submit" class="btn btn-primary" >Create</button>
+                    <button type="reset" class="btn btn-default">Reset</button>
+                    <button onclick = "fun()"> click! </button>
+                    }
+                    <div class="col-md-6">
+
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.col-->
+    </div><!-- /.row -->
+
+
+</div><!--/.main-->
+
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/chart.min.js"></script>
+<script src="js/chart-data.js"></script>
+<script src="js/easypiechart.js"></script>
+<script src="js/easypiechart-data.js"></script>
+<script src="js/bootstrap-datepicker.js"></script>
+<script>
+  $("#noPoints").change(function() {
+  var rows = $("#noVar").val();
+  var cols = $(this).val();
+  var inner = "";
+//alert(cols);
+
+ $('#head').empty();
+ 
+ 
+ $('#head').append("<th data-field=\"extension\" data-sortable=\"true\"> Session Name </th> \
+ <th data-field=\"extension\" data-sortable=\"true\"> Acronym </th> \
+ <th data-field=\"extension\" data-sortable=\"true\"> Session Type </th> \
+ <th data-field=\"extension\" data-sortable=\"true\"> Treatment Arms </th>")
+ /*for(var i =1; i<= cols; i++){
+       $('#head').append("<th data-field=\"extension\" data-sortable=\"true\"> Point "+  i + "</th>")
+  }*/
+
+  var arms = "<option id=\"select_1\" value=1 > Common</option> "
+  
+  for(var a= 1; a<=cols; a++)
+  {
+    arms = arms + " <option id=\"select_1\" value=2 > Arm"+ a +"</option> "
+  }
+  
+  //alert(arms);
+  
+$('#tableBody').empty();
+ for(var i =1; i<= rows; i++){
+       var rowName = "rowsNo" + i;
+       var varName = "varName" + i
+       $('#' + rowName).empty();
+      var tt = $('#tableBody').append ("<tr class=\"table_row_odd table_row_first\" id=\""+  rowName +"\"> </tr> ")
+       $('#' + rowName).append( "<td> <input type=\"text\" class=\"form-control\" id = \""+ "sessionName" + i + "\" required>  </td> ")
+      for(var j =1; j<= 1; j++){
+      var pointName = "point" + i + j
+      $('#' + rowName).append( "<td> <input type=\"text\" class=\"form-control\" id = \""+ "acronym" + i + "\" required>  </td> <td> \
+                <select class=\"form-control\" id=\"" + "sessionType" + i+ "\" name=\"dataType\" value=\"1\"> \
+                    <option id=\"select_1\" value=1 > BaseLine</option> \
+                    <option id=\"select_1\" value=2 > Intervension </option> \
+					<option id=\"select_1\" value=3 > Other </option> \
+                 </select> </td>  \
+				 <td> \
+                <select class=\"form-control\" id=\"" + "arm" + i + "\" name=\"dataType\" value=\"1\"> \"" + arms + "</select> </td>")
+				 
+      }
+  }
+
+});
+
+
+  $("#noVar").change(function() {
+  var rows = $(this).val();
+  var cols = $("#noPoints").val();
+  var inner = "";
+ $('#head').empty();
+ 
+ 
+ $('#head').append("<th data-field=\"extension\" data-sortable=\"true\"> Session Name </th> \
+ <th data-field=\"extension\" data-sortable=\"true\"> Acronym </th> \
+ <th data-field=\"extension\" data-sortable=\"true\"> Session Type </th> \
+ <th data-field=\"extension\" data-sortable=\"true\"> Treatment Arms </th>")
+ /*for(var i =1; i<= cols; i++){
+       $('#head').append("<th data-field=\"extension\" data-sortable=\"true\"> Point "+  i + "</th>")
+  }*/
+
+  var arms = "<option id=\"select_1\" value=1 > Common</option> "
+  
+  for(var a= 1; a<=cols; a++)
+  {
+    arms = arms + " <option id=\"select_1\" value=2 > Arm"+ a +"</option> "
+  }
+  
+  //alert(arms);
+  
+  $('#tableBody').empty();
+ for(var i =1; i<= rows; i++){
+       var rowName = "rowsNo" + i;
+       var varName = "varName" + i
+       $('#' + rowName).empty();
+      var tt = $('#tableBody').append ("<tr class=\"table_row_odd table_row_first\" id=\""+  rowName +"\"> </tr> ")
+       $('#' + rowName).append( "<td> <input type=\"text\" class=\"form-control\" id = \""+ "sessionName" + i + "\" required>  </td> ")
+      for(var j =1; j<= 1; j++){
+      var pointName = "point" + i + j
+      $('#' + rowName).append( "<td> <input type=\"text\" class=\"form-control\" id = \""+ "acronym" + i + "\" required>  </td> <td> \
+                <select class=\"form-control\" id=\"" + "sessionType" + i+ "\" name=\"dataType\" value=\"1\"> \
+                    <option id=\"select_1\" value=1 > BaseLine</option> \
+                    <option id=\"select_1\" value=2 > Intervension </option> \
+					<option id=\"select_1\" value=3 > Other </option> \
+                 </select> </td>  \
+				 <td> \
+                <select class=\"form-control\" id=\"" + "arm" + i + "\" name=\"dataType\" value=\"1\"> \"" + arms + "</select> </td>")
+				 
+      }
+  }
+
+  
+  
+
+   
+
+  
+});
+
+
+
+function fun(){
+
+alert('ttt');
+var rows = $("#noVar").val();
+   var cols = $("#noPoints").val();
+  var dataset = [];
+  
+  for(var i= 1; i<= rows; i++)
+  {
+      
+        var object1= { sessionName: $('#sessionName' + i).val() , acronym: $('#acronym' + i).val(), sessionType: $('#sessionType' + i).val(), arm: $('#arm' + i).val() }
+        dataset.push(object1)
+      
+  }
+alert(JSON.stringify(dataset));
+  
+ $("#code").val(JSON.stringify(dataset))
+
+}
+
+$( "#target" ).submit(function( event ) {
+
+
+
+var rows = $("#noVar").val();
+   var cols = $("#noPoints").val();
+  var dataset = [];
+  
+  for(var i= 1; i<= rows; i++)
+  {
+      
+        var object1= { sessionName: $('#sessionName' + i).val() , acronym: $('#acronym' + i).val(), sessionType: $('#sessionType' + i).val(), arm: $('#arm' + i).val() }
+        dataset.push(object1)
+      
+  }
+alert(JSON.stringify(dataset));
+  
+ $("#code").val(JSON.stringify(dataset))
+  
+  
+  /*for(var i= 1; i<= cols; i++)
+  {
+       var innerData = []
+       for(var j= 1; j<= rows; j++)
+      {
+        var countVal = 0;
+        if($("#point" + j +  i).val() ==1)
+           countVal =100;
+
+        var object1= { yVal: $('#varName' + j).val() , count: countVal}
+        innerData.push(object1)
+      }
+       var object2= {data :innerData, name: 'Series#' + i }
+       dataset.push(object2)
+  }*/
+
+
+
+
+
+
+
+});
+		!function ($) {
+			$(document).on("click","ul.nav li.parent > a > span.icon", function(){
+				$(this).find('em:first').toggleClass("glyphicon-minus");
+			});
+			$(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+	</script>
+</body>
+
+</html>

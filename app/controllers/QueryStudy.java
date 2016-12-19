@@ -389,13 +389,13 @@ public class QueryStudy {
             metric  = metric.trim().toUpperCase();
             score = score.trim();
 
-            System.out.println("--------------" + metric);
+            //System.out.println("--------------" + metric);
 
-            System.out.println("--------------" + lstOfPy);
+            //System.out.println("--------------" + lstOfPy);
 
             if(lstOfPy.containsKey(metric))
             {
-                System.out.println("*****************" + lstOfPy.get(metric).min);
+               // System.out.println("*****************" + lstOfPy.get(metric).min);
                 JSONObject newObj = new JSONObject();
                 newObj.put("name", metric);
                 newObj.put("score", score);
@@ -465,7 +465,7 @@ public class QueryStudy {
         scanner.close();
         input.close();
         json = json + "}";
-        System.out.println(json);
+       // System.out.println(json);
         //return  json;
         return all;
 

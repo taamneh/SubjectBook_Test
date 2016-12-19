@@ -171,9 +171,9 @@
 
                         <div class="form-group">
                             <label>Please select what type of data is this</label>
-                            <select class="form-control" id="sel1" name="dataType">
-                                <option id="select_1" value=3>Text data</option>
+                            <select class="form-control" id="sel1" name="dataType" required>
                                 <option id="select_2" value=1>Time-based data</option>
+                                <option id="select_1" value=3>Text data</option>
                                 <option id="select_3" value=2>video</option>
                                 <option id="select_4" value=4>Rank data</option>
                                 <option id="select_5" value=5>Phychometric data</option>
@@ -182,13 +182,13 @@
 
                         <div class="form-group">
                             <label>Describe your data</label>
-                            <input type="text" class="form-control" name="dataDec">
+                            <input type="text" class="form-control" name="dataDec" required>
                         </div>
 
 
                         <div class="form-group">
                             <label>What is the files's extension for this data</label>
-                            <input type="text" class="form-control" name="dataExtension">
+                            <input type="text" class="form-control" name="dataExtension" required>
                         </div>
 
 
@@ -196,7 +196,7 @@
 
                         <div class="form-group">
                             <label>If applicable, what is the Ytile for this data?</label>
-                            <input type="text" class="form-control" name="yTitle" required>
+                            <input type="text" class="form-control" name="yTitle">
                         </div>
 
 

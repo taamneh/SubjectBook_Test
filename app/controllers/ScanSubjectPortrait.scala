@@ -88,7 +88,7 @@ class ScanSubjectPortrait extends Actor {
               val file2: File = GoogleDrive.waitUntilGetDGFile(service, signalId)
               val SessionName: String = file.getTitle
 
-              if (!file2.getTitle.contains("~")) {
+              if (!file2.getTitle.contains("~") && file2.getFileExtension != null) {
 
 
                 var extension = file2.getFileExtension
@@ -240,7 +240,7 @@ class ScanSubjectPortrait extends Actor {
           //val file2: File = GoogleDrive.waitUntilGetDGFile(service, signalId)
           val SessionName: String = sessionInfo.getTitle
           if (org.apache.commons.lang3.StringUtils.containsIgnoreCase(SessionName, "fd")) {
-            if (!fileInfo.getTitle.contains("~")) {
+            if (!fileInfo.getTitle.contains("~") && fileInfo.getFileExtension != null) {
               var extension = fileInfo.getFileExtension
               if (SignalType.isActivity(extension)) {
                 val input: InputStream = GoogleDrive.downloadFileByFileId(service, signalId)
@@ -304,7 +304,7 @@ class ScanSubjectPortrait extends Actor {
         for ((signalId, signalInfo) <- signals) {
           //val file2: File = GoogleDrive.waitUntilGetDGFile(service, signalId)
           val SessionName: String = sessionInfo.getTitle
-          if (!signalInfo.getTitle.contains("~")) {
+          if (!signalInfo.getTitle.contains("~") && signalInfo.getFileExtension != null) {
             val extension = signalInfo.getFileExtension
             if (extension.equalsIgnoreCase("sim2")) {
               if (org.apache.commons.lang3.StringUtils.containsIgnoreCase(SessionName, "ld1") || org.apache.commons.lang3.StringUtils.containsIgnoreCase(SessionName, "pd") || org.apache.commons.lang3.StringUtils.containsIgnoreCase(SessionName, "nd")) {
@@ -445,7 +445,7 @@ class ScanSubjectPortrait extends Actor {
       var fileInfo: File = null
           //fileInfo = service.files.get(info).execute
       fileInfo = GoogleDrive.waitUntilGetDGFile(service, info)
-      if (!fileInfo.getTitle.contains("~")) //continue //todo: continue is not supported
+      if (!fileInfo.getTitle.contains("~") && fileInfo.getFileExtension != null) //continue //todo: continue is not supported
       {
         val extension: String = fileInfo.getFileExtension
         if (SignalType.isInfo(extension)) {
@@ -534,7 +534,7 @@ class ScanSubjectPortrait extends Actor {
           //fileInfo= service.files.get(info).execute
           fileInfo = GoogleDrive.waitUntilGetDGFile(service, info)
 
-      if (! fileInfo.getTitle.contains("~"))
+      if (! fileInfo.getTitle.contains("~") && fileInfo.getFileExtension != null)
       {
         val extension: String = fileInfo.getFileExtension
         if (SignalType.isBar(extension)) {

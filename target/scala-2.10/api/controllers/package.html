@@ -58,7 +58,20 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="controllers.AccessRefreshString" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="controllers.Abstraction" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AbstractionextendsProductwithSerializable"></a>
+      <a id="Abstraction:Abstraction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Abstraction.html"><span class="name">Abstraction</span></a><span class="params">(<span name="userName">userName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="sourceType">sourceType: <span class="extype" name="scala.Int">Int</span></span>, <span name="studyName">studyName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="studyLocation">studyLocation: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="portriat">portriat: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="public">public: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="primaryExp">primaryExp: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="secondadryExp">secondadryExp: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="primaryRes">primaryRes: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="secondadryRes">secondadryRes: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="StaticBefore">StaticBefore: <span class="extype" name="scala.Int">Int</span></span>, <span name="StaticAfter">StaticAfter: <span class="extype" name="scala.Int">Int</span></span>, <span name="covarite">covarite: <span class="extype" name="scala.Int">Int</span></span>, <span name="explColNo">explColNo: <span class="extype" name="scala.Int">Int</span></span>, <span name="respColNo">respColNo: <span class="extype" name="scala.Int">Int</span></span>, <span name="baseLine">baseLine: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="descriptor">descriptor: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Created by staamneh on 12/3/2015.</p>
+    </li><li name="controllers.AccessRefreshString" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AccessRefreshStringextendsProductwithSerializable"></a>
       <a id="AccessRefreshString:AccessRefreshString"></a>
       <h4 class="signature">
@@ -84,19 +97,6 @@
       </span>
       </h4>
       
-    </li><li name="controllers.ChildDone" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ChildDoneextendsProductwithSerializable"></a>
-      <a id="ChildDone:ChildDone"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="ChildDone.html"><span class="name">ChildDone</span></a><span class="params">(<span name="SubjectName">SubjectName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
     </li><li name="controllers.CreatePortrait" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CreatePortraitextendsActor"></a>
       <a id="CreatePortrait:CreatePortrait"></a>
@@ -110,16 +110,16 @@
       </span>
       </h4>
       
-    </li><li name="controllers.CreatePortraitForAsubject" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="CreatePortraitForAsubjectextendsProductwithSerializable"></a>
-      <a id="CreatePortraitForAsubject:CreatePortraitForAsubject"></a>
+    </li><li name="controllers.CreatePortraitAbstraction" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CreatePortraitAbstractionextendsActor"></a>
+      <a id="CreatePortraitAbstraction:CreatePortraitAbstraction"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">case class</span>
+        <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="CreatePortraitForAsubject.html"><span class="name">CreatePortraitForAsubject</span></a><span class="params">(<span name="service">service: <span class="extype" name="com.google.api.services.drive.Drive">Drive</span></span>, <span name="subject">subject: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="subName">subName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="failureThreshold">failureThreshold: <span class="extype" name="scala.Double">Double</span></span>, <span name="bio_code">bio_code: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="CreatePortraitAbstraction.html"><span class="name">CreatePortraitAbstraction</span></a><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span></span>
       </span>
       </h4>
       
@@ -149,32 +149,6 @@
       </span>
       </h4>
       <p class="comment cmt">Created by staamneh on 6/16/2015.</p>
-    </li><li name="controllers.FindPoint" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="FindPointextendsProductwithSerializable"></a>
-      <a id="FindPoint:FindPoint"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="FindPoint.html"><span class="name">FindPoint</span></a><span class="params">(<span name="service">service: <span class="extype" name="com.google.api.services.drive.Drive">Drive</span></span>, <span name="subject">subject: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="controllers.Gender" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="GenderextendsProductwithSerializable"></a>
-      <a id="Gender:Gender"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="Gender.html"><span class="name">Gender</span></a><span class="params">(<span name="subjectName">subjectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="g">g: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
     </li><li name="controllers.GoogleDrive" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="GoogleDriveextendsObject"></a>
       <a id="GoogleDrive:GoogleDrive"></a>
@@ -188,16 +162,29 @@
       </span>
       </h4>
       
-    </li><li name="controllers.Perf" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="PerfextendsProductwithSerializable"></a>
-      <a id="Perf:Perf"></a>
+    </li><li name="controllers.MyWebSocketActorNewStudy" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MyWebSocketActorNewStudyextendsActor"></a>
+      <a id="MyWebSocketActorNewStudy:MyWebSocketActorNewStudy"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">case class</span>
+        <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Perf.html"><span class="name">Perf</span></a><span class="params">(<span name="subjectName">subjectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <span class="extype" name="scala.collection.immutable.TreeMap">TreeMap</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Double">Double</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="MyWebSocketActorNewStudy.html"><span class="name">MyWebSocketActorNewStudy</span></a><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="controllers.PlusSample" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PlusSampleextendsObject"></a>
+      <a id="PlusSample:PlusSample"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PlusSample.html"><span class="name">PlusSample</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
@@ -214,19 +201,6 @@
       </span>
       </h4>
       <p class="comment cmt">Created by staamneh on 6/11/2015.</p>
-    </li><li name="controllers.PsycoMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="PsycoMsgextendsProductwithSerializable"></a>
-      <a id="PsycoMsg:PsycoMsg"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="PsycoMsg.html"><span class="name">PsycoMsg</span></a><span class="params">(<span name="subjectName">subjectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <span class="extype" name="scala.collection.immutable.TreeMap">TreeMap</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Double">Double</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
     </li><li name="controllers.QueryStudy" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="QueryStudyextendsObject"></a>
       <a id="QueryStudy:QueryStudy"></a>
@@ -279,32 +253,6 @@
       </span>
       </h4>
       
-    </li><li name="controllers.Sai" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="SaiextendsProductwithSerializable"></a>
-      <a id="Sai:Sai"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="Sai.html"><span class="name">Sai</span></a><span class="params">(<span name="value">value: <span class="extype" name="scala.collection.immutable.TreeMap">TreeMap</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="../Models/BarPercentage.html" class="extype" name="Models.BarPercentage">BarPercentage</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="controllers.ScanStudy" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ScanStudyextendsProductwithSerializable"></a>
-      <a id="ScanStudy:ScanStudy"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="ScanStudy.html"><span class="name">ScanStudy</span></a><span class="params">(<span name="folder_id">folder_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="studyName">studyName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="studyTopology">studyTopology: <a href="../Models/StudyTopology.html" class="extype" name="Models.StudyTopology">StudyTopology</a></span>, <span name="bio_code">bio_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="Psycho_code">Psycho_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="physio_code">physio_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="perf_code">perf_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="createPortrait">createPortrait: <span class="extype" name="scala.Int">Int</span></span>, <span name="shareStudy">shareStudy: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
     </li><li name="controllers.ScanSubject" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ScanSubjectextendsActor"></a>
       <a id="ScanSubject:ScanSubject"></a>
@@ -331,6 +279,19 @@
       </span>
       </h4>
       
+    </li><li name="controllers.ScanSubjectPortraitAbstraction" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ScanSubjectPortraitAbstractionextendsActor"></a>
+      <a id="ScanSubjectPortraitAbstraction:ScanSubjectPortraitAbstraction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ScanSubjectPortraitAbstraction.html"><span class="name">ScanSubjectPortraitAbstraction</span></a><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span></span>
+      </span>
+      </h4>
+      
     </li><li name="controllers.SharedData" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SharedDataextendsObject"></a>
       <a id="SharedData:SharedData"></a>
@@ -344,58 +305,6 @@
       </span>
       </h4>
       
-    </li><li name="controllers.StartOfLoadedDrive" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="StartOfLoadedDriveextendsProductwithSerializable"></a>
-      <a id="StartOfLoadedDrive:StartOfLoadedDrive"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="StartOfLoadedDrive.html"><span class="name">StartOfLoadedDrive</span></a><span class="params">(<span name="value">value: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="controllers.Stress" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="StressextendsProductwithSerializable"></a>
-      <a id="Stress:Stress"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="Stress.html"><span class="name">Stress</span></a><span class="params">(<span name="subjectName">subjectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <span class="extype" name="scala.collection.immutable.TreeMap">TreeMap</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="../Models/BarPercentage.html" class="extype" name="Models.BarPercentage">BarPercentage</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="controllers.SubjectFolder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="SubjectFolderextendsProductwithSerializable"></a>
-      <a id="SubjectFolder:SubjectFolder"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="SubjectFolder.html"><span class="name">SubjectFolder</span></a><span class="params">(<span name="subject">subject: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="service">service: <span class="extype" name="com.google.api.services.drive.Drive">Drive</span></span>, <span name="study_no">study_no: <span class="extype" name="scala.Int">Int</span></span>, <span name="studyTopology">studyTopology: <a href="../Models/StudyTopology.html" class="extype" name="Models.StudyTopology">StudyTopology</a></span>, <span name="bio_code">bio_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="Psycho_code">Psycho_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="physio_code">physio_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="perf_code">perf_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="filesExtensions">filesExtensions: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Int">Int</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      <p class="comment cmt">Created by staamneh on 6/11/2015.</p>
-    </li><li name="controllers.SubjectID" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="SubjectIDextendsProductwithSerializable"></a>
-      <a id="SubjectID:SubjectID"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="SubjectID.html"><span class="name">SubjectID</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      <p class="comment cmt">Created by staamneh on 6/12/2015.</p>
     </li><li name="controllers.SubjectsInStudy" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SubjectsInStudyextendsProductwithSerializable"></a>
       <a id="SubjectsInStudy:SubjectsInStudy"></a>
@@ -409,6 +318,19 @@
       </span>
       </h4>
       
+    </li><li name="controllers.SubjectsInStudyAbstract" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SubjectsInStudyAbstractextendsProductwithSerializable"></a>
+      <a id="SubjectsInStudyAbstract:SubjectsInStudyAbstract"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SubjectsInStudyAbstract.html"><span class="name">SubjectsInStudyAbstract</span></a><span class="params">(<span name="subjects">subjects: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="topology">topology: <a href="Abstraction.html" class="extype" name="controllers.Abstraction">Abstraction</a></span>, <span name="study_no">study_no: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
     </li><li name="controllers.routes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="routesextendsObject"></a>
       <a id="routes:routes"></a>
@@ -419,19 +341,6 @@
       </span>
       <span class="symbol">
         <a href="routes.html"><span class="name">routes</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="controllers.startCreatingPortrait" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="startCreatingPortraitextendsProductwithSerializable"></a>
-      <a id="startCreatingPortrait:startCreatingPortrait"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="startCreatingPortrait.html"><span class="name">startCreatingPortrait</span></a><span class="params">(<span name="folder_id">folder_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="studyName">studyName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="studyTopology">studyTopology: <a href="../Models/StudyTopology.html" class="extype" name="Models.StudyTopology">StudyTopology</a></span>, <span name="bio_code">bio_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="Psycho_code">Psycho_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="physio_code">physio_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="perf_code">perf_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="createPortrait">createPortrait: <span class="extype" name="scala.Int">Int</span></span>, <span name="studyNo">studyNo: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -468,6 +377,45 @@
       </span>
       </h4>
       <p class="comment cmt">Created by staamneh on 10/27/2014.</p>
+    </li><li name="controllers.CreatePortraitAbstraction" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CreatePortraitAbstraction"></a>
+      <a id="CreatePortraitAbstraction:CreatePortraitAbstraction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CreatePortraitAbstraction$.html"><span class="name">CreatePortraitAbstraction</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="controllers.CreatePortraitMessages" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CreatePortraitMessages"></a>
+      <a id="CreatePortraitMessages:CreatePortraitMessages"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CreatePortraitMessages$.html"><span class="name">CreatePortraitMessages</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">Created by staamneh on 6/12/2015.</p>
+    </li><li name="controllers.CreatingStudyMessages" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CreatingStudyMessages"></a>
+      <a id="CreatingStudyMessages:CreatingStudyMessages"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CreatingStudyMessages$.html"><span class="name">CreatingStudyMessages</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">Created by staamneh on 6/11/2015.</p>
     </li><li name="controllers.DataBaseOperations" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DataBaseOperations"></a>
       <a id="DataBaseOperations:DataBaseOperations"></a>
@@ -478,45 +426,6 @@
       </span>
       <span class="symbol">
         <a href="DataBaseOperations$.html"><span class="name">DataBaseOperations</span></a><span class="result"> extends <span class="extype" name="play.api.mvc.Controller">Controller</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="controllers.DoneFindingFailurePoint" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="DoneFindingFailurePoint"></a>
-      <a id="DoneFindingFailurePoint:DoneFindingFailurePoint"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="DoneFindingFailurePoint$.html"><span class="name">DoneFindingFailurePoint</span></a><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="controllers.FindLoadedPoint" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="FindLoadedPoint"></a>
-      <a id="FindLoadedPoint:FindLoadedPoint"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="FindLoadedPoint$.html"><span class="name">FindLoadedPoint</span></a><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="controllers.FindRadar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="FindRadar"></a>
-      <a id="FindRadar:FindRadar"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="FindRadar$.html"><span class="name">FindRadar</span></a><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -533,32 +442,6 @@
       </span>
       </h4>
       <p class="comment cmt">Created by staamneh on 6/17/2015.</p>
-    </li><li name="controllers.IsFinished" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="IsFinished"></a>
-      <a id="IsFinished:IsFinished"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="IsFinished$.html"><span class="name">IsFinished</span></a><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="controllers.Start" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="Start"></a>
-      <a id="Start:Start"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="Start$.html"><span class="name">Start</span></a><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
     </li><li name="controllers.javascript" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="javascript"></a>
       <a id="javascript:javascript"></a>

@@ -22,6 +22,8 @@ public class PlainChartFromExcel extends JsonFromExcel {
     public void addToHeader(String str,  boolean newRow)
     {
 
+        if(str.toLowerCase().contains("breaking"))
+            str = "Braking";
         JSONObject obj = new JSONObject();
         obj.put("id","");
         obj.put("label",str);

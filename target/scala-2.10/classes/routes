@@ -38,11 +38,19 @@ GET     /showStudySkipTop/:studyNo  controllers.Application.showStudySkipTop(stu
 
 GET     /displaySubject             controllers.Application.displaySubject(studyNo: Int, SubjectId: String)
 
+GET     /displaySubjectsInProgress  controllers.Application.displaySubjectInProgress(studyNo: Int)
+
 GET     /showRadar                  controllers.Application.showRadar(studyNo: Int, SubjectId: String)
 
 GET     /getRadar                   controllers.Application.getRadar(studyNo: Int, SubjectId: String)
 
 GET      /createStudy               controllers.Application.ShowCreateStudyForm()
+
+POST     /InitiateStudy             controllers.Application.InitiateNewStudy()
+
+GET      /InitiateStudy             controllers.Application.ShowInitiateStudy()
+
+GET      /addNewSubject             controllers.Application.addNewSubject(studyNo: Int)
 
 GET     /realTime                   controllers.Application.RealTime()
 
@@ -58,11 +66,15 @@ POST     /processNewPsychometric    controllers.Application.ProcessNewPsychometr
 
 POST     /ProcessNewTopSummary      controllers.Application.ProcessNewTopSummary()
 
+POST     /processNewDescriptor     controllers.Application.ProcessNewDescriptor()
+
 POST     /editExistingDataType      controllers.Application.EditDataType()
 
 POST     /editPsychometric          controllers.Application.EditPsychometric()
 
 POST     /editHideSubject           controllers.Application.EditHideSubject()
+
+POST     /addMoreSubjects             controllers.Application.AddMoreSubjects()
 
 POST    /logout                     controllers.Application.logout
 
@@ -78,9 +90,19 @@ GET     /showAddPsychometric        controllers.Application.showAddPsychometric
 
 GET     /showAddTopSummary          controllers.Application.showAddTopSummary(studyId: Int)
 
+GET     /showAddDescriptor          controllers.Application.showAddDescriptor(studyId: Int)
+
 GET     /showAllDataTypes           controllers.Application.showAllDataTypes
 
-GET     /showAllSubjectsHide           controllers.Application.showAllSubjectToHide(studyId: Int)
+GET     /showAllSubjectsHide         controllers.Application.showAllSubjectToHide(studyId: Int)
+
+GET     /quickCreating              controllers.Application.CreateStudyTest()
+
+GET     /drp                        controllers.Application.drp(studyNo: Int)
+
+GET     /startNewSubject            controllers.Application.startNewSubject(loc: String, subjectLocation: String, subjectid: String)
+
+GET       /updateVideos             controllers.Application.updateVidoefromServer(studyNo : Int)
 
 
 
@@ -106,7 +128,11 @@ GET     /videoExample          controllers.Application.videoExample()
 # Map static resources from the /public folder to the /assets URL path
 GET       /videoB                     controllers.Application.getVideo()
 
-GET       /test                     controllers.Application.test()
+GET        /videoD                     controllers.Application.getVideo2(studyNo: Int, subjectId : String, sessionName: String )
+
+GET       /videoC                     controllers.Application.getVideo3(studyNo: Int, subjectId : String, sessionName: String, fileName: String )
+
+GET       /test                     controllers.Application.test(stydtNo: Int)
 
 # Orphans...
 
@@ -117,22 +143,10 @@ POST    /login                      controllers.Application.authentication
 
 GET     /ShowDriveDialog            controllers.Application.ShowDriveDialog()
 
-GET     /signup                     controllers.Application.Register
-
-POST    /signup                     controllers.Application.submitRegistration
-
 POST    /InsertStudy                controllers.Application.shareMyStudy
 
-POST    /InsertSubject              controllers.Application.insertSubject
-
-POST    /InsertSession              controllers.Application.InsertSession
-
-GET     /editSubject                controllers.Application.editSubject(studyNo: Int, SubjectId: String)
-
-POST    /upload                     controllers.Application.uploadFile
 
 #to be deleted
 GET     /video                      controllers.Application.video
 
-GET     /editStudy/:studyId         controllers.Application.editStudy(studyId: Int)
 

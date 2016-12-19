@@ -24,8 +24,11 @@ public class BarChartFromExcel extends JsonFromExcel {
     public void addToHeader(String str, boolean newRow){
         if(isFirst)
         {
-            if(namesMapping.containsKey(str))
+            if(namesMapping.containsKey(str.replaceAll("\\s+", "")))
             {
+                str = namesMapping.get(str.replaceAll("\\s+", ""));
+            }
+            else if(namesMapping.containsKey(str)){
                 str = namesMapping.get(str);
             }
             JSONObject obj = new JSONObject();
@@ -37,8 +40,11 @@ public class BarChartFromExcel extends JsonFromExcel {
             isFirst = false;
         }
         else {
-            if(namesMapping.containsKey(str))
+            if(namesMapping.containsKey(str.replaceAll("\\s+", "")))
             {
+                str = namesMapping.get(str.replaceAll("\\s+", ""));
+            }
+            else if(namesMapping.containsKey(str)){
                 str = namesMapping.get(str);
             }
             JSONObject obj = new JSONObject();

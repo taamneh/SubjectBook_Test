@@ -5,6 +5,8 @@ import java.net.SocketTimeoutException
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import controllers.CreatingStudyMessages._
+import play.api.libs.json.{JsString, JsObject, JsArray}
+
 
 import scala.collection.immutable.TreeMap
 import util.control.Breaks._
@@ -27,8 +29,22 @@ import scala.collection.JavaConverters._
 case class ProcessThisSubject (service: Drive, study_no: Int, studyTopology: StudyTopology ,bio_code: Int, Psycho_code: Int, physio_code: Int, perf_code: Int)
 case class SubjectsInStudy(subjects: List[String], folder_id: String, studyName: String, username: String, studyTopology: StudyTopology, bio_code: Int, Psycho_code: Int, physio_code: Int, perf_code: Int, createPortrait: Int, study_no: Int)
 case class SubjectsInStudyAbstract(subjects: List[String], topology: Abstraction, study_no: Int)
+case class SubjectFolderRealTime(subjectId: String, subjectName: String, service: Drive, study_no: Int, filesExtensions: Map[String, Int], explExt:String, expListExtention: List[String], resExt: String, resListExtentions: List[String])
+case class DownloadVideo(userName: String, subject: String, studyLoc: String, studyNo: Int, subjectName: String)
+
 class ScanSubject extends Actor{
 
+
+
+  def inActitivity(point : Double, actionType: Int, activities : java.util.ArrayList[Activity]): Boolean = {
+    import scala.collection.JavaConversions._
+    for (act <- activities) {
+      if (Math.floor(point) >= Math.floor(act.startTime) && Math.floor(point) <= Math.floor(act.endTime) && actionType == act.actionType) {
+        return true
+      }
+    }
+    return false
+  }
 
   def findMeanOfInterval(interval: scala.collection.Map[java.lang.Double, java.lang.Double], start: Double, end: Double, abs: Boolean ): Double =
   {
@@ -52,6 +68,49 @@ class ScanSubject extends Actor{
     previous = act.endTime*/
   }
 
+
+  def getStudyDescriptor (service : Drive, loc : String) : String=
+  {
+
+    var desc : String =  null
+    loc match {
+      case location =>
+        var allSessions : List[SessionDescription] = null
+        import scala.collection.JavaConversions._
+        val input: InputStream = GoogleDrive.downloadFileByFileId(service, location)
+        val tt: ReadExcelJava = new ReadExcelJava
+        allSessions = tt.getStudyDescription(4, GoogleDrive.generateFileNameFromInputStream(input)).toList
+
+        if(allSessions != null){
+          var array: JsArray = new JsArray
+          var listObj : Seq[JsObject] = Seq.empty[JsObject]
+          for(as <- allSessions){
+
+
+            var sessionType = "3";
+            var me = "0"
+            if(as.getShow== true){
+              sessionType = "2"
+            }
+            if(as.getMutualEx == true)
+              me = "1"
+
+            array = array.append( JsObject(Seq("sessionName" -> JsString(as.getName), "acronym" -> JsString(as.getDesiredName),
+              "sessionType" ->JsString(sessionType), "arm" ->JsString(me) )))
+
+            //var x : String = Seq(ww)
+
+            println("WWWWWWWWWWWWWWWWWWfffff" + array.toString())
+          }
+          desc = array.toString()
+        }
+
+        input.close()
+    }
+
+
+   desc
+  }
   def receive = {
     case ScanStudyAbstract(topology) =>
       var study_no: Int = 0
@@ -77,26 +136,41 @@ class ScanSubject extends Actor{
         val subjects = GoogleDrive.returnFilesInFolder(service, topology.studyLocation, "mimeType = 'application/vnd.google-apps.folder'")
         var signals = GoogleDrive.returnFilesInFolderJustForTest2(service, topology.studyLocation, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
 
-        // searach if this study has descriptor
-        for ((signalId, signalInfo) <- signals) {
-          //val file2: File = GoogleDrive.waitUntilGetDGFile(service, signalId)
-          if (!signalInfo.getTitle.contains("~")) {
-            val extension = signalInfo.getFileExtension
+        var descriptor = topology.descriptor
 
-            if(extension.equalsIgnoreCase("descriptor")) {
-              descLoc = signalInfo.getId
+
+        println("FZOOOOOOOOOOOOOOOOOOOOOOOO  " + descriptor);
+        // if the user choose not to provide experimental desing we serach for file with .descriptor extension......
+        if(descriptor ==  null || descriptor.equals("") || descriptor.equals("null")){
+
+          descriptor = null;
+          println("Fucnking nuillllllllllllllllllllllllllllllllllllll")
+          // searach if this study has descriptor
+          for ((signalId, signalInfo) <- signals) {
+            //val file2: File = GoogleDrive.waitUntilGetDGFile(service, signalId)
+            if (!signalInfo.getTitle.contains("~") && signalInfo.getFileExtension != null) {
+              val extension = signalInfo.getFileExtension
+
+              if(extension.equalsIgnoreCase("descriptor")) {
+
+                // code to translate the descitpt ro json code to save in in our database and aslo provdie code to convernt from json to java
+                descLoc = signalInfo.getId
+                descriptor = getStudyDescriptor(service, descLoc);
+              }
+
             }
-
           }
         }
+
 
         if (subjects.size > 0) {
           var share = 0;
           if (topology.public)
             share = 1;
-          study_no = DataBaseOperations.GenerateStudyNoGD(topology.studyName, topology.userName, SharedData.GOOGLE_DRIVE, share, descLoc)
+          study_no = DataBaseOperations.GenerateStudyNoGD(topology.studyName, topology.userName, SharedData.GOOGLE_DRIVE, share, descriptor, topology.studyLocation, null)
         }
         sender() ! SubjectsInStudyAbstract(subjects.toList, topology, study_no)
+
       }
       else{
         var file = new java.io.File(topology.studyLocation);
@@ -110,7 +184,7 @@ class ScanSubject extends Actor{
               share = 1;
 
             // TODO search for descirptor on server
-            study_no = DataBaseOperations.GenerateStudyNoGD(topology.studyName, topology.userName, SharedData.LOCALSERVER, share, null)
+            study_no = DataBaseOperations.GenerateStudyNoGD(topology.studyName, topology.userName, SharedData.LOCALSERVER, share, null, topology.studyLocation, null)
           }
           sender() ! SubjectsInStudyAbstract(subjects, topology, study_no)
         } else {
@@ -119,12 +193,81 @@ class ScanSubject extends Actor{
 
       }
 
+    case SubjectFolderRealTime(subjectId, subjectName, service, study_no, userDefinedExtension, explExt, expListExtention, resExt, resListExtentions) =>
+      println("Subject : " +  subjectName)
+      //println("sss  "  + subject   +  " Data Modified : " + subjectInfo.getl)
+      // This  call asks one of ScanSubject Actor to scan a particulre subect and save its content to our database
+      //TODO when a new study comes in we should send a priority message to scan that study.
+      val sessions = GoogleDrive.returnFilesInFolderJustForTest2(service, subjectId, "mimeType = 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+
+      var session_no: Int = 1
+      //val file0: com.google.api.services.drive.model.File = GoogleDrive.waitUntilGetDGFile(service, subject)
+
+      import scala.collection.JavaConversions._
+      for ((sessionId, sessionInfo) <- sessions) {
+
+        println("session : "  + sessionInfo.getTitle  )
+        var file: com.google.api.services.drive.model.File = sessionInfo
+        var sessionName: String = sessionInfo.getTitle
+
+        sessionName = sessionName.replaceAll("\\s+", "")
+
+        val Signals = GoogleDrive.returnFilesInFolderJustForTest2(service, sessionId, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+        var signal_code: Int = 1
+        breakable {
+          for ((signalId, signalInfo) <- Signals) {
+            var order = 0;
+            var isBl = false;
+            var shouldICommit = true;
+            if (!signalInfo.getTitle.contains("~") && signalInfo.getFileExtension != null) {
+              val extension: String = signalInfo.getFileExtension
+              println("extension  "  + extension  )
+              // TODO in case there is NO primary explantory varialbe make the secondary to appear first
+              if((expListExtention.contains(extension.toLowerCase) || explExt.equalsIgnoreCase(extension) || extension.equalsIgnoreCase("sp") ||
+                extension.equalsIgnoreCase("tp") || /*extension.equalsIgnoreCase("mp4")*/  extension.equalsIgnoreCase("avi")|| extension.equalsIgnoreCase("bar")|| resExt.equalsIgnoreCase(extension) || resListExtentions.contains(extension.toLowerCase) )
+                && !extension.equalsIgnoreCase("sim2") ) {
+                signal_code = userDefinedExtension.get(extension.toLowerCase) match {
+                  case Some(x) => x
+                  case None => 0 // should never reach here
+                }
+              }
+              else
+                shouldICommit = false //todo: continue is not supported
+              if (shouldICommit) {
+
+                var insert = false
+                if(extension.equalsIgnoreCase("avi")) insert = true;
+
+                println("Now going to insert signal  " + extension  + "code  " +  signal_code)
+                DataBaseOperations.UpdateSessionGD(subjectName, study_no, 1, sessionName, signal_code, signalInfo.getId, 0, isBl, order, insert, signalInfo.getTitle)
+              }
+            }
+          }
+        }
+        session_no += 1
+
+      }
+
+      val infos = GoogleDrive.returnFilesInFolderJustForTest2(service, subjectId, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+      import scala.collection.JavaConversions._
+      for ((info, fileInfo) <- infos) {
+        //var fileInfo: File = getFolderId(service, info)
+
+        if (fileInfo.getTitle.contains("~") || fileInfo.getFileExtension == null) break //todo: continue is not supported
+        val extension: String = fileInfo.getFileExtension
+        if (userDefinedExtension.contains(extension.toLowerCase)) {
+          var signal_code = userDefinedExtension.get(extension.toLowerCase) match {
+            case Some(x) => x
+          }
+          DataBaseOperations.UpdateSessionGD(subjectName, study_no, session_no, "GENERAL", signal_code, fileInfo.getId, 1, false, 0, false, fileInfo.getTitle)
+        }
+      }
     case SubjectFolderAbstract(subject, service, study_no, topology, userDefinedExtension) =>
       if(topology.sourceType ==SharedData.GOOGLE_DRIVE) {
         Logger.info("We started reading a new subject for Study No = " + study_no)
         var report: String = "";
         val file0: File = getFolderId(service, subject);
-        DataBaseOperations.InsertSubjectGD(file0.getTitle, study_no, 111, 11, 11)
+        DataBaseOperations.InsertSubjectGD(file0.getTitle, study_no, subject, 11, 11)
         val sessions = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType = 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
         var session_no: Int = 1
 
@@ -135,16 +278,18 @@ class ScanSubject extends Actor{
           sessionName = sessionName.replaceAll("\\s+", "")
           val Signals = GoogleDrive.returnFilesInFolderJustForTest2(service, sessionId, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
           var signal_code: Int = 1
+          
           breakable {
             for ((signalId, signalInfo) <- Signals) {
               var order = 0;
 
               var isBl = false;
-
               var shouldICommit = true;
 
-              if (!signalInfo.getTitle.contains("~")) {
+              if (!signalInfo.getTitle.contains("~") && signalInfo.getFileExtension != null) {
                 val extension: String = signalInfo.getFileExtension
+                println("extension  "  + extension  )
+
                 if (extension.equalsIgnoreCase(topology.primaryExp)) {
                   order = 2;
                 }
@@ -161,7 +306,7 @@ class ScanSubject extends Actor{
                 if (sessionName.replaceFirst("(\\d*\\s*)", "").equalsIgnoreCase(topology.baseLine) && (extension.equalsIgnoreCase(topology.primaryExp) || topology.secondadryExp.contains(extension))) {
                   isBl = true;
                 }
-                if (userDefinedExtension.contains(extension.toLowerCase) && !extension.equalsIgnoreCase("sim2")) {
+                if (userDefinedExtension.contains(extension.toLowerCase) && !extension.equalsIgnoreCase("sim2") ) {
                   signal_code = userDefinedExtension.get(extension.toLowerCase) match {
                     case Some(x) => x
                     case None =>  0  // should never reach here
@@ -170,7 +315,7 @@ class ScanSubject extends Actor{
                 else
                   shouldICommit = false //todo: continue is not supported
                 if (shouldICommit)
-                  DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, sessionName, signal_code, signalInfo.getId, 0, isBl, order)
+                  DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, sessionName, signal_code, signalInfo.getId, 0, isBl, order, signalInfo.getTitle)
               }
             }
           }
@@ -185,13 +330,13 @@ class ScanSubject extends Actor{
         for ((info, fileInfo) <- infos) {
           //var fileInfo: File = getFolderId(service, info)
 
-          if (fileInfo.getTitle.contains("~")) break //todo: continue is not supported
+          if (fileInfo.getTitle.contains("~") || fileInfo.getFileExtension == null) break //todo: continue is not supported
           val extension: String = fileInfo.getFileExtension
           if (userDefinedExtension.contains(extension.toLowerCase)) {
             var signal_code = userDefinedExtension.get(extension.toLowerCase) match {
               case Some(x) => x
             }
-            DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, "GENERAL", signal_code, fileInfo.getId, 1, false, 0)
+            DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, "GENERAL", signal_code, fileInfo.getId, 1, false, 0, fileInfo.getTitle)
           }
         }
       }
@@ -201,7 +346,7 @@ class ScanSubject extends Actor{
         var report: String = "";
         //val file0: File = getFolderId(service, subject);
         var subjectTitle = subject.substring(subject.lastIndexOf("\\")+1)
-        DataBaseOperations.InsertSubjectGD(subjectTitle, study_no, 111, 11, 11)
+        DataBaseOperations.InsertSubjectGD(subjectTitle, study_no, subject, 11, 11)
         //val sessions = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType = 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
         val sessions = returnFileFromFolderLocalMachine(subject, true);
         var session_no: Int = 1
@@ -222,7 +367,7 @@ class ScanSubject extends Actor{
 
               var shouldICommit = true;
               var signalTitle = signal.substring(signal.lastIndexOf("\\")+1)
-              if (!signalTitle.contains("~")) {
+              if (!signalTitle.contains("~") ) {
                 val extension: String = signal.substring(signal.lastIndexOf(".")+1)
                 if (extension.equalsIgnoreCase(topology.primaryExp)) {
                   order = 2;
@@ -242,7 +387,7 @@ class ScanSubject extends Actor{
                 else
                   shouldICommit = false //todo: continue is not supported
                 if (shouldICommit)
-                  DataBaseOperations.InsertSessionGD(subjectTitle, study_no, session_no, sessionName, signal_code, signal, 0, isBl, order)
+                  DataBaseOperations.InsertSessionGD(subjectTitle, study_no, session_no, sessionName, signal_code, signal, 0, isBl, order )
               }
             }
           }
@@ -273,6 +418,342 @@ class ScanSubject extends Actor{
 
       sender() ! OneSubjectDoneAbstract(study_no)
 
+
+
+    case SubjectFolderAbstractExport(subjectTitle, subject, service, study_no) =>
+
+      val sessions = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType = 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+      var tempList : java.util.List[EntryForExcel] = new java.util.ArrayList[EntryForExcel]()
+      import scala.collection.JavaConversions._
+      for ((sessionId, sessionInfo) <- sessions) {
+        var minFrmes: java.util.TreeMap[java.lang.Double, java.lang.Double] = null;
+        var ppSignal: java.util.TreeMap[java.lang.Double, java.lang.Double] = null;
+
+
+
+        var brSignal: java.util.TreeMap[java.lang.Double, java.lang.Double] = null;
+        var hrSignal: java.util.TreeMap[java.lang.Double, java.lang.Double] = null;
+        var hrvSignal: java.util.TreeMap[java.lang.Double, java.lang.Double] = null;
+        var edaSignal: java.util.TreeMap[java.lang.Double, java.lang.Double] = null;
+
+
+        var speed: java.util.TreeMap[java.lang.Double, java.lang.Double] = null;
+        var acc: java.util.TreeMap[java.lang.Double, java.lang.Double] = null;
+        var braking: java.util.TreeMap[java.lang.Double, java.lang.Double] = null;
+        var stering: java.util.TreeMap[java.lang.Double, java.lang.Double] = null;
+        var laneOffest: java.util.TreeMap[java.lang.Double, java.lang.Double] = null;
+        var lanePosition: java.util.TreeMap[java.lang.Double, java.lang.Double] = null;
+
+
+        var activtityFile: java.util.ArrayList[Activity] = null;
+
+        var file: com.google.api.services.drive.model.File = sessionInfo
+        var sessionName: String = sessionInfo.getTitle
+        sessionName = sessionName.replaceFirst("(\\d*\\s*)", "")
+
+        var stimulusName: String = sessionName match {
+
+          case _ => sessionName
+          /*case "Baseline" => "No-Multitasking"
+          case "PracticeDrive" => "No-Multitasking"
+          case "NormalDrive" => "No-Multitasking"
+          case "MotoricDrive" => "Motoric Load"
+          case "CognitiveDrive" => "Cognitive Load"
+          case "FinalDrive" => "Motoric Load"
+          case _ => "No-Multitasking"*/
+        }
+        sessionName = sessionName.toLowerCase match {
+          case x if x.contains("bl") => "1"
+          case x if x.contains("pd") => "2"
+          case x if x.contains("rd") => "3"
+          case x if x.contains("ns") => "4"
+          case x if x.contains("cs") => "5"
+          case x if x.contains("es") => "6"
+          case x if x.contains("ms") => "7"
+          case x if x.contains("fdn") => "8"
+          case x if x.contains("fdl") => "8"
+          case _ => sessionName
+        }
+
+
+        // if(!sessionName.equals("BL") && !sessionName.equals("PD") ) {
+        val Signals = GoogleDrive.returnFilesInFolderJustForTest2(service, sessionId, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+        var signal_code: Int = 1
+        var vidoeCount = 0;
+        breakable {
+          for ((signalId, signalInfo) <- Signals) {
+            if (((!signalInfo.getTitle.contains("~") && signalInfo.getFileExtension != null) || signalInfo.getTitle.contains(".bar"))) {
+
+              var extension: String = signalInfo.getFileExtension
+              //println("extension  " + extension + "   Name: " + signalInfo.getTitle)
+              if (signalInfo.getTitle.contains(".bar.xlsx") || signalInfo.getTitle.contains(".bar")) // to hnalde muhsin issue with .bar extension
+              {
+                extension = "bar"
+              }
+              // TODO in case there is NO primary explantory varialbe make the secondary to appear first
+              if (extension.equalsIgnoreCase("pp")) {
+                val input2: InputStream = GoogleDrive.downloadFileByFileId(service, signalId)
+                val fileName2: String = GoogleDrive.generateFileNameFromInputStream(input2)
+                ppSignal = ReadExcelJava.getAllSignalFromExcelAbstraction(fileName2, 2);
+                if (minFrmes == null) minFrmes = ppSignal
+                else {
+                  if (ppSignal.size() < minFrmes.size()) minFrmes = ppSignal;
+                }
+              }
+              else if (extension.equalsIgnoreCase("np")) {
+                val input2: InputStream = GoogleDrive.downloadFileByFileId(service, signalId)
+                val fileName2: String = GoogleDrive.generateFileNameFromInputStream(input2)
+                ppSignal = ReadExcelJava.getAllSignalFromExcelAbstraction(fileName2, 2);
+                if (minFrmes == null) minFrmes = ppSignal
+                else {
+                  if (ppSignal.size() < minFrmes.size()) minFrmes = ppSignal;
+                }
+              }
+              else if (extension.equalsIgnoreCase("res2")) {
+                var input2: InputStream = GoogleDrive.downloadFileByFileId(service, signalId)
+                var fileName2: String = GoogleDrive.generateFileNameFromInputStream(input2)
+                speed = ReadExcelJava.getAllSignalFromExcelAbstractionNoDeletion(fileName2, 1);
+                acc = ReadExcelJava.getAllSignalFromExcelAbstractionNoDeletion(fileName2, 2);
+                braking = ReadExcelJava.getAllSignalFromExcelAbstractionNoDeletion(fileName2, 3);
+                stering = ReadExcelJava.getAllSignalFromExcelAbstractionNoDeletion(fileName2, 4);
+
+
+
+                //println("Lane + " + lanePosition.size())
+                var name = ReadExcelJava.getHeaderNameFromExel(fileName2, 5)
+
+                var ttlist = name.keySet().toArray()
+                if(ttlist(0).toString.toLowerCase().contains("offset")){
+
+                  println("Kos o5tak men youm")
+                  laneOffest = name.get(ttlist(0))
+                  lanePosition = ReadExcelJava.getAllSignalFromExcelAbstraction(fileName2, 6);
+                }
+                else
+                {
+                  laneOffest = null
+                  lanePosition = name.get(ttlist(0))
+                }
+
+                //laneOffest = ReadExcelJava.getAllSignalFromExcelAbstractionNoDeletion(fileName2, 5);
+
+
+
+                if (minFrmes == null) minFrmes = speed
+                else {
+                  if (speed.size() < minFrmes.size()) minFrmes = speed;
+                }
+              }
+
+
+           /* if (extension.equalsIgnoreCase("peda")) {
+                val input2: InputStream = GoogleDrive.downloadFileByFileId(service, signalId)
+                val fileName2: String = GoogleDrive.generateFileNameFromInputStream(input2)
+                edaSignal = ReadExcelJava.getAllSignalFromExcelAbstraction(fileName2, 1);
+                if (minFrmes == null) minFrmes = edaSignal;
+                else {
+                  if (edaSignal.size() < minFrmes.size()) minFrmes = edaSignal;
+                }
+              }
+              else if (extension.equalsIgnoreCase("hr")) {
+                val input2: InputStream = GoogleDrive.downloadFileByFileId(service, signalId)
+                val fileName2: String = GoogleDrive.generateFileNameFromInputStream(input2)
+                hrSignal = ReadExcelJava.getAllSignalFromExcelAbstraction(fileName2, 1);
+                if (minFrmes == null) minFrmes = hrSignal;
+                else {
+                  if (hrSignal.size() < minFrmes.size()) minFrmes = hrSignal;
+                }
+              }
+
+              else if (extension.equalsIgnoreCase("br")) {
+                val input2: InputStream = GoogleDrive.downloadFileByFileId(service, signalId)
+                val fileName2: String = GoogleDrive.generateFileNameFromInputStream(input2)
+                brSignal = ReadExcelJava.getAllSignalFromExcelAbstraction(fileName2, 1);
+                if (minFrmes == null) minFrmes = brSignal;
+                else {
+                  if (brSignal.size() < minFrmes.size()) minFrmes = brSignal;
+                }
+              }
+
+              else if (extension.equalsIgnoreCase("hrv")) {
+                val input2: InputStream = GoogleDrive.downloadFileByFileId(service, signalId)
+                val fileName2: String = GoogleDrive.generateFileNameFromInputStream(input2)
+                hrvSignal = ReadExcelJava.getAllSignalFromExcelAbstraction(fileName2, 1);
+                if (minFrmes == null) minFrmes = hrvSignal;
+                else {
+                  if (hrvSignal.size() < minFrmes.size()) minFrmes = hrvSignal;
+                }
+              }
+              */
+              else if (extension.equalsIgnoreCase("stm")) {
+                activtityFile = ReadExcelJava.readActivity(GoogleDrive.downloadFileByFileId(service, signalId));
+              }
+            }
+          }
+        }
+
+        if(minFrmes != null){
+          var emptySignal = new java.util.TreeMap[java.lang.Double, java.lang.Double]
+          for ((time, value) <- minFrmes) {
+            emptySignal.put(time, -111111.1)
+          }
+
+          if (activtityFile == null) {
+
+            if (edaSignal == null)
+              edaSignal = emptySignal
+            if (ppSignal == null)
+              ppSignal = emptySignal
+            if (hrSignal == null)
+              hrSignal = emptySignal
+            if (hrvSignal == null)
+              hrvSignal = emptySignal
+            if (brSignal == null)
+              brSignal = emptySignal
+            if (speed == null)
+              speed = emptySignal
+            if (acc == null)
+              acc = emptySignal
+            if (stering == null)
+              stering = emptySignal
+            if (braking == null)
+              braking = emptySignal
+            if (laneOffest == null )
+              laneOffest = emptySignal
+            if(lanePosition == null )
+              lanePosition = emptySignal
+
+            //if(ppSignal != null && edaSignal !=null && hrSignal!= null && brSignal != null && hrvSignal !=null  && speed !=null && acc!=null && stering != null & braking!= null && laneOffest != null){
+            var ctr = 0;
+
+            var ppList = ppSignal.keySet().toArray()
+            var edaList = edaSignal.keySet().toArray()
+            var hrList = hrSignal.keySet().toArray()
+            var brList = brSignal.keySet().toArray()
+            var hrvList = hrvSignal.keySet().toArray()
+            var speedList = speed.keySet().toArray()
+            var accList = acc.keySet().toArray()
+            var steeringList = stering.keySet().toArray()
+            var brakeList = braking.keySet().toArray()
+            var laneList = laneOffest.keySet().toArray()
+            var lanePositionList= lanePosition.keySet().toArray()
+            var gSize = minFrmes.size();
+
+           println("AAAAAAA  " + minFrmes.lastEntry())
+
+            var index =0;
+            for ((time, value) <- minFrmes) {
+
+
+
+              tempList.add(new EntryForExcel(time, sessionName, "0", "0", ppSignal.get(ppList(ctr * Math.floor(ppSignal.size() / gSize).toInt)), edaSignal.get(edaList(ctr * Math.floor(edaSignal.size() / gSize).toInt)),  brSignal.get(brList(ctr * Math.floor(brSignal.size() / gSize).toInt)), hrSignal.get(hrList(ctr * Math.floor(hrSignal.size() / gSize).toInt)), hrvSignal.get(hrvList(ctr * Math.floor(hrvSignal.size() / gSize).toInt)), speed.get(speedList(index)), acc.get(accList(index)), braking.get(brakeList(index)), stering.get(steeringList(index)), laneOffest.get(laneList( math.floor(ctr.toDouble * (laneOffest.size().toDouble/gSize.toDouble)).toInt)), lanePosition.get(lanePositionList(Math.floor(ctr.toDouble * lanePosition.size().toDouble / gSize.toDouble).toInt))));
+              ctr = ctr + 1;
+
+
+              index = math.floor(ctr.toDouble * (speed.size().toDouble/gSize.toDouble)).toInt
+
+             // if(index >= speedList.size)
+               // index = speedList.size -1
+
+            }
+            //}
+
+          }
+          else /*if (activtityFile != null && ppSignal != null && edaSignal !=null && hrSignal!= null && brSignal != null && hrvSignal !=null && speed !=null && acc!=null && stering != null & braking!= null && laneOffest != null)*/ {
+            if (edaSignal == null)
+              edaSignal = emptySignal
+            if (ppSignal == null)
+              ppSignal = emptySignal
+            if (hrSignal == null)
+              hrSignal = emptySignal
+            if (hrvSignal == null)
+              hrvSignal = emptySignal
+            if (brSignal == null)
+              brSignal = emptySignal
+            if (speed == null)
+              speed = emptySignal
+            if (acc == null)
+              acc = emptySignal
+            if (stering == null)
+              stering = emptySignal
+            if (braking == null)
+              braking = emptySignal
+            if (laneOffest == null)
+              laneOffest = emptySignal
+            if(lanePosition == null )
+              lanePosition = emptySignal
+
+
+
+            var ctr = 0;
+            var ppList = ppSignal.keySet().toArray()
+            var edaList = edaSignal.keySet().toArray()
+            var hrList = hrSignal.keySet().toArray()
+            var brList = brSignal.keySet().toArray()
+            var hrvList = hrvSignal.keySet().toArray()
+
+            var speedList = speed.keySet().toArray()
+            var accList = acc.keySet().toArray()
+            var steeringList = stering.keySet().toArray()
+            var brakeList = braking.keySet().toArray()
+            var laneList = laneOffest.keySet().toArray()
+            var lanePositionList= lanePosition.keySet().toArray()
+
+
+            var gSize = minFrmes.size();
+            var distinctAnno: TreeMap[Int, String] = TreeMap.empty
+            import scala.collection.JavaConversions._
+            for (temp <- activtityFile) {
+              if (!distinctAnno.contains(temp.actionType)) {
+                distinctAnno += temp.actionType -> temp.label
+              }
+            }
+
+            var index =0;
+
+
+            var frac = (speed.size().toDouble / gSize.toDouble) % Math.floor(speed.size() / gSize).toInt
+            var totalFrac = frac
+            println("Frac :    " + frac)
+            for ((time, value) <- minFrmes) {
+              var stimulus = "0"
+              var stimulusFailure = "0"
+              for ((code, name) <- distinctAnno) {
+                {
+                  if (!name.toLowerCase().contains("light"))
+                    if (inActitivity(time, code, activtityFile)) {
+                      if (name.toLowerCase().contains("failure"))
+                        stimulusFailure = "6"
+                      else
+                        stimulus = name.toLowerCase match {
+                          case "emotional questions" => "3"
+                          case "answer" => "3"
+                          case "texting" => "4"
+                          case "mathematical questions" => "2"
+                          case "analytical questions" => "1"
+                          case "texting and emotional questions" => "5"
+
+                          case _ => name
+                        }
+                    }
+                }
+              }
+
+              tempList.add(new EntryForExcel(time, sessionName, stimulus, stimulusFailure, ppSignal.get(ppList(ctr * Math.floor(ppSignal.size() / gSize).toInt)), edaSignal.get(edaList(ctr * Math.floor(edaSignal.size() / gSize).toInt)),  brSignal.get(brList(ctr * Math.floor(brSignal.size() / gSize).toInt)), hrSignal.get(hrList(ctr * Math.floor(hrSignal.size() / gSize).toInt)), hrvSignal.get(hrvList(ctr * Math.floor(hrvSignal.size() / gSize).toInt)), speed.get(speedList(index)), acc.get(accList(index)), braking.get(brakeList(index)), stering.get(steeringList(index)),  laneOffest.get(laneList( math.floor(ctr.toDouble * (laneOffest.size().toDouble/gSize.toDouble)).toInt)), lanePosition.get(lanePositionList(Math.floor(ctr.toDouble * lanePosition.size().toDouble / gSize.toDouble).toInt))));
+              ctr = ctr + 1;
+
+              index = math.floor(ctr.toDouble * (speed.size().toDouble/gSize.toDouble)).toInt
+
+              //if(index >= speedList.size)
+               // index = speedList.size -1
+            }
+          }
+        }
+
+      }
+
+        println("length       " + tempList.size())
+      sender() ! OneSubjectDoneDataSet(study_no, subjectTitle, tempList)
     case SubjectFolderAbstractSummary(subject, service, study_no, topology, userDefinedExtension) =>
       var pointsForAllSession = Map.empty[String, Map[String, Double]]
       var totoalSubjectPointsWithResponse : Map[String, Map[String,  Map[String, Double]]] = Map.empty
@@ -305,7 +786,7 @@ class ScanSubject extends Actor{
             // save the explaontory varialbe file in somewere
             breakable {
               for ((signalId,signalInfo) <- Signals) {
-                if (!signalInfo.getTitle.contains("~")) {
+                if (!signalInfo.getTitle.contains("~") && signalInfo.getFileExtension != null) {
 
                   val extension: String = signalInfo.getFileExtension
 
@@ -447,7 +928,7 @@ class ScanSubject extends Actor{
       Logger.info("We started reading a new subject for Study No = " + study_no)
       var report : String ="";
       val file0: File =getFolderId(service, subject);
-      DataBaseOperations.InsertSubjectGD(file0.getTitle, study_no, bio_code, psycho_code, physio_code)
+      DataBaseOperations.InsertSubjectGD(file0.getTitle, study_no, subject, psycho_code, physio_code)
       //val sessions = GoogleDrive.returnFilesInFolder(service, subject, "mimeType = 'application/vnd.google-apps.folder'")
       val sessions = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType = 'application/vnd.google-apps.folder'").asScala.mapValues(x=>x);
       var session_no: Int = 1
@@ -478,7 +959,7 @@ class ScanSubject extends Actor{
 
             var shouldICommit = true;
 
-            if (!signalInfo.getTitle.contains("~")) {
+            if (!signalInfo.getTitle.contains("~") && signalInfo.getFileExtension != null) {
 
               val extension: String = signalInfo.getFileExtension
 
@@ -488,7 +969,7 @@ class ScanSubject extends Actor{
 
               else shouldICommit= false //todo: continue is not supported
               if(shouldICommit)
-                DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, sessionName, signal_code, signalInfo.getId, 0, false,0)
+                DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, sessionName, signal_code, signalInfo.getId, 0, false,0, signalInfo.getTitle)
             }
           }
         }
@@ -524,13 +1005,13 @@ class ScanSubject extends Actor{
       for ((info, fileInfo) <- infos) {
         //var fileInfo: File = getFolderId(service, info)
 
-        if (fileInfo.getTitle.contains("~")) break //todo: continue is not supported
+        if (fileInfo.getTitle.contains("~") || fileInfo.getFileExtension == null) break //todo: continue is not supported
         val extension: String = fileInfo.getFileExtension
 
 
         if(userDefinedExtension.contains(extension)){
           var signal_code = userDefinedExtension.get(extension) match { case Some(x) => x}
-          DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, "GENERAL", signal_code, fileInfo.getId, 1, false,0)
+          DataBaseOperations.InsertSessionGD(file0.getTitle, study_no, session_no, "GENERAL", signal_code, fileInfo.getId, 1, false,0, fileInfo.getTitle)
         }
 
       }
@@ -558,11 +1039,60 @@ class ScanSubject extends Actor{
       else if (subjects.size < studyTopology.noOfSubjects) report = report + "You have fewer subjects than the number you have selected\n"
       var study_no: Int = 0
       if (subjects.size > 0) {
-        study_no = DataBaseOperations.GenerateStudyNoGD(studyName, username, SharedData.GOOGLE_DRIVE, shareStudy, null)
+        study_no = DataBaseOperations.GenerateStudyNoGD(studyName, username, SharedData.GOOGLE_DRIVE, shareStudy, null, folder_id, null)
       }
       sender() ! SubjectsInStudy(subjects.toList,folder_id, studyName, username, studyTopology, bio_code, psycho_code, physio_code, perf_code, createPortrait, study_no)
 
 
+    case DownloadVideo(userName, subject, studyLoc, studyNo, subjectName) =>
+
+      val googleCredential: GoogleCredential = GoogleDrive.getStoredCredentials(userName)
+      val acc: AccessRefreshString = DataBaseOperations.getStoredCredentials(userName)
+      val service: Drive = GoogleDrive.buildService(googleCredential)
+      // This  call asks one of ScanSubject Actor to scan a particulre subect and save its content to our database
+      //TODO when a new study comes in we should send a priority message to scan that study.
+      val sessions = GoogleDrive.returnFilesInFolderJustForTest2(service, subject, "mimeType = 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+      var session_no: Int = 1
+      import scala.collection.JavaConversions._
+      for ((sessionId, sessionInfo) <- sessions) {
+        // println("session : "  + sessionInfo.getTitle  )
+        var file: com.google.api.services.drive.model.File = sessionInfo
+        var sessionName: String = sessionInfo.getTitle
+
+        sessionName = sessionName.replaceAll("\\s+", "")
+
+        val Signals = GoogleDrive.returnFilesInFolderJustForTest2(service, sessionId, "mimeType != 'application/vnd.google-apps.folder'").asScala.mapValues(x => x);
+        var signal_code: Int = 1
+        breakable {
+          for ((signalId, signalInfo) <- Signals) {
+
+            if ((!signalInfo.getTitle.contains("~") && signalInfo.getFileExtension != null)) {
+              var extension: String = signalInfo.getFileExtension
+
+              if (extension.equalsIgnoreCase("avi") || extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("wav") || extension.equalsIgnoreCase("mp3")) {
+
+                val option1 = studyLoc + "\\" + subjectName + "\\" + sessionInfo.getTitle.replaceAll("\\s+", "") + "\\" + signalInfo.getTitle
+                val option2 = studyLoc + "\\" + subjectName + "\\" + sessionInfo.getTitle.replaceAll("\\s+", "") + "\\" + signalInfo.getTitle + "." + "mp3"
+                val option3 = studyLoc + "\\" + subjectName + "\\" + sessionInfo.getTitle.replaceAll("\\s+", "") + "\\" + signalInfo.getTitle + "." + "mp4"
+
+                if (!(new java.io.File(option1).exists() /*|| new java.io.File(option2).exists()*/ || new java.io.File(option3).exists())) {
+
+                  if (!new java.io.File(studyLoc + "\\" + subjectName + "\\" + sessionInfo.getTitle.replaceAll("\\s+", "")).exists())
+                    new java.io.File(studyLoc + "\\" + subjectName + "\\" + sessionInfo.getTitle.replaceAll("\\s+", "")).mkdirs();
+
+                  GoogleDrive.downloadVideo(userName, signalId, option1)
+                }
+
+              }
+
+
+            }
+          }
+        }
+        session_no += 1
+
+      }
+      sender ! OneSubjectDoneAbstract(studyNo)
   }
 
   def getFolderId (service: Drive, folder: String) :File ={

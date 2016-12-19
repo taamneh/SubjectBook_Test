@@ -24,11 +24,12 @@ CREATE TABLE session (
     run_no int    NOT NULL ,
     session_name varchar(100)    NOT NULL ,
     signal_loc varchar(500)    NOT NULL ,
-    signal_json varchar(20000)    NOT NULL ,
+    signal_json LONGTEXT    NULL ,
     is_general int    NOT NULL ,
     is_baseline int    NOT NULL ,
     signal_signal_code int    NOT NULL,
-    order_to_show int NOT Null
+    order_to_show int NOT Null,
+    file_name varchar(100)  NOT NULL DEFAULT ''
 );
 
 -- Table: `signal`
@@ -70,7 +71,10 @@ CREATE TABLE study (
     portrait_string varchar(100000) NULL,
     top_summary varchar(100000) NULL,
     radar varchar(100000) NULL,
-    study_descriptor_url varchar(500) NULL,
+    study_descriptor varchar(100000) NULL,
+    study_location varchar(1000) NULL ,
+    study_topology varchar(100000) NULL ,
+    study_location_on_server varchar(100) NULL,
     CONSTRAINT study_pk PRIMARY KEY (study_id)
 );
 
@@ -80,13 +84,13 @@ CREATE TABLE subject (
     subject_id varchar(100)    NOT NULL ,
     study_id int    NOT NULL ,
     radar_value varchar(10000)  NULL,
-    f_name varchar(20)    NULL ,
+    group_name varchar(100)    NULL ,
     l_name varchar(20)    NULL ,
     DOB date    NULL ,
     hide int    NULL ,
-    PAS int    NULL ,
-    NAS int    NULL ,
-    bio_code int    NULL ,
+    replicated int    NULL ,
+    in_progress int    NULL ,
+    subject_location varchar(100)    NULL ,
     psycho int    NULL,
     physio int     NULL,
     CONSTRAINT subject_pk PRIMARY KEY (subject_seq)
@@ -107,6 +111,12 @@ CREATE TABLE credential (
     access_token varchar(200)    NULL ,
     refresh_token varchar(200)    NULL ,
     CONSTRAINT credential_pk PRIMARY KEY (userId)
+);
+
+
+CREATE TABLE help (
+    ip varchar(100)    NOT NULL ,
+    CONSTRAINT help_pk PRIMARY KEY (ip)
 );
 
 
@@ -138,7 +148,7 @@ ALTER TABLE privilege ADD CONSTRAINT privilege_study FOREIGN KEY (study_id)
 -- Reference:  session_signal (table: session)
 
 
-ALTER TABLE session ADD CONSTRAINT session_signal FOREIGN KEY session_signal (signal_signal_code)
+ALTER TABLE session ADD CONSTRAINT session_signal FOREIGN KEY (signal_signal_code)
     REFERENCES signals (signal_code);
 
 
@@ -154,7 +164,7 @@ ALTER TABLE psychometric ADD CONSTRAINT psychometric_credential FOREIGN KEY (own
     REFERENCES credential (userId);
 
 
-ALTER TABLE session ADD CONSTRAINT session_lookup FOREIGN KEY (data_type)
+ALTER TABLE signals ADD CONSTRAINT signals_lookup FOREIGN KEY (data_type)
     REFERENCES lookup (code);
 
 

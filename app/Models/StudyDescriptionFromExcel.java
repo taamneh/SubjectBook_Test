@@ -88,7 +88,7 @@ public class StudyDescriptionFromExcel extends JsonFromExcel  {
             System.out.print(sess.getName() + "\t");
             System.out.print(sess.getDesiredName() + "\t");
 
-            System.out.print(sess.getHide() + "\t");
+            System.out.print(sess.getShow() + "\t");
             System.out.print(sess.getOrder() + "\t");
             System.out.print(sess.getMutualEx() + "\t");
         }

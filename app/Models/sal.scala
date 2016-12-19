@@ -8,8 +8,10 @@ import java.io.{IOException, File}
 import java.util
 
 import anorm._
-import controllers.GoogleDrive
+import controllers.{SharedData, DataBaseOperations, GoogleDrive}
 import org.apache.poi.openxml4j.exceptions.{InvalidFormatException, InvalidOperationException}
+import org.json.simple.{JSONObject, JSONArray}
+import org.json.simple.parser.{ParseException, JSONParser}
 import play.Logger
 import play.api.db.DB
 
@@ -52,18 +54,40 @@ object sal {
 
 
 
+  var perm = List.empty[String]
+  def permutation(str: String): List[String] = {
+    perm = List.empty[String]
+    permutation("", str)
+  }
 
 
+  def permutation(prefix: String, str: String): List[String] = {
+    val n = str.length
+    if(n==0) perm = prefix :: perm
+    else
+    {
+      for(i<- 0 to n-1){
+        permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i+1, n))
+      }
+    }
+    perm
+  }
 
   def main(args: Array[String]) {
 
-  var s :Seq[Double]= Seq(1.0,2,3,4,5,10,7,8,9,6);
-    println(computePercentile(s, 25, true))
+
+
+    var mp :Map[String,(String,Boolean,Int, Int, Boolean)] = Map.empty
+
+    mp += "s1" ->("s1", true, 1, 0, true)
+    mp += "G2b" ->("G2b", true, 4, 2, false)
 
 
 
+    println(mp)
 
 
+   /*println(String.format("%1$05d", i))
 
 
 
@@ -98,20 +122,9 @@ object sal {
     }
 
     jsonForChart.getDescriptor();
+*/
 
-
-    // val randomGenerator = new Random();
-  // println( randomGenerator.nextInt(1001));
-
-    /*val conn = play.api.db.DB.getConnection();
-    play.api.db.DB.withConnection { implicit c =>
-      val id: Option[Long] =
-        SQL("insert into user(ID, PASSWORD) values ({name}, {country})")
-          .on('name -> "Salah", 'country -> "Taamneh").executeInsert()
-    }*/
   }
 
-  //GoogleDrive.FindStudyLocalServer("","",1);
-  //for(ctr <- test3)
 
 }

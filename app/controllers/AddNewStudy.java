@@ -170,14 +170,14 @@ public class AddNewStudy  {
             report = report + "You have fewer subjects than the number you have selected\n";
         int study_no = 0;
         if(subjects.size() > 0 ) {
-            study_no = DataBaseOperations.GenerateStudyNoGD(studyName, username, SharedData.GOOGLE_DRIVE,shareStudy, null);
+            study_no = DataBaseOperations.GenerateStudyNoGD(studyName, username, SharedData.GOOGLE_DRIVE,shareStudy, null, folder_id, null);
         }
 
         for (String subject : subjects) {
 
             //File file0 = service.files().get(subject).execute();
             File file0 = GoogleDrive.waitUntilGetDGFile(service, subject);
-            DataBaseOperations.InsertSubjectGD(file0.getTitle(), study_no, bio_code, Psycho_code, physio_code);
+            DataBaseOperations.InsertSubjectGD(file0.getTitle(), study_no, subject, Psycho_code, physio_code);
 
             List<String> sessions =  GoogleDrive.returnFilesInFolder(service, subject, "mimeType = 'application/vnd.google-apps.folder'");
 
@@ -1760,14 +1760,14 @@ public class AddNewStudy  {
         if(study.exists()) {
             Logger.info("We Found it");
             // Insert new study in the DB
-            int study_no = DataBaseOperations.GenerateStudyNoGD(studyName, username, SharedData.LOCALSERVER, 0, null);
+            int study_no = DataBaseOperations.GenerateStudyNoGD(studyName, username, SharedData.LOCALSERVER, 0, null, url, null);
             // Get all the subjects in that study
             for (final java.io.File subject : study.listFiles()) {
                 String subjectName = subject.getName();
                 if (subject.isDirectory()) {
                     System.out.println("Subject folder path: " + subject.getAbsolutePath());
                     //Inset subjects into the new study
-                    DataBaseOperations.InsertSubjectGD(subject.getName(), study_no,bio_code,Psycho_code,physio_code);
+                    DataBaseOperations.InsertSubjectGD(subject.getName(), study_no,subject.getAbsolutePath(),Psycho_code,physio_code);
                     int session_no = 1;
 
                     // if the noOfSession is 0 we assume ther is no session and signal will be in the subject folder

@@ -7,7 +7,7 @@
 		revision="1.0-SNAPSHOT"
 		conf="runtime"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool, echo-trace-compile, echo-trace-test, echo-weave, echo-sigar"
-		date="20160316120803"/>
+		date="20161219131357"/>
 	<dependencies>
 		<module organisation="com.google.gdata" name="core">
 			<revision name="1.47.1" status="release" pubdate="20121026032353" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://code.google.com/p/gdata-java-client/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="91">
@@ -1050,7 +1050,7 @@
 				<caller organisation="com.typesafe.play" name="play_2.10" conf="default, compile, runtime, master" rev="1.1.1" rev-constraint-default="1.1.1" rev-constraint-dynamic="1.1.1" callerrev="2.3.6"/>
 				<artifacts>
 					<artifact name="logback-classic" type="jar" ext="jar" status="no" details="" size="270858" time="0" location="C:\Users\staamneh\.ivy2\cache\ch.qos.logback\logback-classic\jars\logback-classic-1.1.1.jar">
-						<origin-location is-local="false" location="http://repo1.maven.org/maven2/ch/qos/logback/logback-classic/1.1.1/logback-classic-1.1.1.jar"/>
+						<origin-location is-local="false" location="file:/C:/activator-1.3.2/repository/ch.qos.logback/logback-classic/1.1.1/jars/logback-classic.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>

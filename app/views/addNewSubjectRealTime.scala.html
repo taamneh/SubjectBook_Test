@@ -1,0 +1,293 @@
+@(userName: String, studyNo: Int, arms: Map[Int,String], gender: List[String], age : List[String])(implicit request: RequestHeader)
+@import helper._
+<!DOCTYPE html>
+<html>
+<head>
+
+    <style type="text/css">
+
+        .kareem {
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            font-family: montserrat;
+            color: #2C3E50;
+            font-size: 13px;
+        }
+
+
+
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=1170" name="viewport"><meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <script type="text/javascript" src="/assets/javascripts/jquery-1.9.0.min.js"></script>
+    <title>SubjectBoo</title>
+
+    <link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/stylesheets/datepicker3.css" rel="stylesheet">
+    <link href="/assets/stylesheets/styles.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/multi.css">
+
+
+    <!--[if lt IE 9]>
+    <script src="/assets/javascripts/html5shiv.js"></script>
+    <script src="/assets/javascripts/respond.min.js"></script>
+    <![endif]-->
+
+
+    <script src="/assets/javascripts/bootstrap.min.js"></script>
+    <script src="/assets/javascripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/assets/javascripts/ow-all.js"></script>
+    <!--<script type='text/javascript' src='@routes.Assets.at("javascripts/showInitiateStudy.js")'></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/studyDescriptorRealTime.js")'></script> -->
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/datePicker.css">
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/oneweb-salah.css">
+
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><span>Subject</span>Book</a> <a class="navbar-brand" href="/allStudies"><span></span>My Studies</a>
+            <!-- <a class="navbar-brand" href="#"><span></span>Share</a> -->
+            <a class="navbar-brand" href="/frontPage"><span></span>Help</a>
+            <ul class="user-menu">
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> @userName <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                        <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+    <form role="search">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+        </div>
+    </form>
+    <ul class="nav menu">
+        <li><a href="/allStudies"><span class="glyphicon glyphicon-th"></span> My Studies </a></li>
+        <li><a href="/createStudy"><span class="glyphicon glyphicon-pencil"></span> New Study</a></li>
+        <li role="presentation" class="divider"></li>
+
+    </ul>
+</div><!--/.sidebar-->
+
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a  href="#"><span class="glyphicon glyphicon-home"></span></a></li>
+            <li class="active">Forms</li>
+        </ol>
+    </div><!--/.row-->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Create New Study</h1>
+        </div>
+    </div><!--/.row-->
+    <!-- <div id= "newStudy"> -->
+
+    <div class ="showontop" >
+            <!-- progressbar -->
+
+            <ul class="taa" id="progressbar1">
+                <li class="active">Study Structure </li>
+            </ul>
+            <!-- fieldsets -->
+
+            <button type="button" id="mdl1" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal1" style="display: none;">
+                Launch demo modal
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Select Baseline Session</h4>
+                        </div>
+
+                        <div class="modal-footer" id = "mdl1Sub">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <button type="button" id="mdl2" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2" style="display: none;">
+                Launch demo modal
+            </button>
+
+
+
+            <fieldset>
+                <h2 class="fs-title">Data Source</h2>
+                <h3 class="fs-subtitle"></h3>
+                <table id="zob" cellspacing="0" class="data_table" id="add_sessions_table">
+                    <form class="form-inline" action="/addMoreSubjects" method="POST" enctype="multipart/form-data">
+
+                    <tr>
+                        <td class="cell_1">Number of Subjects</td>
+                        <td>
+                            <input type="number"  min="0" class="form-control"  name="subjectNo" id = "subjectNo" required>
+                        </td>
+                     <tr>
+                        @import java.math.BigInteger; var j =1;
+                        @for(temp <- arms){
+
+                       <td class="cell_1"> @temp._2 :</td><td> <input type="number"  value = "0" min="0"  class="form-control"  name="subjectNo" id = "noSub@j" required> </td>
+                        @{j = j + 1;}
+
+                        }
+
+                    </tr>
+                   <!-- <tr>
+                        <td class="cell_1">* Select Group:</td>
+                        <td>
+                            <select class="select_field"  id="arms" name="study_type"  style="width: 300px">
+                                @for(temp <- arms){
+
+                                <option id="op1" value=@temp._1  selected ="selected"> @temp._2 </option>
+
+                                }
+
+                            </select>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="cell_1">Gender:</td>
+                        <td>
+                            <select class="select_field"  id="gender" name="study_type"  style="width: 300px">
+                                @for(temp <- gender){
+
+                                <option id="op2" value=@temp  selected ="selected"> @temp </option>
+
+                                }
+
+                            </select>
+                        </td>
+                    </tr>
+
+
+
+                    <tr>
+                        <td class="cell_1">Age:</td>
+                        <td>
+                            <select class="select_field"  id="age" name="study_type"  style="width: 300px">
+                                @for(temp <- age){
+
+                                <option id="op3" value=@temp  selected ="selected"> @temp </option>
+
+                                }
+
+                            </select>
+                        </td>
+                    </tr>-->
+                     <tr>
+
+                        <input type="hidden" name="studyNo" id="studyNo" value= @studyNo>
+                         <td> <input type="submit" name="Edit" value="Edit2"></td>
+
+                     </tr>
+                    </form>
+                </table>
+                <!-- <input type="button" name="previous" class="previous action-button" value="Previous" /> -->
+
+
+                <script>
+                  $(document).ready(function(){
+
+                  $('[id^="noSub"]').change(function() {
+
+                  $('[id^="noSub"]').each(function() {
+                     alert ('wwwww');
+                   });
+
+                  });
+
+                      $("#noSub").change(function(){
+                        alert ($("#noSub1").val());
+                      });
+                      });
+
+                </script>
+
+
+
+            </fieldset>
+
+            </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+</div><!--/.main-->
+
+
+<div id="progressbar" class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2" style="display:none; position: fixed;height:100%; width:90%; background: rgba( 255, 255, 255, .8 )  50% 50%    no-repeat;">
+
+    <div style="position: fixed; top: 400px; left: 38%; height:100%; width:40%;">
+        <!-- <h2>Animated Progress Bar</h2> -->
+
+        <div class="progress">
+            <div id = "progressFileCreating" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="80" aria-valuemax="100" style="width:0%;">
+                0%
+            </div>
+        </div>
+        <p id = "textProgress"> <blink> Please wait.....your file structure is being created </blink> </p>
+    </div>
+</div>
+
+
+<div id="loading" style="display:none; position: fixed;height:100%; width:100%; background: rgba( 255, 255, 255, .8 ) url('/assets/images/ajax-loader.gif') 50% 50%    no-repeat;">
+    <p>  Please wait, study is being created  </p>
+</div>
+
+<script>
+
+
+    var wsUri = "@routes.Application.socket.webSocketURL()";
+    var userName = "@userName"
+
+
+
+</script>
+
+
+
+
+
+
+</body>
+
+</html>

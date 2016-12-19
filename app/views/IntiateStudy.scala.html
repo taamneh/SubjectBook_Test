@@ -1,0 +1,697 @@
+@(userName: String, explVar : List[(Option[String], Int, Int)])(implicit request: RequestHeader)
+@import helper._
+<!DOCTYPE html>
+<html>
+<head>
+
+    <style type="text/css">
+
+        .kareem {
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            font-family: montserrat;
+            color: #2C3E50;
+            font-size: 13px;
+        }
+
+
+
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=1170" name="viewport"><meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <script type="text/javascript" src="/assets/javascripts/jquery-1.9.0.min.js"></script>
+    <title>SubjectBook</title>
+
+    <link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/stylesheets/datepicker3.css" rel="stylesheet">
+    <link href="/assets/stylesheets/styles.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/multi.css">
+
+
+    <!--[if lt IE 9]>
+    <script src="/assets/javascripts/html5shiv.js"></script>
+    <script src="/assets/javascripts/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- <script type="text/javascript" src="/assets/javascripts/showPicker.js"></script> -->
+    <script src="/assets/javascripts/bootstrap.min.js"></script>
+    <script src="/assets/javascripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/assets/javascripts/ow-all.js"></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/showInitiateStudy.js")'></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/studyDescriptorRealTime.js")'></script>
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/datePicker.css">
+    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/oneweb-salah.css">
+
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><span>Subject</span>Book</a> <a class="navbar-brand" href="/allStudies"><span></span>My Studies</a>
+            <!-- <a class="navbar-brand" href="#"><span></span>Share</a> -->
+            <a class="navbar-brand" href="/frontPage"><span></span>Help</a>
+            <ul class="user-menu">
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> @userName <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                        <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+    <form role="search">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+        </div>
+    </form>
+    <ul class="nav menu">
+        <li><a href="/allStudies"><span class="glyphicon glyphicon-th"></span> My Studies </a></li>
+        <li><a href="/createStudy"><span class="glyphicon glyphicon-pencil"></span> New Study</a></li>
+        <li role="presentation" class="divider"></li>
+
+    </ul>
+</div><!--/.sidebar-->
+
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a  href="#"><span class="glyphicon glyphicon-home"></span></a></li>
+            <li class="active">Forms</li>
+        </ol>
+    </div><!--/.row-->
+
+    <div class="row">
+        <div class="col-lg-12">
+           <!-- <h1 class="page-header">Create New Study</h1> -->
+        </div>
+    </div><!--/.row-->
+    <!-- <div id= "newStudy"> -->
+
+    <div class ="showontop" >
+
+        <form calss="salah" id="msform" method="post">
+            <!-- progressbar -->
+
+            <ul class="taa" id="progressbar1">
+                <li class="active">Study Structure </li>
+                <li >Experimental Design</li>
+                <li> Explanatory Variables</li>
+                <li> Response Variable </li>
+                <li> Questionnaires </li>
+                <!--  <li> Covariate </li>  -->
+
+                <!-- <li>Performance </li>  -->
+            </ul>
+
+            @helper.form(action = routes.Application.InsertNewStudy, 'enctype -> "multipart/form-data", 'id-> "target"  ) {
+
+            <!-- fieldsets -->
+
+            <button type="button" id="mdl1" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal1" style="display: none;">
+                Launch demo modal
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Select Baseline Session</h4>
+                        </div>
+
+                        <div class="modal-footer" id = "mdl1Sub">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <button type="button" id="mdl2" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2" style="display: none;">
+                Launch demo modal
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Select the Explanatory Variable</h4>
+                        </div>
+
+                        <div class="modal-footer" id = "mdl1Expl">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <button type="button" id="mdl3" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal3" style="display: none;">
+                Launch demo modal
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Select the Response Variable</h4>
+                        </div>
+
+                        <div class="modal-footer" id = "mdl1Resp">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <button type="button" id="mdl4" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal4" style="display: none;">
+                Launch demo modal
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Select the Response Covariate</h4>
+                        </div>
+                        <input  type="radio" name="baseline" value="female" checked="true" > Gender
+                        <div class="modal-footer" id = "mdl1covr">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <fieldset>
+                <h1 class="fs-title">Study Structure</h1>
+                <h3 class="fs-subtitle"></h3>
+                <br>
+                <table id="zob" cellspacing="0" class="data_table" id="add_sessions_table">
+
+
+                    <tr>
+                        <td class="cell_1">* Study name:</td>
+                        <td id = "kareem">
+                            <input  style = "width: 400px; height: 50px; border-color: #778899;" size="200"  type="text" id="study_name" maxlength="50" name="study_name" prompttext="" required>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="cell_1">* Number of subjects:</td>
+                        <td id = "kareem">
+                            <input  style = "width: 400px; height: 50px; border-color: #778899;" type="number" class="text_field" name="numSubj" id="numSubj" min="1" max="500" value = 1 required>
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <input  type="hidden" name="public" id='public' value=0>
+                        <input  type="hidden" name="portrait" id='portrait' value=0>
+                    </tr>
+                    <!-- <tr>
+                        <td class="cell_1"> Runs per session:</td>
+                    <td> -->
+                    <input class="kareem" type="hidden" class="text_field" name="numRun" min="1" max="100" value = 1>
+                    <!-- </td> -->
+
+                    <!-- </tr>  -->
+                </table>
+                <!-- <input type="button" name="previous" class="previous action-button" value="Previous" /> -->
+                <input id ="firstNext"  type="button" name="next" class="next1 action-button" value="Next" />
+
+
+
+            </fieldset>
+
+            <fieldset >
+                <h2 class="fs-title">Experimental Design</h2>
+                <h3 class="fs-subtitle"></h3>
+                <br>
+                <!-- <table id="tttt" cellspacing="0" class="data_table" id="add_experiments"> -->
+
+
+                    <input type="hidden" name="code" id= "code" value=" ">
+                    <input type="hidden" name="studyId"  value="1">
+
+                    <table id="zob" cellspacing="0" class="data_table" id="add_sessions_table">
+
+
+                        <tr>
+                            <div>
+                            <td class="cell_1"> Blocking Variables</td>
+                            <td >
+                                <div class="col-lg-12">
+                                    <div class="button-group">
+                                        <button type="button" style="width: 300px; height: 50px; border: 1px solid #ccc; border-color: #778899; box-sizing: border-box;" class="form-control"  data-toggle="dropdown" id="blockingVarBtn"> Select Variables <span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+
+                                                <li><a href="#"   class="blockingVar" data-value="1" name = "Age" tabIndex="-1"><input type="checkbox"/>&nbsp;Age</a></li>
+                                                <li><a href="#"   class="blockingVar" data-value="2" name = "Gender"tabIndex="-1"><input type="checkbox"/>&nbsp;Gender</a></li>
+                                                <li><a href="#"   class="blockingVar" data-value="None" name = "None"tabIndex="-1"><input type="checkbox"/>&nbsp;None</a></li>
+
+                                            </ul>
+                                    </div>
+                                </div>
+
+                            </td>
+                                </div>
+                        </tr>
+
+
+                        <tr>
+                                <td class="cell_1"> How many experiments do you have?</td>
+                               <td id = "kareem">
+                                    <div class="col-lg-12">
+                                        <div class="button-group">
+                                            <input style = "width: 300px; height: 50px; border-color: #778899;" type="number"  min="0" class="form-control"  name="pName" id = "noExp" required>
+                                        </div>
+                                    </div>
+                                </td>
+                        </tr>
+
+
+                    </table>
+                    <hr>
+
+                    <div id = "allTable">
+
+                    </div>
+
+
+
+
+
+                <input type="button" name="previous" class="previous action-button" value="Previous" />
+                <input id ="zeroNext"  type="button" name="next" class="next0 action-button" value="Next" />
+
+
+            <!--</table> -->
+            </fieldset>
+
+
+
+
+
+            <fieldset>
+                <h2 class="fs-title">Explanatory Variables</h2>
+                <br>
+                <table cellspacing="0" class="data_table" id="add_sessions_table">
+                    <tr>
+                        <td class="cell_1">Key Explanatory Variable:</td>
+                        <td>
+                            <select class="select_field"  id="explanatoryPrim" name="study_type"  style="width: 300px; border-color: #778899;" required>
+                                @for(temp <- explVar){
+                                @if(temp._3 == 1 ) {
+                                <option id="op1" value=@temp._2  selected ="selected"> @temp._1 </option>
+                                }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="cell_1">Backup Key Explanatory Variables:</td>
+                        <td>
+                            <select class="select_field"  id="explanatoryPrimBackUp" name="study_type"  style="width: 300px; border-color: #778899;" required>
+                                @for(temp <- explVar){
+                                @if(temp._3 == 1 ) {
+                                <option id="op3" value=@temp._2  selected ="selected"> @temp._1 </option>
+                                }
+                                }
+                                <option id="op3" value=-100  selected ="selected"> None </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell_1">Secondary Explanatory Variables</td>
+                        <td>
+
+                            <div class="col-lg-12">
+                                <div class="button-group">
+                                    <button type="button"  style="width: 300px; height: 50px; border: 1px solid #ccc; border-color: #778899; box-sizing: border-box; background: white;"  class="btn btn-default btn-sm dropdown-toggle"  data-toggle="dropdown" id = "explantorySdnVar"> Select Variables <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        @for(temp <- explVar){
+                                        @if(temp._3 == 1 ) {
+                                        <li><a href="#" class="small1" data-value="@temp._2" name = "@temp._1"  tabIndex="-1"><input type="checkbox"/>&nbsp;@temp._1</a></li>
+                                        }
+                                        }
+                                        <li><a href="#" class="small1" data-value="None" name = "None"  tabIndex="-1"><input type="checkbox"/>&nbsp;None</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </table>
+                <input type="button" name="previous" class="previous action-button" value="Previous" />
+                <input type="button" name="next" class="next2 action-button" value="Next" />
+                <!--<input type="submit" name="submit" class="submit action-button" value="Submit" id="createStudy"/> -->
+
+            </fieldset>
+            <fieldset>
+                <h2 class="fs-title">Response Variables</h2>
+                <br>
+                <table cellspacing="0" class="data_table" id="add_sessions_table">
+                    <tr>
+                        <td class="cell_1">Key Response Variables:</td>
+                        <td>
+                            <select class="select_field"  id="responsePrim" name="study_type"  style="width: 300px; border-color: #778899;">
+                                @for(temp <- explVar){
+                                @if(temp._3 == 1) {
+                                <option id="op1" value=@temp._2  selected ="selected"> @temp._1 </option>
+                                }
+                                }
+
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell_1">Secondary Response Variables</td>
+                        <td>
+                            <!-- <select class="select_field"  id="responseSec" name="study_type" >
+                                <option id="op1" value=1  selected ="selected"> EDA Palm</option>
+                            </select> -->
+
+                            <div class="col-lg-12">
+                                <div class="button-group">
+                                    <button type="button" style="width: 300px; height: 50px; border: 1px solid #ccc; border-color: #778899; box-sizing: border-box;background: white;"  class="btn btn-default btn-sm dropdown-toggle"  data-toggle="dropdown" id = "respSndVar"> Select Variables <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        @for(temp <- explVar){
+                                        @if(temp._3 == 1 ) {
+                                        <li><a href="#"   class="small2" data-value="@temp._2"  name = "@temp._1" tabIndex="-1"><input type="checkbox"/>&nbsp;@temp._1</a></li>
+                                        }
+                                        }
+                                        <li><a href="#"   class="small2" data-value="None"  name = "None" tabIndex="-1"><input type="checkbox"/>&nbsp;None</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                        </td>
+
+                    </tr>
+
+
+                </table>
+                <input type="button" name="previous" class="previous action-button" value="Previous" />
+                <input type="button" name="next" class="next3 action-button" value="Next" />
+                <!--<input type="submit" name="submit" class="submit action-button" value="Submit" id="createStudy"/> -->
+
+            </fieldset>
+
+
+            <fieldset>
+                <h2 class="fs-title">Questionnaires</h2>
+                <br>
+                <table cellspacing="0" class="data_table" id="add_sessions_table">
+                    <tr>
+                        <td class="cell_1">Subject-level Pre-study Questionnaires </td>
+                        <td>
+
+
+                            <div class="col-lg-12">
+                                <div class="button-group">
+                                    <button type="button"style="width: 300px; height: 50px; border: 1px solid #ccc; border-color: #778899; box-sizing: border-box;background: white;"  class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id = "subjLevelBtn"> Select Questionnaire<span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                      <li><a href="#"   class="subjectLevel" data-value="NASA" tabIndex="-1"><input type="checkbox"/>&nbsp;NASA</a></li>
+                                      <li><a href="#"   class="subjectLevel" data-value="TAI" tabIndex="-1"><input type="checkbox"/>&nbsp;TAI</a></li>
+                                      <li><a href="#"   class="subjectLevel" data-value="SAI" tabIndex="-1"><input type="checkbox"/>&nbsp;SAI</a></li>
+                                        <!-- <li><a href="#"   class="subjectLevel" data-value="POST STUDY" tabIndex="-1"><input type="checkbox"/>&nbsp;POST STUDY</a></li> -->
+                                        <!-- <li><a href="#"   class="subjectLevel" data-value="USABILITY" tabIndex="-1"><input type="checkbox"/>&nbsp;USABILITY</a></li> -->
+                                        <!-- <li><a href="#"   class="sessionLevel" data-value="PANAS" tabIndex="-1"><input type="checkbox"/>&nbsp;PANAS</a></li> -->
+                                        <li><a href="#"   class="subjectLevel" data-value="ATTENTIONAL CONTROL" tabIndex="-1"><input type="checkbox"/>&nbsp;ATTENTIONAL CONTROL</a></li>
+                                        <li><a href="#"   class="subjectLevel" data-value="PERSONALITY TYPE A/B" tabIndex="-1"><input type="checkbox"/>&nbsp;PERSONALITY TYPE A/B</a></li>
+                                        <li><a href="#"   class="subjectLevel" data-value="None" tabIndex="-1"><input type="checkbox"/>&nbsp;None</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                    <tr>
+                        <td class="cell_1">Subject-level Post-study Questionnaires </td>
+                        <td>
+
+
+                            <div class="col-lg-12">
+                                <div class="button-group">
+                                    <button type="button" style="width: 300px; height: 50px; border: 1px solid #ccc; border-color: #778899; box-sizing: border-box;background: white;"  class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id = "subjLevelPostBtn"> Select Questionnaire<span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#"   class="subjectLevelPost" data-value="NASA" tabIndex="-1"><input type="checkbox"/>&nbsp;NASA</a></li>
+                                        <li><a href="#"   class="subjectLevelPost" data-value="TAI" tabIndex="-1"><input type="checkbox"/>&nbsp;TAI</a></li>
+                                        <li><a href="#"   class="subjectLevelPost" data-value="SAI" tabIndex="-1"><input type="checkbox"/>&nbsp;SAI</a></li>
+                                        <li><a href="#"   class="subjectLevelPost" data-value="POST STUDY" tabIndex="-1"><input type="checkbox"/>&nbsp;POST STUDY</a></li>
+                                        <li><a href="#"   class="subjectLevelPost" data-value="USABILITY" tabIndex="-1"><input type="checkbox"/>&nbsp;USABILITY</a></li>
+                                        <!-- <li><a href="#"   class="sessionLevel" data-value="PANAS" tabIndex="-1"><input type="checkbox"/>&nbsp;PANAS</a></li> -->
+                                        <li><a href="#"   class="subjectLevelPost" data-value="ATTENTIONAL CONTROL" tabIndex="-1"><input type="checkbox"/>&nbsp;ATTENTIONAL CONTROL</a></li>
+                                        <li><a href="#"   class="subjectLevelPost" data-value="PERSONALITY TYPE A/B" tabIndex="-1"><input type="checkbox"/>&nbsp;PERSONALITY TYPE A/B</a></li>
+                                        <li><a href="#"   class="subjectLevelPost" data-value="None" tabIndex="-1"><input type="checkbox"/>&nbsp;None</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="cell_1">Session-level Questionnaires </td>
+                        <td>
+
+
+                            <div class="col-lg-12">
+                                <div class="button-group">
+                                    <button type="button" style="width: 300px; height: 50px; border: 1px solid #ccc; border-color: #778899; box-sizing: border-box;background: white;"  class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id = "sessLevelBtn"> Select Questionnaires<span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#"   class="sessionLevel" data-value="NASA" tabIndex="-1"><input type="checkbox"/>&nbsp;NASA</a></li>
+                                        <li><a href="#"   class="sessionLevel" data-value="TAI" tabIndex="-1"><input type="checkbox"/>&nbsp;TAI</a></li>
+                                        <li><a href="#"   class="sessionLevel" data-value="SAI" tabIndex="-1"><input type="checkbox"/>&nbsp;SAI</a></li>
+                                        <!-- <li><a href="#"   class="sessionLevel" data-value="POST STUDY" tabIndex="-1"><input type="checkbox"/>&nbsp;POST STUDY</a></li> -->
+                                        <!-- <li><a href="#"   class="sessionLevel" data-value="USABILITY" tabIndex="-1"><input type="checkbox"/>&nbsp;USABILITY</a></li> -->
+                                        <!-- <li><a href="#"   class="sessionLevel" data-value="PANAS" tabIndex="-1"><input type="checkbox"/>&nbsp;PANAS</a></li> -->
+                                        <li><a href="#"   class="sessionLevel" data-value="ATTENTIONAL CONTROL" tabIndex="-1"><input type="checkbox"/>&nbsp;ATTENTIONAL CONTROL</a></li>
+                                        <li><a href="#"   class="sessionLevel" data-value="PERSONALITY TYPE A/B" tabIndex="-1"><input type="checkbox"/>&nbsp;PERSONALITY TYPE A/B</a></li>
+                                        <li><a href="#"   class="sessionLevel" data-value="None" tabIndex="-1"><input type="checkbox"/>&nbsp;None</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                        </td>
+
+                    </tr>
+
+                </table>
+                <input type="button" name="previous" class="previous action-button" value="Previous" />
+                <input type="button" name="Next" class="next4 action-button" value="Create" />
+                <input type="submit" id="sb" name="submit" class="submit action-button" value="Submit" style="position: absolute; left: -9999px"/>
+                <!--<input type="submit" name="submit" class="submit action-button" value="Submit" id="createStudy"/> -->
+
+            </fieldset>
+
+          <!--  <fieldset>
+                <h2 class="fs-title">Covariates</h2>
+                <h3 class="fs-subtitle"></h3>
+
+                <table cellspacing="0" class="data_table" id="add_sessions_table">
+                    <tr>
+                        <td class="cell_1">Covariates</td>
+                        <td>
+                            <select class="select_field"  id="cov" name="study_type"  style="width: 300px">
+                                @for(temp <- explVar){
+                                @if(temp._3 == 3 ) {
+                                <option id="op1" value=@temp._2  selected ="selected"> @temp._1</option>
+                                }
+                                }
+                                <option id="op1" value=-1 > none </option>
+                            </select>
+
+                        </td>
+
+                    </tr>
+
+                </table>
+                <script>
+                    $(document).ready(function(){
+                    $('#publicCh').change(function() {
+                    if($(this).is(":checked")) {
+                           $("#public").val(1);
+                           }
+                           else
+                           {
+                            $("#public").val(0);
+                           }
+                         });
+                       $('#portraitCh').change(function() {
+                    if($(this).is(":checked")) {
+                           $("#portrait").val(1);
+                           }
+                           else
+                           {
+                            $("#portrait").val(0);
+                           }
+                         });
+                    $('#Age').change(function() {
+                        if($(this).is(":checked")) {
+                           var a =  parseInt($("#ir").val()) + 1
+                           $("#ir").val(a.toString() );
+                           }
+                           else
+                           {
+                            var a =  parseInt($("#ir").val()) - 1
+                           $("#ir").val(a.toString() );
+                           }
+                         });
+
+                         $('#Height').change(function() {
+                         if($(this).is(":checked")) {
+                             var a =  parseInt($("#ir").val()) + 10
+                           $("#ir").val(a.toString() );
+                           }
+                           else
+                           {
+                             var a =  parseInt($("#ir").val()) - 10
+                           $("#ir").val(a.toString() );
+                           }
+                         });
+
+                          $('#Weight').change(function() {
+                         if($(this).is(":checked")) {
+
+                           var a =  parseInt($("#ir").val()) + 100
+                           $("#ir").val(a.toString() );
+                           }
+                           else
+                           {
+                               var a =  parseInt($("#ir").val()) - 100
+                           $("#ir").val(a.toString() );
+                           }
+                         });
+
+                          $('#Gender').change(function() {
+                         if($(this).is(":checked")) {
+
+                           var a =  parseInt($("#ir").val()) + 1000
+                           $("#ir").val(a.toString() );
+                           }
+                           else
+                           {
+                               var a =  parseInt($("#ir").val()) - 1000
+                           $("#ir").val(a.toString() );
+                           }
+                         });
+
+                          $('#Ethnicity').change(function() {
+                         if($(this).is(":checked")) {
+
+                           var a =  parseInt($("#ir").val()) + 10000
+                           $("#ir").val(a.toString() );
+                           }
+                           else
+                           {
+                               var a =  parseInt($("#ir").val()) - 10000
+                           $("#ir").val(a.toString() );
+                           }
+                         });
+
+                          $('#Bio_other').change(function() {
+                         if($(this).is(":checked")) {
+
+                           var a =  parseInt($("#ir").val()) + 100000
+                           $("#ir").val(a.toString() );
+                           }
+                           else
+                           {
+                               var a =  parseInt($("#ir").val()) - 100000
+                           $("#ir").val(a.toString() );
+                           }
+                         });
+
+                     });
+                                        </script>
+                <input type="hidden" name="bio" id='ir' value=0>
+
+                <input type="button" name="previous" class="previous action-button" value="Previous" />
+                <input type="button" name="next" class="next5 action-button" value="Next" />
+                <input type="submit" id="sb" name="submit" class="submit action-button" value="Submit" style="position: absolute; left: -9999px"/>
+            </fieldset> -->
+
+            </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+            }
+        </form>
+
+    </div>
+
+
+
+</div><!--/.main-->
+
+
+<div id="progressbar" class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2" style="display:none;display:none;position: fixed;height:100%; width:90%; background: rgba( 255, 255, 255, .8 )  50% 50%    no-repeat;">
+
+    <div style="position: fixed; top: 400px; left: 35%; height:100%; width:40%;">
+    <!-- <h2>Animated Progress Bar</h2> -->
+
+    <div class="progress">
+
+            <div id = "progressFileCreating" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="80" aria-valuemax="100" style="width:0%;">
+                <h3 style = "color:white;">0% </h3>
+            </div>
+    </div>
+    <h2 id = "textProgress"> <blink> Please wait.....your file structure is being created </blink> </h2>
+    </div>
+</div>
+
+
+<div id="loading" style="display:none; position: fixed;height:100%; width:100%; background: rgba( 255, 255, 255, .8 ) url('/assets/images/ajax-loader.gif') 50% 50%    no-repeat;">
+    <p>  Please wait, study is being created  </p>
+</div>
+
+<script>
+    var wsUri = "@routes.Application.socket.webSocketURL()";
+    var userName = "@userName"
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

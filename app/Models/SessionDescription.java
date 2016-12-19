@@ -26,7 +26,7 @@ public class SessionDescription {
     public void setHide (boolean h){
         hide = h;
     }
-    public boolean getHide (){
+    public boolean getShow (){
         return hide;
     }
     public void setOrder (int o){

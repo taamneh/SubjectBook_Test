@@ -11,6 +11,7 @@ import java.util.*;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.monitorjbl.xlsx.StreamingReader;
+import org.apache.poi.POIXMLException;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
@@ -73,6 +74,7 @@ public class ReadExcelJava {
                 // to skip the first 5 rows
                 //if (rowNum >= ROW_STAR_AT) {
                 if(startWroking){
+
                     cellIterator = row.cellIterator();
                     i = 0;
                     double start = 0, end = 0;
@@ -86,8 +88,8 @@ public class ReadExcelJava {
                                     //start = Double.parseDouble(cell.getStringCellValue());
                                     if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC || cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
                                         start = cell.getNumericCellValue();
-                                        if ( start == 0.0)
-                                            exit = true;
+                                       /* if ( start == 0.0)
+                                            exit = true;*/
                                     }
                                     else /*if(cell.getCellType()==Cell.CELL_TYPE_BLANK)*/ {
                                         exit = true;
@@ -110,6 +112,7 @@ public class ReadExcelJava {
                                     }
                                     annotationText = annotation;
                                     activities.add(new Activity(start, end, actionType, annotation, annotationText, code.get( (double) actionType)));
+                                    System.out.println(start + " - "+ end +   " - "+actionType+ " - "+ annotation + " - "+ annotationText + " - "+ code.get( (double) actionType));
                                     break;
 
                             }
@@ -135,16 +138,20 @@ public class ReadExcelJava {
                             }
                             if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC && j==0) {
                                 key= cell.getNumericCellValue();
+                                //System.out.println("keyyyyyyyyyyyyy   " +  key);
+                                j =1;
                             }
                             else if(cell.getCellType() == Cell.CELL_TYPE_STRING && j==1) {
                                 code.put(key, cell.getStringCellValue());
+                                //System.out.println("valueeeeeeeee   " +  cell.getStringCellValue());
+                                j = 0;
                                 break;
                             }
 
                             else {
                                 startWroking = true;
                             }
-                            j++;
+
                         }
                     }
                     rowNum++;
@@ -161,6 +168,75 @@ public class ReadExcelJava {
         }
         return activities;
     }
+
+    public static void createExcelFile (TreeMap<String, List<EntryForExcel>> mp, String header){
+
+         HSSFWorkbook workbook = new HSSFWorkbook();
+             String[] parts = header.split("\t");
+             for(String temp : parts)
+             {
+                 System.out.println(temp);
+             }
+
+
+         Iterator it = mp.entrySet().iterator();
+         while (it.hasNext()) {
+             Map.Entry pair = (Map.Entry)it.next();
+             HSSFSheet sheet = workbook.createSheet(pair.getKey().toString());
+             Map<String, Object[]> data = new HashMap<String, Object[]>();
+
+             Row rowtemp = sheet.createRow(0);
+             int cellnumTemp = 0;
+             for(String temp : parts)
+             {
+                 Cell cell = rowtemp.createCell(cellnumTemp++);
+                 cell.setCellValue((String) temp);
+             }
+             List<EntryForExcel> lst = (List<EntryForExcel>) pair.getValue();
+             int rownum = 1;
+             for(EntryForExcel entry:lst){
+                 if(rownum >= 65535)
+                     break;
+                 Row row = sheet.createRow(rownum++);
+                 Object [] objArr = new Object[] {entry.getTime(), entry.getPersperation(), entry.getName(), entry.getStimulus(), entry.getFailure(),entry.getSpeed(), entry.getAcc(), entry.getBrake(), entry.getSteering(), entry.getLaneOffset() /*, entry.getPeda(), entry.getHr(), entry.getbr(), entry.getHrv()*/};
+                 int cellnum = 0;
+                 for (Object obj : objArr) {
+                     Cell cell = row.createCell(cellnum++);
+                     if(obj instanceof Date)
+                         cell.setCellValue((Date)obj);
+                     else if(obj instanceof Boolean)
+                         cell.setCellValue((Boolean)obj);
+                     else if(obj instanceof String)
+                         cell.setCellValue((String)obj);
+                     else if(obj instanceof Double) {
+                         if((Double)obj ==  -111111.1)
+                             cell.setCellValue("NA");
+                         else
+                             cell.setCellValue((Double) obj );
+                     }
+                 }
+
+
+             }
+             it.remove(); // avoids a ConcurrentModificationException
+         }
+
+
+
+
+         try {
+             FileOutputStream out =
+                     new FileOutputStream(new File("C:\\temp\\new.xls"));
+             workbook.write(out);
+             out.close();
+             System.out.println("Excel written successfully..");
+
+         } catch (FileNotFoundException e) {
+             e.printStackTrace();
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+     }
 
     /**
      * This fuctnion is used to find the maximum value in the first column after the time in an excel file
@@ -592,14 +668,14 @@ public class ReadExcelJava {
         double mean = sum / counter;
         return new MeanAndSizeOfSignal(mean, counter, allNumber);
     }
+
+    // this fucntion extract the baseline signal and return it in the form of map (time- > perspiration)
     public static TreeMap<Double, Double> getAllSignalFromExcelAbstraction (String fileName, int respColNo)  throws Exception {
-
-
-
 
         if(fileName == null)
         {
             System.out.println("NULLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
+            return null;
         }
 
         File file = new File(fileName);
@@ -618,12 +694,22 @@ public class ReadExcelJava {
             // actual.put(entry.getKey(), barRaw.getArrayOfDouble());
             //allNumber = barRaw.getArrayOfDouble();
         } catch (org.apache.poi.openxml4j.exceptions.InvalidFormatException e) {
-            System.out.println("Wrong Format..........!!!!!!!!!!!!!!!!!!");
-        } catch (IOException e) {
-            System.out.println("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRIIIIIIIIIIIIIII");
-            e.printStackTrace();
-        } finally {
 
+        }
+        catch (org.apache.poi.POIXMLException e) {
+            System.out.println("Cehck your baseline file pache.poi.POIXMLException error >>>>>>>>>");
+            barRaw.timeAndData = null; // this will treat the signal as there is no baseline at all
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+            //e.printStackTrace();
+            System.out.println("Cehck your baselein file unknow error >>>>>>>>>");
+            barRaw.timeAndData = null; // this will treat the signal as there is no baseline at all
+        }
+
+        finally {
             // delete the file
             if (! file.delete()) {
                 Logger.info("File has NOT been deleted");
@@ -633,6 +719,120 @@ public class ReadExcelJava {
 
         return  barRaw.timeAndData;
     }
+
+    /**
+     * This function read the content of an excel sheet without deleting the file on disc
+     * @param fileName
+     * @param respColNo
+     * @return
+     * @throws Exception
+     */
+
+    public static TreeMap<String, TreeMap<Double, Double>>  getHeaderNameFromExel (String fileName, int respColNo)  throws Exception {
+
+        if(fileName == null)
+        {
+            System.out.println("NULLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
+            return null;
+        }
+
+        File file = new File(fileName);
+        ForBarFromExcel barRaw = new ForBarFromExcel(fileName, 1,respColNo);
+        try {
+
+            NewExcelFormat newF = new NewExcelFormat(barRaw);
+
+            try {
+                newF.processAllSheets();
+            } catch (InvalidOperationException ioe) {
+                OldExcelFormat oldF = new OldExcelFormat(barRaw);
+                oldF.readSheet();
+            }
+
+            // actual.put(entry.getKey(), barRaw.getArrayOfDouble());
+            //allNumber = barRaw.getArrayOfDouble();
+        } catch (org.apache.poi.openxml4j.exceptions.InvalidFormatException e) {
+
+        }
+        catch (org.apache.poi.POIXMLException e) {
+            System.out.println("Cehck your baseline file pache.poi.POIXMLException error >>>>>>>>>");
+            barRaw.timeAndData = null; // this will treat the signal as there is no baseline at all
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+            //e.printStackTrace();
+            System.out.println("Cehck your baselein file unknow error >>>>>>>>>");
+            barRaw.timeAndData = null; // this will treat the signal as there is no baseline at all
+        }
+
+        finally {
+            // delete the file
+           /* if (! file.delete()) {
+                Logger.info("File has NOT been deleted");
+            }*/
+        }
+
+
+        TreeMap<String,TreeMap<Double,Double>> a = new TreeMap<String,TreeMap<Double,Double>>();
+        a.put(barRaw.headerName, barRaw.timeAndData);
+
+        return  a;
+    }
+    public static TreeMap<Double, Double> getAllSignalFromExcelAbstractionNoDeletion (String fileName, int respColNo)  throws Exception {
+
+        if(fileName == null)
+        {
+            System.out.println("NULLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
+            return null;
+        }
+
+        File file = new File(fileName);
+        ForBarFromExcel barRaw = new ForBarFromExcel(fileName, 1,respColNo);
+        try {
+
+            NewExcelFormat newF = new NewExcelFormat(barRaw);
+
+            try {
+                newF.processAllSheets();
+            } catch (InvalidOperationException ioe) {
+                OldExcelFormat oldF = new OldExcelFormat(barRaw);
+                oldF.readSheet();
+            }
+
+            // actual.put(entry.getKey(), barRaw.getArrayOfDouble());
+            //allNumber = barRaw.getArrayOfDouble();
+        } catch (org.apache.poi.openxml4j.exceptions.InvalidFormatException e) {
+
+        }
+        catch (org.apache.poi.POIXMLException e) {
+            System.out.println("Cehck your baseline file pache.poi.POIXMLException error >>>>>>>>>");
+            barRaw.timeAndData = null; // this will treat the signal as there is no baseline at all
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+            //e.printStackTrace();
+            System.out.println("Cehck your baselein file unknow error >>>>>>>>>");
+            barRaw.timeAndData = null; // this will treat the signal as there is no baseline at all
+        }
+
+        finally {
+            // delete the file
+           /* if (! file.delete()) {
+                Logger.info("File has NOT been deleted");
+            }*/
+        }
+
+
+        return  barRaw.timeAndData;
+    }
+
+
+
+
     public  static ArrayList<Double> findTotalNASA(int signalType, String fileName)  throws  Exception {
         long startTime =System.nanoTime();
         int i = 0, frameRate = getFrameRate(signalType);
@@ -648,6 +848,10 @@ public class ReadExcelJava {
 
                 newF.processAllSheets();
             } catch(InvalidOperationException ioe)
+            {
+                oldF.readSheet();
+            }
+            catch (POIXMLException e)
             {
                 oldF.readSheet();
             }
@@ -690,6 +894,10 @@ public class ReadExcelJava {
             {
                 oldF.readSheet();
             }
+            catch (POIXMLException e)
+            {
+                oldF.readSheet();
+            }
             jsonForChart.finalize();
         }
         catch (org.apache.poi.openxml4j.exceptions.InvalidFormatException e)
@@ -701,7 +909,6 @@ public class ReadExcelJava {
         }
         finally {
 
-
             // delete the file
             if (! file.delete()) {
                 Logger.info("File has NOT been deleted");
@@ -711,7 +918,7 @@ public class ReadExcelJava {
         return jsonForChart.getCloNamesWithVal();
     }
 
-    public static JSONObject fromExcelInputTemp(int signalType,TreeMap<Double, Double> basline,  ArrayList<Activity> activities, String fileName, int first_row, int first_col)  throws Exception {
+    public static JSONObject fromExcelInputTemp(int signalType,TreeMap<Double, Double> basline, String baselineSessionName,   ArrayList<Activity> activities, String fileName, int first_row, int first_col, int islog, double miny)  throws Exception {
         long startTime =System.nanoTime();
         org.json.simple.JSONObject all = null;
         File file = new File(fileName);
@@ -719,13 +926,17 @@ public class ReadExcelJava {
         NPOIFSFileSystem npoifs = null;
         OPCPackage pkg = null;
 
+
+
+
         try {
             //PlainChartFromExcel jsonForChart = new PlainChartFromExcel(fileName);
             //AnnotatedChartFromExcel ann = new AnnotatedChartFromExcel(fileName, activities, signalType);
 
-            if(basline !=null) {
 
-                AnnotatedChartFromExcelWithBaseLine ann = new AnnotatedChartFromExcelWithBaseLine(fileName, basline, activities, signalType);
+
+            if(basline !=null) {
+                AnnotatedChartFromExcelWithBaseLine ann = new AnnotatedChartFromExcelWithBaseLine(fileName, basline, activities, signalType, baselineSessionName, islog, miny);
 
                 NewExcelFormat newF = new NewExcelFormat(ann, first_row, first_col);
                 //NewExcelFormat newF = new NewExcelFormat(ann);
@@ -737,14 +948,19 @@ public class ReadExcelJava {
                 } catch (InvalidOperationException ioe) {
                     oldF.readSheet();
                 }
+                catch (POIXMLException e)
+                {
+                    oldF.readSheet();
+                }
 
                 ann.finalSteps();
 
                 return ann.getJosonForChart();
             }
-            else
+            else  // if the baseline is not available (this case can happen on real time system)
             {
-                AnnotatedChartFromExcel ann = new AnnotatedChartFromExcel(fileName, activities, signalType);
+
+                AnnotatedChartFromExcel ann = new AnnotatedChartFromExcel(fileName, activities, signalType, islog, miny);
 
                 NewExcelFormat newF = new NewExcelFormat(ann, first_row, first_col);
                 //NewExcelFormat newF = new NewExcelFormat(ann);
@@ -754,6 +970,10 @@ public class ReadExcelJava {
                     newF.processAllSheets();
 
                 } catch (InvalidOperationException ioe) {
+                    oldF.readSheet();
+                }
+                catch (POIXMLException e)
+                {
                     oldF.readSheet();
                 }
 
@@ -804,6 +1024,10 @@ public class ReadExcelJava {
             {
                 oldF.readSheet();
             }
+            catch (POIXMLException e)
+            {
+                oldF.readSheet();
+            }
             //jsonForChart.close();
         }
         catch (org.apache.poi.openxml4j.exceptions.InvalidFormatException e)
@@ -844,6 +1068,10 @@ public class ReadExcelJava {
 
                 newF.processAllSheets();
             } catch(InvalidOperationException ioe)
+            {
+                oldF.readSheet();
+            }
+            catch (POIXMLException e)
             {
                 oldF.readSheet();
             }
@@ -902,6 +1130,10 @@ public class ReadExcelJava {
             {
                 oldF.readSheet();
             }
+            catch (POIXMLException e)
+            {
+                oldF.readSheet();
+            }
             jsonForChart.finalize();
             //jsonForChart.getArrayOfDouble();
         }
@@ -941,6 +1173,10 @@ public class ReadExcelJava {
 
                 newF.processAllSheets();
             } catch(InvalidOperationException ioe)
+            {
+                oldF.readSheet();
+            }
+            catch (POIXMLException e)
             {
                 oldF.readSheet();
             }
@@ -994,6 +1230,10 @@ public class ReadExcelJava {
 
                         newF.processAllSheets();
                     } catch (InvalidOperationException ioe) {
+                        oldF.readSheet();
+                    }
+                    catch (POIXMLException e)
+                    {
                         oldF.readSheet();
                     }
 

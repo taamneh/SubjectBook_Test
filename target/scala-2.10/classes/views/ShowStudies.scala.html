@@ -68,7 +68,8 @@
         <li><a href="widgets.html"><span class="glyphicon glyphicon-th"></span> Widgets</a></li>
         <li class="active"><a href="charts.html"><span class="glyphicon glyphicon-stats"></span> Charts</a></li> -->
         <li><a href="/allStudies"><span class="glyphicon glyphicon-th"></span> My Studies </a></li>
-        <li><a href="/createStudy"><span class="glyphicon glyphicon-pencil"></span> New Study</a></li>
+        <li><a href="/createStudy"><span class="glyphicon glyphicon-pencil"></span> Visualize an Existing Study</a></li>
+        <li><a href="/InitiateStudy"><span class="glyphicon glyphicon-pencil"></span> Initiate a study</a></li>
         <!-- <li><a href="/showAddDataType"><span class="glyphicon glyphicon-pencil"></span> Add New Data Type</a></li> -->
 
         <li><a href="/showAllDataTypes"><span class="glyphicon glyphicon-cog"></span> Manage your Data</a></li>
@@ -142,19 +143,34 @@
                                 </form>
                             </td>
 
-                            <td><a href="/downloadStudy?studyId=@study._2" class="export">Export</a></td>
+                            <!-- <td><a href="/downloadStudy?studyId=@study._2" class="export">Export</a></td> -->
+                            <td><a href="/drp?studyNo=@study._2" class="export">Export</a></td>
+
 
 
                             <td>
                             <form action="/deleteStudy" method="POST" enctype="multipart/form-data" onclick="return confirm('Are you sure you want to delete this item?');">
                             <input type="hidden" name="study_id" id="study_id" value= @study._2>
-                            @if(study._1._2 == userName) {
+                            @if(study._1._2 == userName && userName != "sim2dc@gmail.com") {
 
                              <input type="submit" name="submit" value="delete">
 
                             }
                             </form>
                             </td>
+
+                           <!-- <td>
+                                <form action="/addNewSubject" method="GET" enctype="multipart/form-data">
+                                    <input type="hidden" name="studyNo" id="studyNo" value= @study._2>
+                                    @if(study._1._2 == userName) {
+
+                                    <input type="submit" name="Edit" value="Edit2">
+
+                                    }
+                                </form>
+                            </td> -->
+
+
 
 
 

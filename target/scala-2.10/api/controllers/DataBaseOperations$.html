@@ -973,15 +973,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Results</dd></dl></div>
     </li><li name="controllers.DataBaseOperations#GenerateStudyNoGD" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="GenerateStudyNoGD(StudyName:String,username:String,study_type:Int,public:Int):Int"></a>
-      <a id="GenerateStudyNoGD(String,String,Int,Int):Int"></a>
+      <a id="GenerateStudyNoGD(StudyName:String,username:String,study_type:Int,public:Int,descLoc:String):Int"></a>
+      <a id="GenerateStudyNoGD(String,String,Int,Int,String):Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">GenerateStudyNoGD</span><span class="params">(<span name="StudyName">StudyName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="study_type">study_type: <span class="extype" name="scala.Int">Int</span></span>, <span name="public">public: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">GenerateStudyNoGD</span><span class="params">(<span name="StudyName">StudyName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="study_type">study_type: <span class="extype" name="scala.Int">Int</span></span>, <span name="public">public: <span class="extype" name="scala.Int">Int</span></span>, <span name="descLoc">descLoc: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
       
@@ -1181,15 +1181,15 @@
       </h4>
       
     </li><li name="controllers.DataBaseOperations#InsertSessionGD" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="InsertSessionGD(subject:String,studyId:Int,session_no:Int,session_name:String,signal_code:Int,url:String,isGeneral:Int):Unit"></a>
-      <a id="InsertSessionGD(String,Int,Int,String,Int,String,Int):Unit"></a>
+      <a id="InsertSessionGD(subject:String,studyId:Int,session_no:Int,session_name:String,signal_code:Int,url:String,isGeneral:Int,isBL:Boolean,order:Int):Unit"></a>
+      <a id="InsertSessionGD(String,Int,Int,String,Int,String,Int,Boolean,Int):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">InsertSessionGD</span><span class="params">(<span name="subject">subject: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="studyId">studyId: <span class="extype" name="scala.Int">Int</span></span>, <span name="session_no">session_no: <span class="extype" name="scala.Int">Int</span></span>, <span name="session_name">session_name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="signal_code">signal_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isGeneral">isGeneral: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">InsertSessionGD</span><span class="params">(<span name="subject">subject: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="studyId">studyId: <span class="extype" name="scala.Int">Int</span></span>, <span name="session_no">session_no: <span class="extype" name="scala.Int">Int</span></span>, <span name="session_name">session_name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="signal_code">signal_code: <span class="extype" name="scala.Int">Int</span></span>, <span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isGeneral">isGeneral: <span class="extype" name="scala.Int">Int</span></span>, <span name="isBL">isBL: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="order">order: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       
@@ -2298,6 +2298,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Results</dd></dl></div>
+    </li><li name="controllers.DataBaseOperations#UpdateSignalJson" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="UpdateSignalJson(subjectSeq:Long,signalSeq:Long,data:String):Unit"></a>
+      <a id="UpdateSignalJson(Long,Long,String):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">UpdateSignalJson</span><span class="params">(<span name="subjectSeq">subjectSeq: <span class="extype" name="scala.Long">Long</span></span>, <span name="signalSeq">signalSeq: <span class="extype" name="scala.Long">Long</span></span>, <span name="data">data: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      
     </li><li name="play.api.mvc.Results#UriTooLong" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="UriTooLong:Results.this.Status"></a>
       <a id="UriTooLong:Status"></a>
@@ -2557,6 +2570,19 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="controllers.DataBaseOperations#fromJsonToMapDescriptor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fromJsonToMapDescriptor(str:String):Option[scala.collection.immutable.TreeMap[String,(String,Boolean,Int,Boolean)]]"></a>
+      <a id="fromJsonToMapDescriptor(String):Option[TreeMap[String,(String,Boolean,Int,Boolean)]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fromJsonToMapDescriptor</span><span class="params">(<span name="str">str: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.collection.immutable.TreeMap">TreeMap</span>[<span class="extype" name="scala.Predef.String">String</span>, (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Boolean">Boolean</span>)]]</span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -2570,6 +2596,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="controllers.DataBaseOperations#getDescriptorAsMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getDescriptorAsMap(stdNo:Int):Option[scala.collection.immutable.TreeMap[String,(String,Boolean,Int,Boolean)]]"></a>
+      <a id="getDescriptorAsMap(Int):Option[TreeMap[String,(String,Boolean,Int,Boolean)]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getDescriptorAsMap</span><span class="params">(<span name="stdNo">stdNo: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.collection.immutable.TreeMap">TreeMap</span>[<span class="extype" name="scala.Predef.String">String</span>, (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Boolean">Boolean</span>)]]</span>
+      </span>
+      </h4>
+      
+    </li><li name="controllers.DataBaseOperations#getDescriptorAsMapJava" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getDescriptorAsMapJava(stdNo:Int):java.util.TreeMap[String,String]"></a>
+      <a id="getDescriptorAsMapJava(Int):TreeMap[String,String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getDescriptorAsMapJava</span><span class="params">(<span name="stdNo">stdNo: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="java.util.TreeMap">TreeMap</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4>
+      
     </li><li name="controllers.DataBaseOperations#getStoredCredentials" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="getStoredCredentials(userID:String):controllers.AccessRefreshString"></a>
       <a id="getStoredCredentials(String):AccessRefreshString"></a>

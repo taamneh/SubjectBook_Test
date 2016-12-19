@@ -35,81 +35,6 @@ object CreatePortraitAbstraction
 
 
 
-  def getStudyDescriptorJava (service : Drive, loc : String) : java.util.TreeMap[String, String] =
-  {
-
-     getStudyDescriptor (service , loc) match {
-       case Some(x) =>
-         var newMap : java.util.TreeMap[String, String] = new java.util.TreeMap[String, String];
-         for((key,value) <- x){
-           newMap put(key , value._1)
-         }
-         newMap
-       case None => null
-     }
-  }
-
-
-
-  def getStudyDescriptor (userName : String, loc : String): Option[TreeMap[String,(String,Boolean,Int, Boolean)] ] =
-  {
-
-    var googleCredential: GoogleCredential = GoogleDrive.getStoredCredentials(userName)
-    var service: Drive = GoogleDrive.buildService(googleCredential)
-
-
-
-    loc match {
-      case location =>
-        var allSessions : util.ArrayList[SessionDescription] = null
-        import scala.collection.JavaConversions._
-        val input: InputStream = GoogleDrive.downloadFileByFileId(service, location)
-        val tt: ReadExcelJava = new ReadExcelJava
-        allSessions = tt.getStudyDescription(4, GoogleDrive.generateFileNameFromInputStream(input))
-
-        if(allSessions != null){
-
-          var all :TreeMap[String,(String,Boolean,Int, Boolean)] = TreeMap.empty
-
-          allSessions.foreach(x=>
-            all += x.getName -> (x.getDesiredName, x.getHide, x.getOrder, x.getMutualEx)
-          )
-          println("SSSSSSSSSSSSSSSSSSS"    + all);
-          Option(all);
-        }
-        else
-          None
-      case null => null
-    }
-
-  }
-    def getStudyDescriptor (service : Drive, loc : String): Option[TreeMap[String,(String,Boolean,Int, Boolean)] ] =
-  {
-
-
-    loc match {
-      case location =>
-        var allSessions : util.ArrayList[SessionDescription] = null
-        import scala.collection.JavaConversions._
-        val input: InputStream = GoogleDrive.downloadFileByFileId(service, location)
-        val tt: ReadExcelJava = new ReadExcelJava
-        allSessions = tt.getStudyDescription(4, GoogleDrive.generateFileNameFromInputStream(input))
-
-        if(allSessions != null){
-
-          var all :TreeMap[String,(String,Boolean,Int, Boolean)] = TreeMap.empty
-
-          allSessions.foreach(x=>
-            all += x.getName -> (x.getDesiredName, x.getHide, x.getOrder, x.getMutualEx)
-          )
-          println("SSSSSSSSSSSSSSSSSSS"    + all);
-          Option(all);
-        }
-        else
-          None
-      case null => null
-    }
-  }
 }
 
 class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor {
@@ -228,23 +153,17 @@ class CreatePortraitAbstraction(abst :Abstraction, studyNo: Int)  extends Actor 
       startTimeStudy = sTime
 
       var sessionNamesMapping : java.util.TreeMap[String, String] = null;
-      val desclocation = DataBaseOperations.getDescriptorLocation(sNo);
-      if( desclocation !=null)
-        {
-          studyDescriptor = CreatePortraitAbstraction.getStudyDescriptor(service,desclocation )
-
-          sessionNamesMapping= studyDescriptor match {
-            case Some(x) =>
-              var newMap : java.util.TreeMap[String, String] = new java.util.TreeMap[String, String];
-              for((key,value) <- x){
-                newMap put(key , value._1)
-              }
-              newMap
-            case None => null
-            case null => null
+      studyDescriptor = DataBaseOperations.getDescriptorAsMap(sNo)
+      sessionNamesMapping= studyDescriptor match {
+        case Some(x) =>
+          var newMap : java.util.TreeMap[String, String] = new java.util.TreeMap[String, String];
+          for((key,value) <- x){
+            newMap put(key , value._1)
           }
-        };
-
+          newMap
+        case None => null
+        case null => null
+      }
 
 
 

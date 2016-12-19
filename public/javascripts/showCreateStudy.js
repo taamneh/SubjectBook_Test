@@ -2,12 +2,21 @@
 $(document).ready(function(){
 
 
+// this is to prevent user from hitting enter
+  $(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+
 // slaha aldeeee
 var studyParameters = {}
 
 var explOptions = [];
 var respOptions = [];
 
+var primaryNextButton = null;
 var firstNextButton = null;
 var secondNextButton = null;
 var thirdNextButton = null;
@@ -57,7 +66,7 @@ var subjectOk =false;
              }
   }
 
-    function onRespChange(){
+  function onRespChange(){
       for(var i =1; i< resRe.length; i++)
                {
                   var num = i;
@@ -70,15 +79,25 @@ var subjectOk =false;
                }
     }
 
+// This function will be called every time a message arrive from the server
  function onMessage(evt)
 {
 
-// when we check the subjects number
+  // at the begining we recieve two messages one for the number of subjects and the second is the number of session and their names..
+ // when we check the subjects number
     if(messageNo ==1) {
        var subjNo = document.getElementById("numSubj").value;
         var r = confirm( evt.data + " Subjects were found Not "+  subjNo + "! Would you like to continue");
         if (r == true) {
            subjectOk = true;
+           if($("#quickCreation").is(":checked")){
+                            doSend("QUICK")
+
+                            //to submit the form now and regirect to list of studies
+                            $('#sb').trigger('click');
+
+                  }
+
         } else {
            messageNo = messageNo -2;
            doSend("BACK");
@@ -175,10 +194,9 @@ var subjectOk =false;
         {
 
              if(evt.data == "WRONG"){
-                        //$(".previous").trigger("click");
-                       $("#loading").hide()
-                        alert("We could not find that signal in one or more folders! Please select another one")
-                        messageNo--;
+                 $("#loading").hide()
+                 alert("We could not find that signal in one or more folders! Please select another one")
+                 messageNo--;
 
             }
             else
@@ -312,6 +330,11 @@ $( '.dropdown-menu .small1' ).on( 'click', function( event ) {
 
 $("form" ).submit(function( event ) {
    studyParameters["covarite"] = $("#cov" ).val()
+
+   if (dataset.length == 0)
+      studyParameters["descriptor"] = null;
+   else
+       studyParameters["descriptor"] = dataset
    //doSend($("#cov" ).val());
    doSend(JSON.stringify(studyParameters));
 
@@ -321,6 +344,99 @@ $("form" ).submit(function( event ) {
     });
 
 
+
+$(".next0").click(function(){
+
+   // to build the descriptor
+
+  // alert(dataset.length);
+   var r = fun();
+
+   //alert(JSON.stringify(dataset));
+
+   if(r == 0)
+   {
+    alert("please fill in all fields")
+   }
+   else {
+
+   primaryNextButton = this;
+
+     if(animating) return false;
+      	animating = true;
+
+      	current_fs = $(this).parent();
+      	next_fs = $(this).parent().next();
+
+      	//activate next step on progressbar using the index of next_fs
+      	$("#progressbar1 li").eq($("fieldset").index(next_fs)).addClass("active");
+
+      	//show the next fieldset
+      	next_fs.show();
+      	//hide the current fieldset with style
+      	current_fs.animate({opacity: 0}, {
+      		step: function(now, mx) {
+      			//as the opacity of current_fs reduces to 0 - stored in "now"
+      			//1. scale current_fs down to 80%
+      			scale = 1 - (1 - now) * 0.2;
+      			//2. bring next_fs from the right(50%)
+      			left = (now * 50)+"%";
+      			//3. increase opacity of next_fs to 1 as it moves in
+      			opacity = 1 - now;
+      			current_fs.css({'transform': 'scale('+scale+')'});
+      			next_fs.css({'left': left, 'opacity': opacity});
+      		},
+      		duration: 800,
+      		complete: function(){
+      			current_fs.hide();
+      			animating = false;
+      		},
+      		//this comes from the custom easing plugin
+      		easing: 'easeInOutBack'
+      	});
+   }
+
+
+
+
+
+});
+$(".previous0").click(function(){
+
+    //alert(explOptions);
+	if(animating) return false;
+	animating = true;
+
+	current_fs = $(this).parent();
+	previous_fs = $(this).parent().prev();
+
+	//de-activate current step on progressbar
+	$("#progressbar1 li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+	//show the previous fieldset
+	previous_fs.show();
+	//hide the current fieldset with style
+	current_fs.animate({opacity: 0}, {
+		step: function(now, mx) {
+			//as the opacity of current_fs reduces to 0 - stored in "now"
+			//1. scale previous_fs from 80% to 100%
+			scale = 0.8 + (1 - now) * 0.2;
+			//2. take current_fs to the right(50%) - from 0%
+			left = ((1-now) * 50)+"%";
+			//3. increase opacity of previous_fs to 1 as it moves in
+			opacity = 1 - now;
+			current_fs.css({'left': left});
+			previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity});
+		},
+		duration: 800,
+		complete: function(){
+			current_fs.hide();
+			animating = false;
+		},
+		//this comes from the custom easing plugin
+		easing: 'easeInOutBack'
+	});
+});
 
 
 $(".next1").click(function(){

@@ -51,7 +51,7 @@ Seq[Any](format.raw/*1.1*/("""<html>
 <div id="player">
 <object width='640' height='385'  id="video1">
     <param name="id" value="myytplayer"> </param>
-    <embed id = "toto" src='https://video.google.com/get_player?docid=0B2TDTGk9sqZLWTNSNklUM0xKc2s&ps=docs&partnerid=30&cc_load_policy=1&controls=2&enablejsapi=1&playerapiid=player' type='application/x-shockwave-flash' allowfullscreen='true' allowScriptAccess='always' width='640' height='385'></embed>
+    <embed id = "toto" src='https://video.google.com/get_player?docid=0B00ugPsj4f4RakdCZEZmRGpiT0U&ps=docs&partnerid=30&cc_load_policy=1&controls=2&enablejsapi=1&playerapiid=player' type='application/x-shockwave-flash' allowfullscreen='true' allowScriptAccess='always' width='640' height='385'></embed>
 </object>
 
 </div>
@@ -110,9 +110,9 @@ Seq[Any](format.raw/*1.1*/("""<html>
 }
               /*
                   -- GENERATED --
-                  DATE: Fri Mar 04 16:43:33 CST 2016
+                  DATE: Tue Sep 27 11:33:10 CDT 2016
                   SOURCE: C:/first_play/app/views/testVideoFromDrive.scala.html
-                  HASH: 2fa98cc78ea27aca19620ac6d86d013fa0dd75b3
+                  HASH: c8d802670a2b0e785439040831134943ffc52151
                   MATRIX: 593->0|794->174|822->175|871->197|899->198|1001->273|1029->274|1065->284|1376->567|1405->568|1438->574|1537->645|1566->646|1595->647|1642->666|1671->667|1702->671|1730->672|1901->816|1929->817|1962->823
                   LINES: 22->1|26->5|26->5|26->5|26->5|28->7|28->7|29->8|37->16|37->16|38->17|40->19|40->19|40->19|40->19|40->19|41->20|41->20|46->25|46->25|47->26
                   -- GENERATED --

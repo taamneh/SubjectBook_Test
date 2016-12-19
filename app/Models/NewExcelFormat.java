@@ -69,25 +69,35 @@ public class NewExcelFormat {
 
     public void processAllSheets() throws Exception {
 
-        OPCPackage pkg = OPCPackage.open(dataFromExcel.getFileName());
-        XSSFReader r = new XSSFReader( pkg );
-        SharedStringsTable sst = r.getSharedStringsTable();
 
-        XMLReader parser = fetchSheetParser(sst);
+        try {
+            OPCPackage pkg = OPCPackage.open(dataFromExcel.getFileName());
+            XSSFReader r = new XSSFReader(pkg);
+            SharedStringsTable sst = r.getSharedStringsTable();
 
-        Iterator<InputStream> sheets = r.getSheetsData();
-        Boolean isFirst = true;
-        while(sheets.hasNext() && isFirst) {
-            //System.out.println("Processing new sheet:\n");
-            InputStream sheet = sheets.next();
-            InputSource sheetSource = new InputSource(sheet);
-            parser.parse(sheetSource);
-            sheet.close();
-            isFirst = false; // read only the first sheet
-            // System.out.println(content);
+            System.out.println("$$$$$$$$$$$$$$$$$$$$" + dataFromExcel.getFileName());
+
+            XMLReader parser = fetchSheetParser(sst);
+
+            Iterator<InputStream> sheets = r.getSheetsData();
+            Boolean isFirst = true;
+            while (sheets.hasNext() && isFirst) {
+                //System.out.println("Processing new sheet:\n");
+                InputStream sheet = sheets.next();
+                InputSource sheetSource = new InputSource(sheet);
+                parser.parse(sheetSource);
+                sheet.close();
+                isFirst = false; // read only the first sheet
+                // System.out.println(content);
+            }
+
+            pkg.close();
+        }
+        catch(org.apache.poi.openxml4j.exceptions.OpenXML4JException e){
+            System.out.println("NULLLLLLLLLLLLLLLLLLLLLLLLLLLLL############################");
         }
 
-        pkg.close();
+
     }
 
     public XMLReader fetchSheetParser(SharedStringsTable sst) throws SAXException {

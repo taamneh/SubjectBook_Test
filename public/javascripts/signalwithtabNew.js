@@ -1,55 +1,40 @@
- var PERSPIRATION_CODE = 1;
- var SIMULATION_CODE = 2;
- var EDA_CODE = 3;
- var HRV_CODE =4;
- var EXPRESSION_CODE = 5;
- var MOTION_CODE = 6;
- var BREATHING_CODE = 7;
- var HEART_RATE_CODE = 8;
- var BELT_BREATHING_CODE = 9;
- var TEMPERATURE_CODE = 10;
-
- var N_PERSPIRATION_CODE =11;
- var BAR_CHART_CODE =12;
- var EYE_TRACKING_CODE =13;
-
-
- var VIDEO_CODE =100;
- var INFO_CODE = 101;
- var ACTIVITY_CODE =102;
- var PSYCHOMETRIC_CODE = 103;
- var PERFORMANCE_CODE =104;
- var OTHER_CODE =105;
-
-
 var goToTime = 0; // when youtube file get read it use this variable to go to a particulare point
 var currentVideoButton ="";  // needed
+var currentVideoBoard = ""
+var currentChart ="";
+var synchOneTime =false;
+
+var noOfAvailableVideo = 0;
 
 var refreshIntervalId = null;
 // we assume that the maximum number of video is 4--- TODO
 var player1 = null, player2 = null, player3 = null, player4 = null;
-var videonum =0 ;
+
+var allPlayers =[];
 
 var subject;
 var session;
+var newSessionName;
 var studyId;
 var occupied ;
 
 var gChart= null;
 var gData = null;
 
+var maxXLine = null;
+
 $(document).ready(function(){
 // when user click on the tab (i.e., session)
+google.load('visualization', '1', { 'packages': ['corechart', 'bar'], callback: startProcess});
+  //google.setOnLoadCallback(tala);
 
+function startProcess()
+{
 
- $('.panel-body.tabs .nav.nav-tabs a').click(function() {
+ $('.panel-body.tabs .nav.nav-tabs a').click(function() { // when someone click on sessino tab
 
-   function intermediate ()
+   function displayAllSignalsForThisSession ()
      {
-
-
-
-
           var counter =0, iterator=0;
           // just to add horizontal axis to the last chart
           $( ".chart" ).each(function( index ) {
@@ -65,7 +50,6 @@ $(document).ready(function(){
           $( ".chart" ).each(function( index ) {
           if($(this).attr('session') == session)
           {
-
                var signalType = $(this).attr('signalType');
                var signalSequence = $(this).attr('signalSequence');
                var yTitle = $(this).attr('yTitle');
@@ -75,26 +59,32 @@ $(document).ready(function(){
                var chartname = "chart"+session+signalSequence;
                var dynamicbtn = "dynamic"+session+signalSequence;
                if(iterator== counter -1){
-                 drawStuff_temp1(session, subject , chartname, studyId, signalSequence,signalType, dynamicbtn, info, true, yTitle, ymin, ymax, log);
+                 drawChart(session, subject , chartname, studyId, signalSequence,signalType, dynamicbtn, info, true, yTitle, ymin, ymax, log);
                }
                else
-                 drawStuff_temp1(session, subject , chartname, studyId, signalSequence,signalType, dynamicbtn, info, false, yTitle, ymin, ymax, log);
+                 drawChart(session, subject , chartname, studyId, signalSequence,signalType, dynamicbtn, info, true, yTitle, ymin, ymax, log);
                info = 0;
                iterator++;
                showVideo($(this).attr('session'),signalSequence);
+
+
 
           }
 
           });
      }
+
+
        var currentAttrValue = $(this).attr('href');
       $(currentAttrValue).show().siblings().hide();
-
+       clearAllAudioFiles();
         subject= $(this).attr('subject');
         session = $(this).attr('session');
         newSessionName = $(this).attr('newSessionName');
         studyId = $(this).attr('studyId');
         occupied = $(this).attr('occupied');
+        allPlayers =[];
+
 
         // to avoid calling the AJAX multiple time
 
@@ -103,22 +93,18 @@ $(document).ready(function(){
 
             // $("#loading").show();
            $(this).attr("occupied", "yes");
-           google.load('visualization', '1', { 'packages': ['corechart', 'bar'], callback: intermediate});
+		   displayAllSignalsForThisSession();
            //e.preventDefault();
-           var videoDiv ="#"+session;
+            var videoDiv ="#"+session;
             $(videoDiv).slideDown("slow");
        }
 
 
         if (gData !== null)
          {
-
-
            var match = /\d*/
            for( i =1; i< gData.getNumberOfColumns(); i++){
-
-             //alert(session.replace(match, "").toUpperCase()  +'   '+  gData.getColumnLabel(i).toUpperCase() )
-             if(gData.getColumnLabel(i).toUpperCase() == session.replace(match, "").toUpperCase())
+             if(gData.getColumnLabel(i).toUpperCase() == newSessionName.replace(match, "").toUpperCase())
              {
                 gChart.setSelection([{row:null,column:i}]);
                 //alert('fonnd it');
@@ -127,15 +113,34 @@ $(document).ready(function(){
 
          }
 
+         $('video').each(function() {
+                         if($(this).attr('sess') == session )
+                                        $(this).attr("src", "/videoC?studyNo=" +studyId + "&subjectId=" + subject +"&sessionName=" + session +"&fileName="+ $(this).attr('vName'));
+                          else  // if($(this).attr('sub') != subject)
+                            $(this).attr("src", null);
+                     });
+
+        $('audio').each(function() {
+                       if($(this).attr('sess') == session ){
+                                      $(this).attr("src", "/videoC?studyNo=" +studyId + "&subjectId=" + subject +"&sessionName=" + session +"&fileName="+ $(this).attr('vName'));
+                                     // $(this).attr("type", "audio/x-wav");
+                                      }
+                        else //if($(this).attr('sub') != subject)
+                          $(this).attr("src", null);
+            });
+
 
     });
-
 
     var info = 1; // this var is used to avoid calling the information function every time
      // this is used to automatically request data from the first tab
     $('.panel-body.tabs .nav.nav-tabs a').first().trigger("click");
       //$('.btn.btn-default.show-video').first().trigger("click");
+
+      //google.load('visualization', '1', { 'packages': ['corechart', 'bar'], callback: showAllGeneral});
      showAllGeneral();  // this fucntion will show all the general infromation
+
+}
 });
 
 function showAllGeneral(){
@@ -160,7 +165,7 @@ function showAllGeneral(){
                                           </div> \
                                     </div>");
                    $(this).show();
-                    drawStuff_temp1("BAR", subject , chartName , studyId, signalSequence,dataType, "", 1, true, yTitle, -1, -1, 0);
+                    drawChart("BAR", subject , chartName , studyId, signalSequence,dataType, "", 1, true, yTitle, -1, -1, 0);
                  }
                if(dataType == 3) {
                                    $(this).append( "<div class=\"panel panel-info\"> \
@@ -172,7 +177,9 @@ function showAllGeneral(){
                                          </div> \
                                     </div>");
                   $(this).show();
-                  getBiography (" ", subject, chartName, studyId, signalSequence);
+                  var subj = $(this).attr('subject');
+                  var stdNo = $(this).attr('studyId');
+                  getBiography (" ", subj, chartName, stdNo, signalSequence);
               }
                if(dataType == 5) {
                $(this).attr( "class", "col-lg-8" );
@@ -184,7 +191,9 @@ function showAllGeneral(){
                                         </div> \
                                    </div>");
                   $(this).show();
-                  getPsychometric (" ", subject, chartName, studyId, signalSequence);
+                    var subj = $(this).attr('subject');
+                    var stdNo = $(this).attr('studyId');
+                  getPsychometric (" ", subj, chartName, stdNo, signalSequence);
                }
 
                // this code to allow minimize each panel
@@ -193,20 +202,6 @@ function showAllGeneral(){
                                 $(document).on("click",str, function(){
                                    $("div.panel div#" +chartName ).slideToggle();
                 });
-               /*if(dataType == 1) {
-                   $(this).attr( "class", "col-lg-12" );
-                              $(this).append( "<div class=\"panel panel-info\"> \
-                                       <div class=\"panel-heading\" > \
-                                            Signal <a><span data-toggle=\"collapse\" href=\"#\" class=\"icon pull-right\"><em class=\"glyphicon glyphicon-chevron-down\"></em></span> </a> \
-                                       </div> \
-                                      <div id=\"" + chartName + "\" class=\"panel-body\"> \
-                                      </div> \
-                                 </div>");
-                            $(this).show();
-                           // getPsychometric (" ", subject, chartName, studyId, signalSequence);
-                            drawStuff_temp1(" ss", subject , chartName, studyId, signalSequence, signalCode, dynamicbtn, info, true);
-
-               }*/
           });
 }
 
@@ -414,7 +409,7 @@ function showPerformance(task, subject, chartDestination, studyId, signalSequenc
 
 
 
-function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequence,signal_type, dynamicbtn, info, showhAxis, vTitle, ymin, ymax, log) {
+function drawChart(task, subject, chartDestination, studyId, signalSequence,signal_type, dynamicbtn, info, showhAxis, vTitle, ymin, ymax, log) {
 
 
     var signal_title ;
@@ -442,18 +437,24 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
 
     var jsonData;
      $.ajax({
-                         type: 'GET',
-                         url: '/GetSignal',
-                         dataType:"json",
-                         data: "task=" + task + "&subject=" + subject + "&studyId=" + studyId  + "&signal_type=" + signal_type + "&signal_sequence=" + signalSequence,
-                         async: true,
-                          beforeSend: function() { $('#loading').show(); },
-                          complete: function() { $('#loading').hide(); },
-                          success:function(result) {
-                             jsonData = result;
-                              var data = new google.visualization.DataTable(jsonData);
+                     type: 'GET',
+                     url: '/GetSignal',
+                     dataType:"json",
+                     data: "task=" + task + "&subject=" + subject + "&studyId=" + studyId  + "&signal_type=" + signal_type + "&signal_sequence=" + signalSequence,
+                     async: true,
+                      beforeSend: function() { $('#loading').show(); },
+                      complete: function() { $('#loading').hide(); },
+                      success:function(result) {
+                         jsonData = result;
 
-                             if(signal_type ==4){
+
+                      if(jsonData["NOTTHERE"] !== undefined )
+                        document.getElementById(chartDestination).innerHTML += '<br><h3>' + jsonData["NOTTHERE"] +  ' is not available yet!</h3>';
+                       else {
+
+                             var data = new google.visualization.DataTable(jsonData);
+
+                             if(signal_type ==4){  // if this is bar data
                              gData = data;
 
                                         var options = {
@@ -468,16 +469,14 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                         };
                               gChart = new google.visualization.ColumnChart(document.getElementById(chartDestination));
                               gChart.draw(data,options );
-
-
-                              //chart.setSelection([{row:null, column:0}])
-                               //gChart.setSelection([{row:null,column:1}]);
                               }
-                              else if(signal_type == 3){
+                              else if(signal_type == 3){ // bigoraphy infromation
+
                                   getBiography (" ", subject, chartDestination, studyId, signalSequence);
 
                               }
-                              else if(signal_type == 5){
+                              else if(signal_type == 5){ // pychometric info.
+
                                  chartDestination = "#"+ chartDestination;
 
                                  $(chartDestination).attr( "class", "col-lg-8" );
@@ -495,76 +494,28 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                               }
                               else{
 
-                                   switch(parseInt(signal_type))
-                                   {
-                                     case EDA_CODE:
-                                        signal_title = "EDA Signal";
-                                        ytitle = "Palm EDA [µS]";
-                                        break;
-                                     case MOTION_CODE:
-                                        signal_title = "Motion Signal";
-                                        ytitle = "Energy";
-                                         break;
-                                     case PERSPIRATION_CODE:
-                                         signal_title = "Perspiration Signal";
-                                     	ytitle = "Perinasal EDA ["+ '\u00B0' +"C"+ '\xB2' +"]";
-                                     	break;
-                                     case N_PERSPIRATION_CODE:
-                                     	 signal_title = "Perspiration Signal";
-                                         ytitle = "Nasal EDA ["+ '\u00B0' +"C"+ '\xB2' +"]";
-                                         break;
-                                     case BREATHING_CODE:
-                                         signal_title = "Breathing";
-                                     	ytitle = "Rate";
-                                     	break;
-                                     case HEART_RATE_CODE:
-                                         signal_title = "Heart Rate";
-                                     	ytitle = "Rate";
-                                     	break;
-                                     case BELT_BREATHING_CODE:
-                                         signal_title = "Belt Breathing Signal";
-                                         ytitle = "Rate";
-                                         break;
-                                     case TEMPERATURE_CODE:
-                                         signal_title = "Temperature Signal";
-                                     	ytitle = "Temperature";
-                                     	break;
-                                     case SIMULATION_CODE:
-                                         signal_title = "Driving Simulator Data";
-                                         ytitle = "";
-                                         showYAxis = 'none'
-                                         tooltipTrigger = 'none'
-                                        	break;
-                                     case HRV_CODE:
-                                         signal_title = "Heart Rate Variability";
-                                         ytitle = "HRV [bpm]";
-                                            break;
-                                       case EXPRESSION_CODE:
-                                          signal_title = "Facial Expressions";
-                                          ytitle = "";
-                                             break;
-                                      case EYE_TRACKING_CODE:
-                                            signal_title = "Malcolm is Idiot";
-                                            ytitle = "Eye Tracker";
-                                            break;
+                                  if(data.getValue(data.getNumberOfRows()-1, 0) > maxXLine)
+                                        maxXLine = data.getValue(data.getNumberOfRows()-1, 0);
 
-                                     default:
-                                       signal_title = "Anonymous Signal";
-                                       ytitle = "";
-                                   }
+
+
+
                                     ytitle = vTitle;      /// Just use the parameter vtitle as the ytile for the chart
 
-                                    // Tempraray
-                                    if(ytitle.toLowerCase().indexOf("perinasal") > -1)
-                                         ytitle = "Perinasal EDA ["+ '\u00B0' +"C"+ '\xB2' +"]";
-                                     else if(ytitle.toLowerCase().indexOf("nasal") > -1)
-                                        ytitle = "Nasal EDA ["+ '\u00B0' +"C"+ '\xB2' +"]";
-                                      else if(ytitle.toLowerCase().indexOf("eda") > -1)
-                                        ytitle = "Palm EDA [µS]";
-                                      else if(ytitle.toLowerCase().indexOf("hrv") > -1)
-                                        ytitle =  "HRV [bpm]";
 
-                                    ////////////////////////////
+                                      if(ytitle.toLowerCase().indexOf("perinasal") > -1)
+                                         ytitle = "Perinasal EDA ["+ '\u00B0' +"C"+ '\xB2' +"]";
+                                      else if(ytitle.toLowerCase().indexOf("ohm") > -1 || ytitle.toLowerCase().indexOf("kohms") > -1 )
+                                        ytitle =  "Palm EDA [ k"+ '\u2126' + '\u207B' +'\u00B9' + "]";
+                                        //ytitle =  "Palm EDA [kohms" + '\u207B' +'\u00B9' + "]";
+                                      else if(ytitle.toLowerCase().indexOf("nasal") > -1)
+                                        ytitle = "Nasal EDA ["+ '\u00B0' +"C"+ '\xB2' +"]";
+                                      else if(ytitle.toLowerCase().indexOf("palm eda") > -1)
+                                        ytitle = "Palm EDA [µS]";
+                                      else if(ytitle.toLowerCase().indexOf("wrist eda") > -1)
+                                         ytitle = "Wrist EDA [µS]";
+                                       else if(ytitle.toLowerCase().indexOf("eda") > -1)
+                                          ytitle = "Palm EDA [µS]";
 
 
                                   // to set the title for each signal
@@ -597,6 +548,7 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
 
                                 var colors = ["#dc3912","#3366cc","#ff9900","#109618","#A901DB","#0099c6","#dd4477","#66aa00","#b82e2e","#316395","#E88DBA","#22aa99","#aaaa11","#6633cc","#e67300",'#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'];
                                  var chart = new google.visualization.LineChart(document.getElementById(chartDestination));
+
                                  var options = {
                                            //title: signal_title,
 
@@ -625,7 +577,12 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                                                      bold: true,
                                                                      italic: false
                                                    },
-                                                  textPosition : showAx
+                                                  textPosition : showAx,
+                                                  viewWindow :{
+                                                                 min : 0,
+                                                                // max :   maxXLine
+                                                            }
+
 
                                                 },
                                            crosshair: { trigger: 'selection', orientation: 'vertical', color: 'black'},
@@ -633,7 +590,7 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                                        //style: 'line',
                                                        color: 'red',
                                                            textStyle: {
-                                                             fontName: 'Times-Roman',
+                                                             //fontName: 'Times-Roman',
                                                              fontSize:5,
                                                              bold: true,
                                                              //italic: true,
@@ -669,28 +626,7 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                                        min : min_xvalue,
                                                        max : max_yvalue
                                                       }}
-                                           /*vAxis: { title: ytitle,
-                                                    baseline: min_xvalue,
-                                                     textPosition: showYAxis,
-                                                     format: '###0.000',
-                                                    gridlines: {
-                                                           color: 'transparent'
-                                                       },
-                                                    textStyle:{
-                                                            //color : 'green',
-                                                            bold: true,
-                                                            italic: false
-                                                   },
-                                                    titleTextStyle:{
-                                                                   // color : 'green',
-                                                                    bold: true,
-                                                                    italic: false
-                                                                    },
-                                                   viewWindow :{
-                                                    min : min_xvalue,
-                                                    max : max_yvalue
-                                                   }
-                                            }*/
+
                                       };
 
                                  // to assigna colors for the annotaiton series....
@@ -714,7 +650,9 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                     columns.push(i);
                                     if(i>=startAnnotFrom)
                                     {
-                                   // alert(i + '  '+  data.getColumnLabel(i))
+                                     var index = i-3
+                                     if(i >2 + startAnnotFrom) { // to skip the first two annotation cluoumns pluse the all the ordinary signals (i.e., )
+                                     //alert(i + '  '+  data.getColumnLabel(i))
                                       switch(ctrColor)
                                        {
                                         case 1:
@@ -738,42 +676,66 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                          }
 
 
-                                          //////////////////////////////////Under test code  Toyota ///////////////////////////////
+
+
+                                         if(data.getColumnId(i).indexOf("line") > -1){  // if the id contain line tha means it is lamp data
+                                           //alert(data.getColumnLabel(i));
+                                           var colorforLamp = colorVar;
+
+                                           if(data.getColumnLabel(i).toLowerCase().indexOf("red") > -1 || data.getColumnLabel(i).toLowerCase().indexOf("stress") > -1)
+                                              colorforLamp = "pink";
+                                           else if(data.getColumnLabel(i).toLowerCase().indexOf("green") > -1 || data.getColumnLabel(i).toLowerCase().indexOf("relaxation") > -1)
+                                               colorforLamp = "green";
+                                           else if (data.getColumnLabel(i).toLowerCase().indexOf("baseline") > -1)
+                                               colorforLamp = "grey";
+
+                                            series[index] = {type: "line", areaOpacity:0.9, lineWidth:6, color: colorforLamp};
+                                             ctrColor--;
+                                              colors[index] = colorforLamp;
+                                         }
+                                         else{
+                                            series[index] = {type: "area", areaOpacity:0.9, lineWidth:0, color: colorVar};
+                                            colors[index] = colorVar;
+                                        }
+
+                                         //////////////////////////////////Under test code  Toyota ///////////////////////////////
                                           if(data.getColumnLabel(i).toLowerCase().indexOf("failure") > -1)  // this is an exception of Toyota study to show all the failure drive with
                                              {
-                                                   series[i-3].color = second;
-                                                   colors[i-3] = second
+                                                   series[index].color = second;
+                                                   colors[index] = second
                                                   //alert(colorVar + ' After ' + second )
                                                   colorVar = second;
                                                   isSecondTaken = true; // to make sure this color will not be assigned again to an
                                              }
                                          /////////////////////////////////////////////////////////////////////////////////////////
+                                         ctrColor++;
 
-                                        ctrColor++;
 
-                                        series[i] = {type: "area", areaOpacity:0.9, lineWidth:0, color: colorVar};
-                                        colors[i] = colorVar;
+                                       }
                                     }
                                     else {
-                                        series[i] = {color: colors[i]};
+                                        series[i] = {color: colors[i]}; // all lines that are not annotation
                                     }
                                 }
 
+
+
+
                                  // update the option with new colors for annotations
                                  options.series = series;
-                                 chart.draw(data,options );
+                                 chart.draw(data,options);
 
 
 
-                                  //  var currentdate = new Date("July 21, 1983 01:15:00:526");
-                              google.visualization.events.addListener(chart, 'select', selectHandler);
-                              function selectHandler(e) {
-                                   var videoButton = "#showvideo"+ task + signalSequence;
-                                   var videoBoard = "#videoboard" + task + signalSequence;
-                                    var sel =  chart.getSelection();
+
+                                   // this fucntion is called once the user click on any data point on the signal
+								   function selectHandler(e) {
+                                       var videoButton =  "#showvideo"+ task + signalSequence;
+                                       var videoBoard  =  "#videoboard" + task + signalSequence;
+                                       var sel =  chart.getSelection();
                                       // if selection length is 0, we deselected an element
                                       if (sel.length > 0) {
-                                        if (sel[0].row === null) {
+                                        if (sel[0].row === null) {   // this is entered when user wants to remove some series from the signal
                                                       var col = sel[0].column;
                                                       var shift;
                                                       if (typeof startAnnotFrom === "undefined")
@@ -804,10 +766,10 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                                        //options2.series = myObj;
                                                       chart.draw(view, options);
                                                   }
-                                                  else
+                                                  else // if user wants to show the videos
                                                 {
-                                                    slidDownVideoPlay(videoButton, videoBoard);
-                                                   //var videoButton = "#showvideo"+ task + signalSequence;
+                                                    var numOfVideos = 0
+                                                    noOfAvailableVideo =0;
                                                     if($(stopv).html()== 'Play Videos')
                                                      {
                                                         $(stopv).html('Stop Videos');
@@ -816,67 +778,61 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                                     {
                                                            // to stop the previous indicator
                                                          if(refreshIntervalId != null){
-                                                                       clearInterval(refreshIntervalId);
+                                                                 clearInterval(refreshIntervalId);
                                                           }
                                                          var selectedItem = chart.getSelection()[0];
-                                                         var diff =data.getValue(selectedItem.row+1, 0)- data.getValue(selectedItem.row, 0)
-                                                         // to move second by second
-                                                          var addAmount =Math.ceil(1/diff);
-                                                          var point = selectedItem.row;
-                                                          var pointValue = data.getValue(point,0);
-                                                          seek(Math.floor(pointValue), videoButton);
-                                                          goToTime= Math.floor(pointValue);  // this is to let the video play when it is not ready yet
-                                                          //seek(Math.floor(pointValue));  // this is to play the video when it is rady
+                                                         var selectedRow = selectedItem.row; // at which row the selected point locate
+                                                         var selectedTime = data.getValue(selectedRow,0);  // the time of the selected point
 
-                                                          refreshIntervalId =setInterval(function() {
-                                                              // only start the indicator if there is a video playing
-                                                              if(player1.getPlayerState() == 1)
-                                                                {
-                                                                    // this will not fire slection handler;
-                                                                    chart.setSelection([{row:point}]);
-                                                                    point = point + addAmount;
-                                                                    //pointValue = data.getValue(point,0);
-                                                                }
+
+                                                          goToTime= Math.floor(selectedTime);  // this is to let the video play when it is not ready yet
+
+                                                           if(videoButton != currentVideoButton) {
+                                                               slidDownVideoPlay(videoButton, videoBoard, task);
+                                                           }
+                                                          // else {
+                                                            currentVideoButton = videoButton;
+                                                            currentVideoBoard = videoBoard
+                                                            currentChart = chart
+
+                                                         //  }
+
+                                                            seek(goToTime);
+
+                                                            // we calculate the number of videos this session has
+                                                            $(currentVideoBoard).children('.vdTag').each(function () {
+                                                                        numOfVideos++;
+                                                             });
+
+
+                                                              refreshIntervalId =setInterval(function() {
+                                                              // do not start playing the play head until we make sure every vidoe is available
+                                                                  if(noOfAvailableVideo != numOfVideos)
+                                                                    {
+                                                                    checkVideoAvailability(numOfVideos);
+                                                                    //alert(noOfAvailableVideo + " / " + numOfVideos)
+                                                                    }
+                                                                    else{
+                                                                        var jump = 1;
+                                                                        while(Math.floor(data.getValue(selectedRow+jump, 0)) == Math.floor(data.getValue(selectedRow, 0))){
+                                                                            jump++;
+                                                                         }
+                                                                        // this will not fire slection handler;
+                                                                        selectedRow = selectedRow + jump;
+                                                                        chart.setSelection([{row:selectedRow}]);
+
+                                                                    }
                                                                },1000);
-                                                         currentVideoButton = videoButton;
+
+
+
                                                      }
                                                 }
                                       }
 
                                    }
 
-
-                                 $(editme).show();
-                                 $(editme).click(function()
-                                 {
-                                      var chartEditor = new google.visualization.ChartEditor();
-                                      google.visualization.events.addListener(chartEditor, 'ok', redrawChart);
-                                      chartEditor.openDialog(wrapper, {});
-                                      function redrawChart(){
-                                            //chartEditor.getChartWrapper().draw(document.getElementById('chart1DirectView1'));
-                                           var newwrapper = chartEditor.getChartWrapper();
-                                            dashboard.bind(donutRangeSlider, newwrapper);
-                                                               dashboard.draw(data);
-
-                                                               google.visualization.events.addListener(newwrapper, 'select', function(e) {
-                                                                           var selectedItemIn  = newwrapper.getChart().getSelection()[0].row;
-                                                                           var point = data.getValue(selectedItemIn, 0);
-                                                                           var v = donutRangeSlider.getState();
-                                                                                   var absStart = v.range.start;
-                                                                                   var end = v.range.end;
-                                                                                   var w = wrapper.getChart().getChartLayoutInterface().getChartAreaBoundingBox().width;
-                                                                                   move_str =0;
-                                                                                   var relStart =  point + absStart;
-                                                                                   active++;
-                                                                                    stopBar = false;
-                                                                                   doMove(absStart, relStart, end, w, active);
-                                                                                  seek(point + absStart);
-                                                                     });
-                                          }
-                                  });
-
-
-
+                                  google.visualization.events.addListener(chart, 'select', selectHandler);
                                   var stopv = "#stopvideo"  + task + signalSequence;
                                   $(document).on('keypress', function(e) {
                                       var tag = e.target.tagName.toLowerCase();
@@ -889,7 +845,9 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                        if ( e.which === 112 && tag != 'input' && tag != 'textarea')
                                        {
                                           $(stopv).html('Stop Videos');
-                                          google.visualization.events.trigger(chart, 'select', selectHandler);
+
+
+                                          google.visualization.events.trigger(currentChart, 'select', selectHandler);
                                        }
 
                                   });
@@ -903,7 +861,7 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
                                         else
                                             {
                                             $(stopv).html('Stop Videos');
-                                             google.visualization.events.trigger(chart, 'select', selectHandler);
+                                             google.visualization.events.trigger(currentChart, 'select', selectHandler);
                                             }
 
                                    });
@@ -960,6 +918,7 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
 
 
                              }
+                             }  // if result == 0
                              }
                          })
       if( jQuery.isEmptyObject(jsonData))
@@ -971,178 +930,175 @@ function drawStuff_temp1(task, subject, chartDestination, studyId, signalSequenc
 
 }
 
+function clearAllAudioFiles (){
 
-
-// to create a video board for each signal that is called when the user press show video
-function showVideo(SessionName, signalSequence) {
-
-   var videoButton = "#showvideo"+SessionName + signalSequence;
-   var videoBoard = "#videoboard" + SessionName + signalSequence;
-   //$(videoButton).show();
-
-   if($(videoBoard).children().length <= 3 ) {
-        $(videoButton).hide();
-   }
-
-$(videoButton).click(function(){
-
-       currentVideoButton ="";
-      $('div[id^="videoboard"]').each(function() {
-              var v_id=  "#" + this.id;
-             if(v_id == videoBoard){  // to avoid hidding the video for current  chart
-              // player1 = null, player2 = null, player3 = null, player4 = null;
-              $(v_id).slideUp();
-              $(v_id).hide();
-             }
-       });
-       /* $('a[id^="showvideo"]').each(function() {
-            var v_id=  "#" + this.id;
-            if(v_id != videoButton)
-                 $(v_id).html('Show Videos');
-             });
-
-    videonum =0;*/
-
-    //  $(videoButton).html('Hide Videos');
-
-      // slidDownVideoPlay(videoButton, videoBoard);
-
-
-
-      $(videoBoard).slideUp();
-      $(videoBoard).hide();
-
-
-  });
+// clean all audio signal
+      $('.sal').each(function() {
+                      var v_id=  "#" + this.id;
+                      //this.currentTime = to;
+                      this.pause();
+        });
 }
 
-function slidDownVideoPlay(videoButton, videoBoard){
 
 
+// to hide all videos when user hit hide videos
+function showVideo(SessionName, signalSequence) {
+       var videoButton = "#showvideo"+SessionName + signalSequence;
+       var videoBoard = "#videoboard" + SessionName + signalSequence;
+
+        // this is when we hit hide videos or we chose another signals
+        $(videoButton).click(function(){
+
+               currentVideoButton ="";
+              $('div[id^="videoboard"]').each(function() {
+                      var v_id=  "#" + this.id;
+                      $(v_id).slideUp();
+                      $(v_id).hide();
+               });
+
+          });
+}
+
+// this is called whenever the user click on different signal
+function slidDownVideoPlay(videoButton, videoBoard, task){
+
+    // hide all other boards
     $('div[id^="videoboard"]').each(function() {
              var v_id=  "#" + this.id;
-             if(v_id != videoBoard){
+             if(v_id != currentVideoButton){
              $(v_id).slideUp();
              $(v_id).hide();
+               allPlayers =[];
              }
       });
 
-      /* $('a[id^="showvideo"]').each(function() {
-           var v_id=  "#" + this.id;
-           if(v_id != videoButton)
-                $(v_id).html('Show Videos');
-            });*/
+            // show the clicked board
+            //$(videoButton).html('Hide Videos');
+            //$(videoBoard).slideDown();
 
-   videonum =0;
-                //$(videoBoard).toggle();
-     $(videoButton).html('Hide Videos');
-     $(videoBoard).slideDown();
+            videonum =0;
+           /*if(videoBoard != currentVideoBoard){
+                   $(currentVideoBoard).children('.sal').each(function () {
+							 if ($(this).attr('sess') == task){
+									 $(videoBoard).append(this);
+									 $(videoBoard).append(' ');
+							 }
+
+                   });
+
+            }*/
+
+			     $('.sal').each(function () {
+							 if ($(this).attr('sess') == task){
+									 $(videoBoard).append(this);
+									 $(videoBoard).append(' ');
+							 }
+
+                   });
+
+                 //<!--src="https://googledrive.com/host/@video._2" -->
+
+
+          $(videoButton).html('Hide Videos');
+          $(videoBoard).slideDown();
 
 
   }
 
+
+// this function make sure that all videos are playing
+ function checkVideoAvailability(noOfVideo){
+
+
+       noOfAvailableVideo = 0;
+           // check of all video are avail.
+           var arrayLength = allPlayers.length;
+           for (var i = 0; i < arrayLength; i++) {
+               var player1 = document.getElementById(allPlayers[i]);
+               if(player1 != null ){
+                  noOfAvailableVideo++;
+                }
+           }
+       // sync all of them
+      if(noOfVideo == noOfAvailableVideo){
+       seek(goToTime )
+      }
+ }
+
 // this fucntion is called whenever whe show the videoboard becuase that create new videos...
 function onYouTubePlayerReady(playerId)
 {
-  switch(videonum)
-     {
-       case 0:
 
-         player1 = document.getElementById(playerId);
-         player1.seekTo(goToTime, true);
+        alert("Taamneh");
+         console.log(playerId);
+         allPlayers.push(playerId);
+
+         var player1 = document.getElementById(playerId);
+         console.log("hiiiiii");
+          player1.seekTo(goToTime, true);
+          console.log("byeeeeeeeee");
          player1.playVideo();
-         //player1.pauseVideo();
-
          player1.addEventListener("onStateChange", "onytplayerStateChange");
-          break;
-       case 1:
 
-          player2 = document.getElementById(playerId);
-          player2.seekTo(goToTime, true);
-          player2.playVideo();
-          //player2.pauseVideo();
-
-          player2.addEventListener("onStateChange", "onytplayerStateChange");
-        break;
-       case 2:
-
-           player3 = document.getElementById(playerId);
-           player3.seekTo(goToTime, true);
-           player3.playVideo();
-           player3.addEventListener("onStateChange", "onytplayerStateChange");
-        break;
-       case 3:
-           player4 = document.getElementById(playerId);
-           player4.seekTo(goToTime, true);
-           player4.playVideo();
-           //player4.pauseVideo();
-           player4.addEventListener("onStateChange", "onytplayerStateChange");
-        break;
-       case 4:
-           player5 = document.getElementById(playerId);
-            player5.playVideo();
-            //player5.pauseVideo();
-            player5.seekTo(goToTime, true);
-           player5.addEventListener("onStateChange", "onytplayerStateChange");
-         break;
-     }
-  videonum++;
 }
 
 function onytplayerStateChange(newState) {
   // alert("Player's new state: " + newState);
 }
 
-function seek(to, videoButton) {
+function seek(to) {
+   // stop all audio
+    clearAllAudioFiles();
+    var arrayLength = allPlayers.length;
+    for (var i = 0; i < arrayLength; i++) {
+        var player1 = document.getElementById(allPlayers[i]);
+        if(player1 != null ){
+              player1.seekTo(to, true);
+             player1.playVideo();
+         }
+      }
 
 
-if(videoButton == currentVideoButton){
- if(player1 != null ){
-      player1.seekTo(to, true);
-      player1.playVideo();
-     }
- if(player2 != null ){
-      player2.seekTo(to, true);
-      player2.playVideo();
-     }
-  if(player3 != null ){
-      player3.seekTo(to, true);
-      player3.playVideo();
-  }
-  if(player4 != null ){
-    player4.seekTo(to, true);
-    player4.playVideo();
-       }
-   }
+    $(currentVideoBoard).children('.sal').each(function () {
+      this.currentTime = to;
+      this.play();
+       //this.playVideo();
+    });
+
+
 }
 
 // to play after pause
 function playPausedVideos() {
- if(player1 != null) {
-   player1.playVideo();
- }
- if(player2 != null){
-  player2.playVideo();
-  }
-  if(player3 != null){
-    player3.playVideo();
-  }
-  if(player4 != null){
-    player4.playVideo();
-   }
+
+$(currentVideoBoard).children('.sal').each(function () {
+                 this.play();
+  });
+    var arrayLength = allPlayers.length;
+    for (var i = 0; i < arrayLength; i++) {
+        var player1 = document.getElementById(allPlayers[i]);
+        if(player1 != null ){
+          player1.playVideo();
+         }
+    }
 }
 
 function stopvideo() {
- if(player1 != null) {
-  player1.pauseVideo();
- }
-  if(player2 != null){
-  player2.pauseVideo();
-  }
-  if(player3 != null){
-    player3.pauseVideo();
-  }
-  if(player4 != null){
-    player4.pauseVideo();
-   }
+
+
+var arrayLength = allPlayers.length;
+    for (var i = 0; i < arrayLength; i++) {
+        var player1 = document.getElementById(allPlayers[i]);
+        if(player1 != null ){
+          player1.pauseVideo();
+         }
+    }
+   // stop all audio
+    $('.sal').each(function() {
+                 var v_id=  "#" + this.id;
+                 //this.currentTime = to;
+                 this.pause();
+
+     });
 }
